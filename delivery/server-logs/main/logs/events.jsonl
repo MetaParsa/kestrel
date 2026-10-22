@@ -1,0 +1,116 @@
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653343.381631, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653343.6782882, "event": "degrade_level", "level": 3, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": false}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653343.6782882, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653343.6782882, "event": "manager_request", "request_id": "req-1792653343", "reason": "scheduled"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653423.3834164, "event": "playbook_accepted", "playbook_id": "pb-20261022-1046-08d7b0", "source": "mock", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -18.6}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653423.3834164, "event": "playbook_active", "playbook_id": "pb-20261022-1046-08d7b0", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.2, "BTCTMN": 0.1}, "risk_multiplier": 1.0}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653423.3834164, "event": "degrade_level", "level": 0, "previous": 3, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792653473.3842466, "event": "manager_request", "request_id": "req-1792653473", "reason": "event: degrade level 0"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792654673.406622, "event": "manager_request", "request_id": "req-1792654673", "reason": "event: degrade level 0 (reissued)"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792655873.4248893, "event": "manager_request", "request_id": "req-1792655873", "reason": "event: degrade level 0 (reissued)"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792657023.4411943, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792657073.441806, "event": "manager_request", "request_id": "req-1792657073", "reason": "event: degrade level 0 (reissued)"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658273.4565053, "event": "manager_request", "request_id": "req-1792658273", "reason": "event: degrade level 0 (reissued)"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658443.7573879, "event": "playbook_accepted", "playbook_id": "pb-20261022-1210-73dea6", "source": "claude", "regime": "event_shock", "clamps": [], "clock_skew_s": -22.4}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658443.7573879, "event": "playbook_active", "playbook_id": "pb-20261022-1210-73dea6", "source": "claude", "regime": "event_shock", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658443.7573879, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658453.4585814, "event": "manager_request", "request_id": "req-1792658453", "reason": "event: USDTTMN 1h move +1.36%"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658553.4597108, "event": "playbook_rejected", "file": "playbook-pb-20261022-1210-73dea6.json", "reason": "unknown_or_used_bundle_hash"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658663.4631507, "event": "playbook_rejected", "file": "playbook-pb-20261022-1210-73dea6.json", "reason": "unknown_or_used_bundle_hash"}
+{"git_sha": "c839f44a54e6", "mode": "shadow", "ts": 1792658763.4649477, "event": "playbook_rejected", "file": "playbook-pb-20261022-1210-73dea6.json", "reason": "unknown_or_used_bundle_hash"}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792658915.5788944, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792658915.8726635, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792658915.8726635, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792659045.58182, "event": "manager_request", "request_id": "req-1792659045", "reason": "scheduled"}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792659145.5831292, "event": "playbook_accepted", "playbook_id": "pb-20261022-1222-ddbbdf", "source": "claude", "regime": "event_shock", "clamps": [], "clock_skew_s": -9.0}
+{"git_sha": "386a6fbdb772", "mode": "shadow", "ts": 1792659145.5831292, "event": "playbook_active", "playbook_id": "pb-20261022-1222-ddbbdf", "source": "claude", "regime": "event_shock", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660420.877338, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660421.165927, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660421.165927, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660670.8823645, "event": "manager_request", "request_id": "req-1792660670", "reason": "scheduled"}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660790.8839536, "event": "playbook_accepted", "playbook_id": "pb-20261022-1249-ecde51", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -16.3}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660790.8839536, "event": "playbook_active", "playbook_id": "pb-20261022-1249-ecde51", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660957.9960783, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660958.4086087, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792660958.4086087, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792663248.1327913, "event": "manager_request", "request_id": "req-1792663248", "reason": "scheduled"}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792664398.1476953, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "d67c3a42f00f", "mode": "shadow", "ts": 1792664448.1483219, "event": "manager_request", "request_id": "req-1792664448", "reason": "scheduled (reissued)"}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665469.977245, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665469.979916, "event": "degrade_level", "level": 2, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665469.979916, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665469.979916, "event": "manager_request", "request_id": "req-1792665469", "reason": "scheduled"}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665979.9866655, "event": "playbook_accepted", "playbook_id": "pb-20261022-1416-ff3d5f", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -7.9}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665979.9866655, "event": "playbook_active", "playbook_id": "pb-20261022-1416-ff3d5f", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "c171a0e26c2f", "mode": "shadow", "ts": 1792665979.9866655, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792667165.7724364, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792667165.7761302, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792667165.7761302, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792668425.819292, "event": "manager_request", "request_id": "req-1792668425", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792668465.8209193, "event": "playbook_accepted", "playbook_id": "pb-20261022-1457-5d9576", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -5.6}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792668465.8209193, "event": "playbook_active", "playbook_id": "pb-20261022-1457-5d9576", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792670885.9097247, "event": "manager_request", "request_id": "req-1792670885", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792670945.911791, "event": "playbook_accepted", "playbook_id": "pb-20261022-1538-bc2295", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -8.2}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792670945.911791, "event": "playbook_active", "playbook_id": "pb-20261022-1538-bc2295", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792673345.9535398, "event": "manager_request", "request_id": "req-1792673345", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792674545.9720492, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792674545.9720492, "event": "manager_request", "request_id": "req-1792674545", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792675745.9910846, "event": "manager_request", "request_id": "req-1792675745", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792676946.0096357, "event": "manager_request", "request_id": "req-1792676946", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792678136.0292606, "event": "playbook_accepted", "playbook_id": "pb-20261022-1738-06fc9c", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -23.6}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792678136.0292606, "event": "playbook_active", "playbook_id": "pb-20261022-1738-06fc9c", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792678136.0292606, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792680546.0658023, "event": "manager_request", "request_id": "req-1792680546", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792680606.066838, "event": "playbook_accepted", "playbook_id": "pb-20261022-1819-ad0564", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -13.3}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792680606.066838, "event": "playbook_active", "playbook_id": "pb-20261022-1819-ad0564", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.15, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792683006.1030674, "event": "manager_request", "request_id": "req-1792683006", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792683056.1036806, "event": "playbook_accepted", "playbook_id": "pb-20261022-1900-dcd744", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -18.8}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792683056.1036806, "event": "playbook_active", "playbook_id": "pb-20261022-1900-dcd744", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.15, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792685466.1378467, "event": "manager_request", "request_id": "req-1792685466", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792686656.153123, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792686666.1532068, "event": "manager_request", "request_id": "req-1792686666", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792686786.1548793, "event": "playbook_accepted", "playbook_id": "pb-20261022-2002-76393b", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -19.9}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792686786.1548793, "event": "playbook_active", "playbook_id": "pb-20261022-2002-76393b", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.15, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792686786.1548793, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792689186.187068, "event": "manager_request", "request_id": "req-1792689186", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792689246.1878612, "event": "playbook_accepted", "playbook_id": "pb-20261022-2043-58f537", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -12.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792689246.1878612, "event": "playbook_active", "playbook_id": "pb-20261022-2043-58f537", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.15, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792691646.2218313, "event": "manager_request", "request_id": "req-1792691646", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792691726.2226396, "event": "playbook_accepted", "playbook_id": "pb-20261022-2125-9a5b41", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -13.4}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792691726.2226396, "event": "playbook_active", "playbook_id": "pb-20261022-2125-9a5b41", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.15, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792694166.255272, "event": "manager_request", "request_id": "req-1792694166", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792694246.2561252, "event": "playbook_accepted", "playbook_id": "pb-20261022-2207-c8461c", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -6.1}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792694246.2561252, "event": "playbook_active", "playbook_id": "pb-20261022-2207-c8461c", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792696686.285965, "event": "manager_request", "request_id": "req-1792696686", "reason": "scheduled"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792697846.299671, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792697886.300011, "event": "manager_request", "request_id": "req-1792697886", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792699086.3170636, "event": "manager_request", "request_id": "req-1792699086", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792700286.3345451, "event": "manager_request", "request_id": "req-1792700286", "reason": "scheduled (reissued)"}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792701006.3444934, "event": "day_rolled", "day_start_equity": 4999830.8488}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792701176.3470476, "event": "playbook_accepted", "playbook_id": "pb-20261023-0002-51e4f7", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -15.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792701176.3470476, "event": "playbook_active", "playbook_id": "pb-20261023-0002-51e4f7", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792701176.3470476, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "eec06ad28472", "mode": "shadow", "ts": 1792704486.3960674, "event": "manager_request", "request_id": "req-1792704486", "reason": "scheduled"}
+{"git_sha": "790ec5bc61ea", "mode": "shadow", "ts": 1792705111.2935665, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "790ec5bc61ea", "mode": "shadow", "ts": 1792705111.3060734, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "790ec5bc61ea", "mode": "shadow", "ts": 1792705111.3060734, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "790ec5bc61ea", "mode": "shadow", "ts": 1792705111.3060734, "event": "manager_request", "request_id": "req-1792705111", "reason": "scheduled"}
+{"git_sha": "462eaca709f8", "mode": "shadow", "ts": 1792705291.4716334, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "462eaca709f8", "mode": "shadow", "ts": 1792705291.4742284, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "462eaca709f8", "mode": "shadow", "ts": 1792705291.4742284, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "462eaca709f8", "mode": "shadow", "ts": 1792705291.4742284, "event": "manager_request", "request_id": "req-1792705291", "reason": "scheduled"}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705416.1268582, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705416.1294878, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705416.1294878, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705416.1294878, "event": "manager_request", "request_id": "req-1792705416", "reason": "scheduled"}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705686.1411128, "event": "degrade_level", "level": 2, "previous": 0, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705766.143601, "event": "playbook_accepted", "playbook_id": "pb-20261023-0119-bd435e", "source": "claude", "regime": "devaluation_drift", "clamps": [], "clock_skew_s": -14.7}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705766.143601, "event": "playbook_active", "playbook_id": "pb-20261023-0119-bd435e", "source": "claude", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.1, "BTCTMN": 0.0}, "risk_multiplier": 0.5}
+{"git_sha": "9d6a6ef8c37d", "mode": "shadow", "ts": 1792705766.143601, "event": "degrade_level", "level": 0, "previous": 2, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792705812.436298, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792705812.4400892, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792705812.4400892, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "301364bd981d", "mode": "live", "ts": 1792705844.5116723, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
+{"git_sha": "301364bd981d", "mode": "live", "ts": 1792705844.513699, "event": "live_startup", "cancelled": [], "foreign": [], "adopted": {}, "fresh_start": true, "notes": []}
+{"git_sha": "301364bd981d", "mode": "live", "ts": 1792705844.5151784, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
+{"git_sha": "301364bd981d", "mode": "live", "ts": 1792705844.5151784, "event": "flatten_phase", "phase": "normal"}

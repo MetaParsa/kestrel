@@ -1,0 +1,41 @@
+﻿2026-10-22T12:09:18 starting ai_box loop (paid, cap 15 USD)
+2026-10-22T12:11:14 {"event": "push_failed", "playbook_id": "pb-20261022-1210-73dea6"}
+2026-10-22T12:16:00 {"event": "playbook_pushed_on_retry", "file": "playbook-pb-20261022-1210-73dea6.json"}
+2026-10-22T12:18:59 starting ai_box loop (paid, cap 15 USD)
+2026-10-22T12:22:22 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1222-ddbbdf", "source": "claude", "regime": "event_shock", "cost_usd": 0.0848, "clamps": []}
+2026-10-22T12:49:45 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1249-ecde51", "source": "claude", "regime": "range", "cost_usd": 0.0768, "clamps": []}
+2026-10-22T13:09:35 starting ai_box loop (paid, cap 15 USD)
+2026-10-22T14:15:50 starting ai_box loop (paid, cap 15 USD)
+2026-10-22T14:16:13 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1416-ff3d5f", "source": "claude", "regime": "range", "cost_usd": 0.0662, "clamps": []}
+2026-10-22T14:57:41 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1457-5d9576", "source": "claude", "regime": "range", "cost_usd": 0.0626, "clamps": []}
+2026-10-22T15:39:01 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1538-bc2295", "source": "claude", "regime": "range", "cost_usd": 0.0634, "clamps": []}
+2026-10-22T17:17:45 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792675745"}
+2026-10-22T17:38:45 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1738-06fc9c", "source": "claude", "regime": "range", "cost_usd": 0.0694, "clamps": []}
+2026-10-22T18:06:38 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T18:19:55 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1819-ad0564", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0727, "clamps": []}
+2026-10-22T19:00:46 {"event": "playbook_pushed", "playbook_id": "pb-20261022-1900-dcd744", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.068, "clamps": []}
+2026-10-22T19:42:09 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792685466"}
+2026-10-22T19:45:11 {"event": "pull_failed", "error": "scp exit 255: scp: Connection closed"}
+2026-10-22T20:02:57 {"event": "playbook_pushed", "playbook_id": "pb-20261022-2002-76393b", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0725, "clamps": []}
+2026-10-22T20:43:54 {"event": "playbook_pushed", "playbook_id": "pb-20261022-2043-58f537", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0703, "clamps": []}
+2026-10-22T21:25:13 {"event": "playbook_pushed", "playbook_id": "pb-20261022-2125-9a5b41", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0663, "clamps": []}
+2026-10-22T21:39:14 {"event": "pull_failed", "error": "scp exit 255: scp: Connection closed"}
+2026-10-22T22:07:22 {"event": "playbook_pushed", "playbook_id": "pb-20261022-2207-c8461c", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0783, "clamps": []}
+2026-10-22T23:00:36 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792696686"}
+2026-10-22T23:20:04 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:21:06 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792697886"}
+2026-10-22T23:32:33 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:34:56 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:37:20 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:40:50 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:42:37 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792699086"}
+2026-10-22T23:44:20 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:46:40 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:50:10 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:52:29 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-22T23:58:16 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-23T00:02:44 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0002-51e4f7", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0544, "clamps": []}
+2026-10-23T00:58:25 {"event": "manager_failed", "error": "ManagerError: API error: APIConnectionError", "request_id": "req-1792704486"}
+2026-10-23T01:19:12 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0119-bd435e", "source": "claude", "regime": "devaluation_drift", "cost_usd": 0.0556, "clamps": []}
+2026-10-23T01:20:22 ai_box loop exited with code -1
+2026-10-23T01:20:24 starting ai_box loop (paid, cap 15 USD)

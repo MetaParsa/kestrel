@@ -1,0 +1,39 @@
+{
+ "cash": 4985230.036527972,
+ "start_equity": 5000000.0,
+ "realized_pnl": -14711.728736573306,
+ "fees_tmn": 3846.4246369723073,
+ "day": "2026-09-30",
+ "day_start_equity": 5000000.0,
+ "peak_equity": 5000753.893047752,
+ "max_drawdown": -0.003093056738889599,
+ "halted": false,
+ "halt_reason": "",
+ "core_stopped_at": {
+  "BTCTMN": 1790751240.0
+ },
+ "tactical_entries": {},
+ "core_increases": {
+  "USDTTMN": 0,
+  "BTCTMN": 2
+ },
+ "entries_today": 2,
+ "activity_today": 4,
+ "fills_today": 4,
+ "counted_decisions": [
+  "9074446002",
+  "9074482009",
+  "9074926056",
+  "x90751240"
+ ],
+ "positions": [
+  {
+   "market": "BTCTMN",
+   "sleeve": "core",
+   "qty": 2.700000000002532e-09,
+   "cost_tmn": 58.23473545405432,
+   "opened_at": 1790744760.0,
+   "peak_price": 21844534054.25632
+  }
+ ]
+}
