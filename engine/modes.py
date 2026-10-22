@@ -2,8 +2,8 @@
 
 - ShadowBroker: live quotes from the poller, fills simulated by SimExchange.
 - BacktestBroker: historical 1-minute bars, fills simulated by SimExchange.
-- LiveBroker: real Wallex orders — deliberately not implemented until go-live (C5),
-  and only after the user says "go live".
+- LiveBroker (engine/live.py): real Wallex orders — only with `--mode live` AND
+  WALLEX_LIVE_ARMED=yes-real-money, set by the user at go-live.
 """
 from __future__ import annotations
 
@@ -38,8 +38,3 @@ class BacktestBroker(SimExchange):
             self.trade_through(market, l, h)
         hs = self.half_spread[market]
         self.set_quote(market, c * (1 - hs), c * (1 + hs), ts)
-
-
-class LiveBroker:
-    def __init__(self, *_, **__):
-        raise NotImplementedError("Live trading is wired in C5, only after the user says 'go live'.")

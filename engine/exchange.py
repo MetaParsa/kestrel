@@ -74,7 +74,8 @@ class Exchange(Protocol):
 
 
 def quantize_qty(qty: float, decimals: int) -> float:
-    return float(Decimal(str(qty)).quantize(Decimal(1).scaleb(-decimals), rounding=ROUND_DOWN))
+    clean = Decimal(str(round(qty, decimals + 6)))            # drop float noise before flooring
+    return float(clean.quantize(Decimal(1).scaleb(-decimals), rounding=ROUND_DOWN))
 
 
 class SimExchange:

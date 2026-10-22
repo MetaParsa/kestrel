@@ -42,6 +42,7 @@ from engine.gate import GateContext, Verdict, check
 from engine.gate import mode as gate_mode
 from engine.logs import Logs
 from engine.portfolio import Portfolio
+from engine.reconcile import reconcile
 from engine.types import URGENCY_RANK, Fill, Proposal
 from manager import scorecard
 from manager.mock import mock_playbook
@@ -55,6 +56,7 @@ LEVEL_FA = {0: "عادی", 2: "نقشه‌ی مدیر منقضی شده — نگ
 EARLY_REQUEST_S = 20 * 60          # ask for the next playbook this long before the current one expires
 START_ALERT_EVERY_S = 10 * 60      # a crash-restart loop must not spam the phone
 EVENT_AFTER_PLAYBOOK_S = 15 * 60   # no off-cycle request within this long after a playbook arrived
+RECONCILE_EVERY_S = 30 * 60        # live: compare our books with the exchange this often
 
 
 @dataclass
@@ -71,9 +73,12 @@ class EngineCfg:
 class Engine:
     def __init__(self, cfg: EngineCfg, *, broker: Exchange, market: Callable[[], dict[str, MarketSnapshot]],
                  bars: Callable[[str], pd.DataFrame | None], clock: Callable[[], float] = time.time,
-                 alerter: Alerter | None = None, portfolio: Portfolio | None = None):
+                 alerter: Alerter | None = None, portfolio: Portfolio | None = None, account=None):
+        """`account`: a read-only Wallex client (live mode) used for reconcile; None in shadow."""
         self.cfg, self.L = cfg, cfg.loop
         self.broker, self.market, self.bars, self.clock = broker, market, bars, clock
+        self.account = account
+        self.last_reconcile = clock()
         self.alerter = alerter or Alerter(None, None)
         rd = cfg.run_dir
         rd.mkdir(parents=True, exist_ok=True)
@@ -81,6 +86,7 @@ class Engine:
         self.playbook_path, self.outbox_dir = rd / "playbook.json", rd / "outbox"
         now = clock()
         self.logs = Logs(rd / "logs", sha=cfg.sha, mode=cfg.mode)
+        (rd / "state.mode").write_text(cfg.mode, encoding="utf-8")   # which mode owns state.json
         if portfolio is not None:
             self.pf = portfolio
         elif self.state_path.exists():
@@ -143,8 +149,14 @@ class Engine:
         level = self._degrade(now)
         ph = flatten.phase(now, self.cfg.end_at)
         if ph != self.last_phase:
+            previous, self.last_phase = self.last_phase, ph
             self._event(now, "flatten_phase", phase=ph, alert=None if ph == "normal" else f"⏳ مرحله‌ی پایانی: {ph}")
-            self.last_phase = ph
+            if ph in ("verify", "ended") and previous is not None:
+                try:                                     # T−30 min check / final check; never blocks the flatten
+                    self._reconcile(now, final=ph == "ended")
+                except Exception as e:
+                    self._event(now, "reconcile_failed", error=f"{type(e).__name__}: {e}"[:300],
+                                alert="⚠️ تطبیق حساب انجام نشد؛ موتور به فروش پایانی ادامه می‌دهد.", critical=True)
         gmode = gate_mode(self._ctx(now))
         trigger = {m: max(self.bids[m], self.prev_bids.get(m, 0.0)) for m in config.MARKETS}   # glitch guard
         if (level >= 3 or ph != "normal" or gmode == "hard_flatten") and any(
@@ -166,7 +178,10 @@ class Engine:
             self._route(p, now)
         self.ex.tick(now)
         self._save_and_beat(now, level, ph, gmode)
-        for step in (lambda: self._alerts(now, gmode), lambda: self._bundle(now), lambda: self._retry_alerts(now)):
+        steps = [lambda: self._alerts(now, gmode), lambda: self._bundle(now), lambda: self._retry_alerts(now)]
+        if self.account is not None and now - self.last_reconcile >= RECONCILE_EVERY_S:
+            steps.append(lambda: self._reconcile_safe(now))
+        for step in steps:
             try:
                 step()
             except Exception as e:                    # optional work never stops trading or the heartbeat
@@ -438,6 +453,31 @@ class Engine:
         for text, key, tries in pending:
             if not self.alerter.send(text, key=key, force=True) and tries < 30:
                 self.retry_alerts.append((text, key, tries + 1))
+
+    # ---- reconcile (live only, read-only) ----------------------------------------------------
+    def _reconcile_safe(self, now: float) -> None:
+        try:
+            self._reconcile(now)
+        except Exception as e:
+            self.last_reconcile = now                      # retry next period, not every tick
+            self._event(now, "reconcile_failed", error=f"{type(e).__name__}: {e}"[:300], key="reconcile_failed",
+                        alert="⚠️ تطبیق دوره‌ای حساب انجام نشد (خطای خواندن از والکس).")
+
+    def _reconcile(self, now: float, final: bool = False) -> None:
+        if self.account is None:
+            return
+        self.last_reconcile = now
+        known = {w.client_id for w in self.ex.working.values()}
+        rep = reconcile(self.pf, self.account.balances(), self.account.open_orders(), self.bids, known)
+        non_tmn = sum(p.value(self.bids[m]) for (m, _), p in self.pf.positions.items() if p.qty > 0)
+        self._event(now, "reconcile", ok=rep.ok, final=final, diffs=rep.asset_diffs, foreign=rep.foreign_orders,
+                    orphans=rep.orphan_orders, other_assets=rep.other_assets, non_tmn_tmn=round(non_tmn))
+        if final:
+            text = (f"🏁 پایان مسابقه: دارایی {self.pf.equity(self.bids):,.0f} تومان "
+                    f"({self.pf.gain(self.bids):+.2%})، غیرتومانی {non_tmn:,.0f} تومان. {rep.summary_fa()}")
+            self.alerter.send(text, key="final", force=True)
+        elif not rep.ok or self.last_phase == "verify":
+            self.alerter.send(rep.summary_fa(), key=f"reconcile-{rep.ok}", force=self.last_phase == "verify")
 
     # ---- bundles and manager requests ----------------------------------------------------
     def _bundle(self, now: float) -> None:

@@ -4,8 +4,8 @@
     uv run python -m engine.run --mode shadow --run-dir run/shadow
     # shadow baseline: same data, rule-based manager, no Claude, no Clef (A/B evidence during the contest)
     uv run python -m engine.run --mode shadow --manager rules --run-dir run/baseline
-    # live: refuses until step C5, and only after the user says "go live"
-    uv run python -m engine.run --mode live --run-dir run/live
+    # live: real orders. Refuses unless WALLEX_LIVE_ARMED=yes-real-money is set — only at the user's "go live"
+    uv run python -m engine.run --mode live --run-dir run/main
 
 Errors inside a tick are logged and alerted; the loop keeps running.
 """
@@ -23,10 +23,12 @@ import config
 from alerts.bale import Alerter
 from data import bars, fetch
 from data.poll import Poller
+from engine.live import LiveBroker, live_startup
 from engine.logs import git_sha
 from engine.loop import Engine, EngineCfg
-from engine.modes import LiveBroker, ShadowBroker
+from engine.modes import ShadowBroker
 from wallex.client import WallexClient, WallexError
+from wallex.trading import TradingClient, env_armed
 
 REPO = Path(__file__).resolve().parent.parent
 
@@ -63,6 +65,50 @@ class LiveBars:
             return self.grids.get(market)
 
 
+def archive_shadow_state(run_dir: Path) -> Path | None:
+    """Simulated shadow positions must never be read as real holdings: move them aside."""
+    state, marker = run_dir / "state.json", run_dir / "state.mode"
+    mode = marker.read_text(encoding="utf-8").strip() if marker.exists() else ("shadow" if state.exists() else "")
+    if state.exists() and mode != "live":
+        dest = run_dir / f"state.{mode or 'unknown'}-{int(time.time())}.json"
+        state.replace(dest)
+        return dest
+    return None
+
+
+def start_live(cfg: EngineCfg, client: WallexClient, poller: Poller, live_bars: LiveBars, alerter: Alerter) -> Engine:
+    """Go-live path: both locks open, then cancel our stale orders and reconcile before trading."""
+    if not env_armed():
+        raise SystemExit("refusing live mode: WALLEX_LIVE_ARMED is not set (the user arms it at go-live)")
+    if not client.has_key:
+        raise SystemExit("refusing live mode: no Wallex key (WALLEX_KEY_FILE / WALLEX_API_KEY)")
+    archive_shadow_state(cfg.run_dir)
+    (cfg.run_dir / "state.mode").write_text("live", encoding="utf-8")   # from now on state.json is real
+    notes: list[dict] = []
+    broker = LiveBroker(client, TradingClient.from_env(armed=True), on_note=notes.append)
+    snaps = poller.poll_once()
+    if not all(m in snaps for m in config.MARKETS):
+        raise SystemExit("refusing live mode: no prices for every market")
+    broker.feed(snaps)
+    live_bars.refresh(time.time())
+    try:
+        pf, rep = live_startup(client, broker, cfg.run_dir / "state.json", {m: s.bid for m, s in snaps.items()})
+    except Exception as e:
+        alerter.send(f"🚨 حالت واقعی شروع نشد: {type(e).__name__}: {str(e)[:300]}", force=True)
+        raise
+    engine = Engine(cfg, broker=broker, market=poller.poll_once, bars=live_bars, alerter=alerter,
+                    portfolio=pf, account=client)
+    broker.on_note = lambda e: engine._event(time.time(), e.pop("event"), **e)
+    summary = (f"🔴 حالت واقعی روشن شد · سفارش‌های لغوشده‌ی قبلی: {len(rep.cancelled)} · "
+               f"سفارش‌های خارجی: {len(rep.foreign_orders)} · "
+               + ("شروع تازه از موجودی حساب" if rep.fresh_start else "ادامه از وضعیت ذخیره‌شده")
+               + (f" · اصلاح دفتر از روی صرافی: {', '.join(rep.adopted)}" if rep.adopted else "")
+               + f" · {rep.reconcile.summary_fa()}")
+    engine._event(time.time(), "live_startup", cancelled=rep.cancelled, foreign=rep.foreign_orders,
+                  adopted=rep.adopted, fresh_start=rep.fresh_start, notes=notes, alert=summary, critical=True)
+    return engine
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--mode", choices=["shadow", "live"], default="shadow")
@@ -85,10 +131,12 @@ def main(argv=None):
     client = WallexClient.from_env()
     poller = Poller(client, list(config.MARKETS) + list(config.FEATURE_MARKETS))
     live_bars = LiveBars(client, list(config.MARKETS))
-    broker = LiveBroker(client) if a.mode == "live" else ShadowBroker()
     alerter = Alerter.from_env()
-    engine = Engine(EngineCfg(run_dir=a.run_dir, mode=a.mode, manager=a.manager, sha=git_sha(REPO)),
-                    broker=broker, market=poller.poll_once, bars=live_bars, alerter=alerter)
+    cfg = EngineCfg(run_dir=a.run_dir, mode=a.mode, manager=a.manager, sha=git_sha(REPO))
+    if a.mode == "live":
+        engine = start_live(cfg, client, poller, live_bars, alerter)
+    else:
+        engine = Engine(cfg, broker=ShadowBroker(), market=poller.poll_once, bars=live_bars, alerter=alerter)
     n, failures = 0, 0
     while True:
         started = time.time()

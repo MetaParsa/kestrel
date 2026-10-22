@@ -7,7 +7,7 @@ from engine import core, exits, flatten
 from engine.exchange import SimExchange
 from engine.executor import Executor
 from engine.gate import GateContext, Verdict, check
-from engine.modes import BacktestBroker, LiveBroker
+from engine.modes import BacktestBroker
 from engine.portfolio import Portfolio
 from engine.types import Fill, Proposal
 
@@ -434,7 +434,3 @@ def test_end_to_end_flatten_leaves_no_coins_without_qty_hints():
     assert pf.cash > EQ * 0.98
     assert not [e for e in events if e["event"] == "order_rejected"]
 
-
-def test_live_broker_is_not_wired_yet():
-    with pytest.raises(NotImplementedError):
-        LiveBroker()

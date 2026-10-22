@@ -77,9 +77,14 @@ def main(argv=None):
     from data.poll import Poller
     from wallex.client import WallexClient
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--state", type=Path, required=True)
+    ap.add_argument("--state", type=Path, help="omit to just list balances and open orders")
     a = ap.parse_args(argv)
     client = WallexClient.from_env()
+    if a.state is None:
+        bal = {k: str(b.value) for k, b in client.balances().items() if b.value != 0 or b.locked != 0}
+        print("balances:", bal)
+        print("open orders:", [(o.client_id, o.symbol, o.side, str(o.orig_qty)) for o in client.open_orders()])
+        return
     pf = Portfolio.load(a.state, time.time())
     snaps = Poller(client, list(config.MARKETS)).poll_once()
     rep = reconcile(pf, client.balances(), client.open_orders(), {m: s.bid for m, s in snaps.items()}, set())
