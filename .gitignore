@@ -32,3 +32,8 @@ Thumbs.db
 
 # written at deploy time
 VERSION
+
+# Kronos research sandbox (cloned repo, venv, model cache)
+.kronos/
+research/kronos_out/*.npy
+research/kronos_out/*.log

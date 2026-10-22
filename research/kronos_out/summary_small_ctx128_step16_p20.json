@@ -1,0 +1,157 @@
+{
+ "model": "small",
+ "device": "cpu",
+ "bar": "15min",
+ "ctx": 128,
+ "horizon_bars": 16,
+ "step_bars": 16,
+ "paths": 20,
+ "round_trip": 0.006,
+ "markets": {
+  "BTCTMN": {
+   "windows": 172,
+   "from": "2026-09-23 13:30:00+00:00",
+   "to": "2026-10-22 01:30:00+00:00",
+   "dir4_kronos": {
+    "hit": 0.488,
+    "n": 172,
+    "ci95": 0.075
+   },
+   "dir4_momentum_4h": {
+    "hit": 0.506,
+    "n": 172,
+    "ci95": 0.075
+   },
+   "dir4_always_up": {
+    "hit": 0.547,
+    "n": 172,
+    "ci95": 0.074
+   },
+   "dir1_kronos": {
+    "hit": 0.541,
+    "n": 172
+   },
+   "mae4_kronos_pct": 0.623,
+   "mae4_naive_pct": 0.583,
+   "mae4_skill": -0.069,
+   "band_coverage_10_90": 0.494,
+   "median_band_q_pct": 0.885,
+   "median_abs_r4_pct": 0.404,
+   "spearman_band_vs_rv_next": 0.378,
+   "spearman_trail4_vs_rv_next": 0.316,
+   "spearman_trail24_vs_rv_next": 0.4,
+   "partial_band_given_trail24": 0.162,
+   "spearman_band_vs_abs_r4": 0.257,
+   "pnl_kronos_long_if_gt_0.000_pct": {
+    "sum": -23.22,
+    "trades": 50,
+    "win": 0.26
+   },
+   "pnl_kronos_long_if_gt_0.006_pct": {
+    "sum": -0.98,
+    "trades": 5,
+    "win": 0.6
+   },
+   "pnl_always_long_each_window_pct": -90.81,
+   "pnl_buy_and_hold_pct": 13.17,
+   "pnl_windows": 172,
+   "first_half": {
+    "windows": 86,
+    "from": "2026-09-23 13:30:00+00:00",
+    "to": "2026-10-07 17:30:00+00:00",
+    "dir4_kronos": {
+     "hit": 0.43,
+     "n": 86,
+     "ci95": 0.105
+    },
+    "dir4_momentum_4h": {
+     "hit": 0.5,
+     "n": 86,
+     "ci95": 0.106
+    },
+    "dir4_always_up": {
+     "hit": 0.605,
+     "n": 86,
+     "ci95": 0.103
+    },
+    "dir1_kronos": {
+     "hit": 0.5,
+     "n": 86
+    },
+    "mae4_kronos_pct": 0.682,
+    "mae4_naive_pct": 0.62,
+    "mae4_skill": -0.1,
+    "band_coverage_10_90": 0.488,
+    "median_band_q_pct": 0.95,
+    "median_abs_r4_pct": 0.456,
+    "spearman_band_vs_rv_next": 0.341,
+    "spearman_trail4_vs_rv_next": 0.354,
+    "spearman_trail24_vs_rv_next": 0.49,
+    "partial_band_given_trail24": 0.029,
+    "spearman_band_vs_abs_r4": 0.231,
+    "pnl_kronos_long_if_gt_0.000_pct": {
+     "sum": -11.53,
+     "trades": 21,
+     "win": 0.238
+    },
+    "pnl_kronos_long_if_gt_0.006_pct": {
+     "sum": -0.31,
+     "trades": 3,
+     "win": 0.667
+    },
+    "pnl_always_long_each_window_pct": -39.52,
+    "pnl_buy_and_hold_pct": 12.03,
+    "pnl_windows": 86
+   },
+   "second_half": {
+    "windows": 86,
+    "from": "2026-10-07 21:30:00+00:00",
+    "to": "2026-10-22 01:30:00+00:00",
+    "dir4_kronos": {
+     "hit": 0.547,
+     "n": 86,
+     "ci95": 0.105
+    },
+    "dir4_momentum_4h": {
+     "hit": 0.512,
+     "n": 86,
+     "ci95": 0.106
+    },
+    "dir4_always_up": {
+     "hit": 0.488,
+     "n": 86,
+     "ci95": 0.106
+    },
+    "dir1_kronos": {
+     "hit": 0.581,
+     "n": 86
+    },
+    "mae4_kronos_pct": 0.564,
+    "mae4_naive_pct": 0.547,
+    "mae4_skill": -0.031,
+    "band_coverage_10_90": 0.5,
+    "median_band_q_pct": 0.779,
+    "median_abs_r4_pct": 0.323,
+    "spearman_band_vs_rv_next": 0.396,
+    "spearman_trail4_vs_rv_next": 0.287,
+    "spearman_trail24_vs_rv_next": 0.278,
+    "partial_band_given_trail24": 0.293,
+    "spearman_band_vs_abs_r4": 0.234,
+    "pnl_kronos_long_if_gt_0.000_pct": {
+     "sum": -11.7,
+     "trades": 29,
+     "win": 0.276
+    },
+    "pnl_kronos_long_if_gt_0.006_pct": {
+     "sum": -0.67,
+     "trades": 2,
+     "win": 0.5
+    },
+    "pnl_always_long_each_window_pct": -51.29,
+    "pnl_buy_and_hold_pct": 0.54,
+    "pnl_windows": 86
+   },
+   "seconds": 2927
+  }
+ }
+}
