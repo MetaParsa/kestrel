@@ -1,0 +1,8 @@
+{
+ "_note": "Trimmed from a real read-only GET /v1/account/fee (2026-10-21).",
+ "result": {"USDTTMN": {"makerFeeRate": "0.00250000", "takerFeeRate": "0.00300000", "recent_days_sum": 0},
+            "BTCTMN": {"makerFeeRate": "0.00250000", "takerFeeRate": "0.00300000", "recent_days_sum": 0},
+            "BTCUSDT": {"makerFeeRate": "0.00100000", "takerFeeRate": "0.00130000", "recent_days_sum": 0},
+            "default": [], "metaData": {"levels": [0, 100000000], "coin_levels": [0, 500000]}},
+ "success": true
+}

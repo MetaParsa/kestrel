@@ -1,0 +1,27 @@
+[project]
+name = "wallex-agent"
+version = "0.1.0"
+description = "AI trading agent for the StarCoach x Wallex challenge: Claude sets the course, models pick the moments, code holds the brakes."
+readme = "README.md"
+# Server runs Ubuntu 26.04's Python 3.14; laptop AI box runs 3.12 (torch wheels).
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.8",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "numpy>=2.0",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+]
+
+[project.optional-dependencies]
+quant = ["lightgbm>=4.5", "scikit-learn>=1.5"]
+# Laptop only: Claude calls and the self-hosted Clef judge
+ai-box = ["anthropic>=0.60", "torch>=2.8", "transformers>=4.50", "bitsandbytes>=0.45", "accelerate>=1.0", "huggingface-hub>=0.30"]
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

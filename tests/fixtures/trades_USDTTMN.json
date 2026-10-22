@@ -1,0 +1,48 @@
+{
+ "result": {
+  "latestTrades": [
+   {
+    "symbol": "USDTTMN",
+    "quantity": "149.9600000000000000",
+    "price": "266721.0000000000000000",
+    "sum": "39997481.1600000000000000",
+    "isBuyOrder": false,
+    "timestamp": "2026-10-21T20:00:30Z"
+   },
+   {
+    "symbol": "USDTTMN",
+    "quantity": "1.9100000000000000",
+    "price": "266721.0000000000000000",
+    "sum": "509437.1100000000000000",
+    "isBuyOrder": false,
+    "timestamp": "2026-10-21T20:00:30Z"
+   },
+   {
+    "symbol": "USDTTMN",
+    "quantity": "50.6100000000000000",
+    "price": "266720.0000000000000000",
+    "sum": "13498699.2000000000000000",
+    "isBuyOrder": true,
+    "timestamp": "2026-10-21T20:00:26Z"
+   },
+   {
+    "symbol": "USDTTMN",
+    "quantity": "8.6800000000000000",
+    "price": "266720.0000000000000000",
+    "sum": "2315129.6000000000000000",
+    "isBuyOrder": true,
+    "timestamp": "2026-10-21T20:00:25Z"
+   },
+   {
+    "symbol": "USDTTMN",
+    "quantity": "50.5300000000000000",
+    "price": "266720.0000000000000000",
+    "sum": "13477361.6000000000000000",
+    "isBuyOrder": true,
+    "timestamp": "2026-10-21T20:00:16Z"
+   }
+  ]
+ },
+ "message": "عملیات موفقیت‌آمیز بود.",
+ "success": true
+}

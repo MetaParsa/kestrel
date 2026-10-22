@@ -1,0 +1,31 @@
+# Secrets — keys live in env files OUTSIDE this repo; these are belt-and-braces
+.env
+.env.*
+*.key
+api.txt
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Data and models (large, regenerable)
+data/store/
+models/*.bin
+models/*.safetensors
+*.parquet
+
+# Runtime
+run/
+logs/*.jsonl
+logs/*.log
+!logs/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

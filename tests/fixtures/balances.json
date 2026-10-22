@@ -1,0 +1,10 @@
+{
+ "_note": "Trimmed from a real read-only GET /v1/account/balances (2026-10-22). Real response lists ~370 assets, mostly zero.",
+ "result": {"balances": {
+  "TMN": {"asset": "TMN", "faName": "تومان", "fiat": true, "value": "5000000", "locked": "0", "is_dust": false, "is_digital_gold": false},
+  "USDT": {"asset": "USDT", "faName": "تتر", "fiat": false, "value": "0", "locked": "0", "is_dust": false, "is_digital_gold": false},
+  "BTC": {"asset": "BTC", "faName": "بیت کوین", "fiat": false, "value": "0", "locked": "0", "is_dust": false, "is_digital_gold": false}
+ }},
+ "message": "عملیات با موفقیت انجام شد",
+ "success": true
+}

@@ -1,0 +1,8 @@
+{
+ "_note": "ASSUMED SHAPE (no live order placed yet): field names from the new_order example in github.com/amirSamanQ/python-wallex README. Re-record from the first real order and update tests.",
+ "result": {"symbol": "USDTTMN", "type": "LIMIT", "side": "BUY", "clientOrderId": "d-20261022-0001", "transactTime": 1792650000,
+            "price": "266500", "origQty": "3.75", "origSum": "999375", "executedPrice": "266500", "executedQty": "1.25",
+            "executedSum": "333125", "executedPercent": 33, "status": "PARTIALLY_FILLED", "active": true, "fills": []},
+ "message": "عملیات با موفقیت انجام شد",
+ "success": true
+}
