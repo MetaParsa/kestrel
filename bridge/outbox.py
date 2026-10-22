@@ -46,6 +46,8 @@ def market_section(grid_1m: pd.DataFrame, snap: MarketSnapshot | None, now: floa
         "range_30d_pct": round(float((last - c.min()) / (c.max() - c.min())) if c.max() > c.min() else 0.5, 3),
         "traded_minutes_last_hour": int(grid_1m["traded"].iloc[-60:].sum()),
         "missing_minutes_24h": int(grid_1m["missing"].iloc[-1440:].sum()),
+        # how old the newest candle is; > 60 means the history is stale and the stats above are suspect
+        "bars_age_min": round((now - grid_1m.index[-1].timestamp()) / 60, 1),
     }
     snapshot = None
     if snap is not None:

@@ -43,6 +43,7 @@ from engine.gate import mode as gate_mode
 from engine.logs import Logs
 from engine.portfolio import Portfolio
 from engine.reconcile import reconcile
+from engine.live import adopt_balances
 from engine.types import URGENCY_RANK, Fill, Proposal
 from manager import scorecard
 from manager.mock import mock_playbook
@@ -94,7 +95,8 @@ class Engine:
         else:
             self.pf = Portfolio(cfg.start_cash, now, day_start_equity=cfg.start_cash)
         self.ex = Executor(broker, on_fill=self._on_fill, on_event=self._on_order_event,
-                           on_accept=lambda p: self.pf.note_accept(p, self.clock()), still_valid=self._still_valid)
+                           on_accept=lambda p: self.pf.note_accept(p, self.clock()), still_valid=self._still_valid,
+                           urgency_cap=self._urgency_cap)
         self.inbox = Inbox(rd / "inbox")
         self.playbook: Playbook | None = None
         self.playbook_history: deque[dict] = deque(maxlen=72)
@@ -118,6 +120,7 @@ class Engine:
         self.seq = 0
         self.alerted: set[str] = set()
         self.last_phase = None
+        self._adopt_due: str | None = None
         self._targets: dict[str, float] = {}
         self._event(now, "engine_start", end_at=cfg.end_at.isoformat(), halted=self.pf.halted,
                     alert=self._start_alert(now))
@@ -151,14 +154,16 @@ class Engine:
         if ph != self.last_phase:
             previous, self.last_phase = self.last_phase, ph
             self._event(now, "flatten_phase", phase=ph, alert=None if ph == "normal" else f"⏳ مرحله‌ی پایانی: {ph}")
+            if ph in ("market", "verify") and self.account is not None:
+                self._adopt_due = ph                     # done after the executor tick (fills first), retried
             if ph in ("verify", "ended") and previous is not None:
                 try:                                     # T−30 min check / final check; never blocks the flatten
                     self._reconcile(now, final=ph == "ended")
                 except Exception as e:
                     self._event(now, "reconcile_failed", error=f"{type(e).__name__}: {e}"[:300],
                                 alert="⚠️ تطبیق حساب انجام نشد؛ موتور به فروش پایانی ادامه می‌دهد.", critical=True)
-        gmode = gate_mode(self._ctx(now))
         trigger = {m: max(self.bids[m], self.prev_bids.get(m, 0.0)) for m in config.MARKETS}   # glitch guard
+        gmode = gate_mode(self._ctx(now, prices=trigger))   # one bad quote can't flip the risk mode either
         if (level >= 3 or ph != "normal" or gmode == "hard_flatten") and any(
                 w.side == "BUY" for w in self.ex.working.values()):
             n = self.ex.cancel_buys(now, "risk_must_not_grow")
@@ -174,10 +179,22 @@ class Engine:
             props += flatten.flatten_proposals(self.pf, self.bids, ph, now)
             if ph == "normal" and level < 3:
                 props += self._core_proposals(now, level, gmode)
-        for p in props:
-            self._route(p, now)
-        self.ex.tick(now)
-        self._save_and_beat(now, level, ph, gmode)
+        try:
+            for p in props:
+                try:                                     # one bad proposal never blocks the others
+                    self._route(p, now)
+                except Exception as e:
+                    self._throttled(now, f"route_error:{p.market}:{p.kind}", error=f"{type(e).__name__}: {e}"[:300],
+                                    alert=f"❗ خطا در ثبت سفارش {p.market} ({p.kind}): {type(e).__name__}")
+            try:
+                self.ex.tick(now)
+            except Exception as e:
+                self._throttled(now, "executor_error", error=f"{type(e).__name__}: {e}"[:300],
+                                alert=f"❗ خطا در پیگیری سفارش‌ها: {type(e).__name__}")
+            if self._adopt_due and self._adopt_real_balances(now, self._adopt_due):
+                self._adopt_due = None                   # sell what Wallex really holds, not just our books
+        finally:
+            self._save_and_beat(now, level, ph, gmode)   # state + heartbeat no matter what
         steps = [lambda: self._alerts(now, gmode), lambda: self._bundle(now), lambda: self._retry_alerts(now)]
         if self.account is not None and now - self.last_reconcile >= RECONCILE_EVERY_S:
             steps.append(lambda: self._reconcile_safe(now))
@@ -201,9 +218,11 @@ class Engine:
             self._throttled(now, "market_error", error=type(e).__name__)
         for m in config.MARKETS:
             s = snaps.get(m)
-            if s is None or (m in self.snaps and s.fetched_at <= self.snaps[m].fetched_at):
-                self.errors.append(now)               # missing or not refreshed (the poller kept the old one)
+            if s is None:
+                self.errors.append(now)
                 continue
+            if m in self.snaps and s.fetched_at <= self.snaps[m].fetched_at:
+                continue                              # not refreshed yet: the 30 s staleness check handles it
             self.snaps[m], self.bids[m] = s, s.bid
             self.spreads[m].append((s.fetched_at, s.spread_bps))
         if snaps and hasattr(self.broker, "feed"):
@@ -300,9 +319,10 @@ class Engine:
         return pb.risk_multiplier, config.REGIMES[pb.regime].allow_adds
 
     # ---- gate context ------------------------------------------------------------------
-    def _ctx(self, now: float, supersede: tuple[str, str, str] | None = None) -> GateContext:
-        bids, pf = self.bids, self.pf
-        buys, sells = self.ex.pending_tmn(supersede)
+    def _ctx(self, now: float, supersede: tuple[str, str, str] | None = None, exclude_key: str | None = None,
+             prices: dict[str, float] | None = None) -> GateContext:
+        bids, pf = prices or self.bids, self.pf
+        buys, sells = self.ex.pending_tmn(supersede, exclude_key)
         pb = self.playbook
         _, adds = self._effective(self.level if self.level is not None else 3)
         return GateContext(
@@ -317,7 +337,50 @@ class Engine:
             entries_today=pf.entries_today, core_stopped_at=dict(pf.core_stopped_at))
 
     def _still_valid(self, p: Proposal) -> bool:
-        return check(p, self._ctx(self.clock())).ok
+        """Re-check a working order before crossing the spread — without counting the order itself
+        (its own pending size, and its own count if it already part-filled)."""
+        ctx = self._ctx(self.clock(), exclude_key=Executor.key_of(p))
+        if p.increases_risk and p.decision_id in self.pf.counted_decisions:
+            counts = dict(ctx.tactical_entries_today if p.sleeve == "tactical" else ctx.core_increases_today)
+            counts[p.market] = max(0, counts.get(p.market, 0) - 1)
+            field = "tactical_entries_today" if p.sleeve == "tactical" else "core_increases_today"
+            ctx = replace(ctx, **{field: counts, "entries_today": max(0, ctx.entries_today - 1)})
+        v = check(p, ctx)
+        if v.action == "allow":
+            return True
+        if v.action != "resize":
+            return False
+        # A resize is fine only if the cap still covers what is left of the order (rounding, fees).
+        w = self.ex.working.get(Executor.key_of(p))
+        if w is None:
+            return False
+        left_tmn = w.remaining * self.ex.ex.quote(p.market)[1]
+        return v.size_tmn >= 0.99 * left_tmn
+
+    def _urgency_cap(self, p: Proposal) -> str:
+        """How far an order may escalate: take-profits stay maker; core reductions may cross the spread
+        but never go to market; the final sell-off follows its phase; stops and hard flatten may go to market."""
+        if p.kind == "take_profit":
+            return "passive"
+        if p.kind == "rebalance_down":
+            return "aggressive"
+        if p.kind == "flatten" and p.decided_by == "flatten":
+            return flatten.URGENCY.get(flatten.phase(self.clock(), self.cfg.end_at), "market")
+        if p.increases_risk:
+            return "aggressive"
+        return "market"
+
+    def _adopt_real_balances(self, now: float, ph: str) -> bool:
+        try:
+            changes = adopt_balances(self.pf, self.account.balances(), self.bids, now)
+        except Exception as e:
+            self._throttled(now, "adopt_failed", every_s=60, phase=ph, error=f"{type(e).__name__}: {e}"[:300])
+            return False                                 # retried next tick
+        moved = {k: v for k, v in changes.items() if k != "TMN" and abs(v["from"] - v["to"]) > 1e-12}
+        self._event(now, "balances_adopted", phase=ph, changes=changes,
+                    alert=f"ℹ️ دفتر ربات با موجودی واقعی والکس هماهنگ شد ({', '.join(moved)})" if moved else None)
+        self.pf.save(self.state_path)
+        return True
 
     # ---- proposals -------------------------------------------------------------------------
     def _did(self, now: float) -> str:
@@ -410,6 +473,7 @@ class Engine:
     # ---- executor callbacks ------------------------------------------------------------------
     def _on_fill(self, f: Fill) -> None:
         self.pf.apply_fill(f)
+        self.pf.note_fill(f)                           # counters count filled decisions, once each
         self.logs.write("fills", f.__dict__)
         self.pf.save(self.state_path)                  # a crash right after a fill must not lose it
 
@@ -489,6 +553,10 @@ class Engine:
             self._throttled(now, "bundle_skipped_no_bars")
             return
         markets = {m: market_section(grids[m], self.snaps.get(m), now) for m in config.MARKETS}
+        stale = {m: s["stats"]["bars_age_min"] for m, s in markets.items() if s["stats"]["bars_age_min"] > 60}
+        if stale:
+            self._throttled(now, "bars_stale", every_s=3600, ages_min=stale,
+                            alert=f"⚠️ داده‌ی کندل قدیمی است ({stale} دقیقه)؛ مدیر با داده‌ی ناقص تصمیم می‌گیرد.")
         reason = self._manager_due(now, markets)
         gm = gate_mode(self._ctx(now))
         h1 = {m: bars_mod.resample(grids[m], "1h") for m in config.MARKETS}

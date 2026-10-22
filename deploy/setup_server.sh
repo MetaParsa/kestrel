@@ -36,6 +36,10 @@ $PIP install --quiet --index-url "$MIRROR" lightgbm scikit-learn \
   || echo "NOTE: lightgbm/scikit-learn not installable here (only needed for the tactical sleeve, step T1/T2)"
 
 [ -f /etc/wallex-agent/env ] || cp "$APP/deploy/env.example" /etc/wallex-agent/env
+# the engine mode lives in the env file (never in the unit file) so a redeploy can't change it;
+# add the default only if it's missing — an armed live server keeps WALLEX_MODE=live
+grep -q '^WALLEX_MODE=' /etc/wallex-agent/env || echo 'WALLEX_MODE=shadow' >> /etc/wallex-agent/env
+[ -f VERSION ] && cp VERSION "$APP/VERSION" || echo "NOTE: no VERSION file — logs will say git_sha=unknown"
 chown -R trader:trader "$APP" /etc/wallex-agent
 # the laptop (as $PUSH_USER, group trader) reads outbox/ and writes inbox/; setgid keeps files in group trader
 chmod 750 "$APP/run" "$APP/run/main" "$APP/run/baseline"

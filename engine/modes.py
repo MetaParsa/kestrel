@@ -13,12 +13,23 @@ from engine.exchange import SimExchange
 
 
 class ShadowBroker(SimExchange):
-    """Feed it every poller snapshot; resting orders fill when quotes cross them."""
+    """Feed it every poller snapshot. Resting orders fill when quotes cross them, or when a NEW real
+    trade prints strictly through their price (a trade at exactly our price might not have reached us
+    in the queue, so it doesn't count — conservative)."""
+
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self._last_trade_at: dict[str, float] = {}
 
     def feed(self, snaps: dict[str, MarketSnapshot]) -> None:
         for m, s in snaps.items():
-            if m in config.MARKETS:
-                self.set_quote(m, s.bid, s.ask, s.fetched_at)
+            if m not in config.MARKETS:
+                continue
+            if s.last_trade_at and s.last_trade_price and s.last_trade_at > self._last_trade_at.get(m, s.last_trade_at):
+                self.trade_through(m, s.last_trade_price, s.last_trade_price)
+            if s.last_trade_at:
+                self._last_trade_at[m] = max(self._last_trade_at.get(m, 0.0), s.last_trade_at)
+            self.set_quote(m, s.bid, s.ask, s.fetched_at)
 
 
 class BacktestBroker(SimExchange):

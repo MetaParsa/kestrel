@@ -118,13 +118,20 @@ def test_playbook_drives_core_buys_then_fills_once_per_day(tmp_path):
     clock.t += 10
     eng.tick()
     bids = eng.bids
-    assert eng.pf.exposure("USDTTMN", bids, "core") == pytest.approx(0.10, abs=0.01)    # one 10% step today
-    assert eng.pf.exposure("BTCTMN", bids, "core") == pytest.approx(0.10, abs=0.01)
+    assert eng.pf.exposure("USDTTMN", bids, "core") == pytest.approx(0.10, abs=0.01)    # first 10% step
+    assert eng.pf.exposure("BTCTMN", bids, "core") == pytest.approx(0.10, abs=0.01)    # BTC target reached
+    clock.t += 10
+    eng.tick()                                                   # second (and last) increase today: USDT → 20%
+    cross(eng, market, "USDTTMN")
+    clock.t += 10
+    eng.tick()
+    assert eng.pf.exposure("USDTTMN", eng.bids, "core") == pytest.approx(0.20, abs=0.015)
+    assert eng.pf.core_increases["USDTTMN"] == 2 and eng.pf.core_increases["BTCTMN"] == 1
     n = len(eng.broker.orders)
     clock.t += 10
     eng.tick()
-    assert len(eng.broker.orders) == n                                                  # no second increase today
-    assert len(eng.logs.tail("fills", 50)) >= 2
+    assert len(eng.broker.orders) == n                           # at target: no more orders
+    assert len(eng.logs.tail("fills", 50)) >= 3
 
 
 def test_expired_playbook_goes_level_2_then_3_with_alerts(tmp_path):
@@ -291,7 +298,7 @@ def test_bale_alerter_dedupes_and_never_leaks_the_token():
         return httpx.Response(200, json={"ok": True})
     t = {"now": 0.0}
     al = Alerter("SECRET-TOKEN", "123", transport=httpx.MockTransport(handler), clock=lambda: t["now"],
-                 on_error=errors.append)
+                 on_error=errors.append, sync=True)
     assert al.send("hello", key="k") and not al.send("hello again", key="k")
     t["now"] = 1801
     assert al.send("hello again", key="k")
@@ -299,7 +306,7 @@ def test_bale_alerter_dedupes_and_never_leaks_the_token():
 
     def boom(req):
         raise httpx.ConnectError("down")
-    bad = Alerter("SECRET-TOKEN", "123", transport=httpx.MockTransport(boom), on_error=errors.append)
+    bad = Alerter("SECRET-TOKEN", "123", transport=httpx.MockTransport(boom), on_error=errors.append, sync=True)
     assert bad.send("x") is False
     assert errors and all("SECRET-TOKEN" not in e for e in errors)
     assert Alerter(None, None).send("x") is False
@@ -436,7 +443,7 @@ def test_single_glitch_quote_does_not_fire_a_stop(tmp_path):
     assert not [d for d in decisions(eng) if d["kind"] == "stop"] and eng.pf.qty("BTCTMN") > 0
 
 
-def test_unrefreshed_snapshots_count_as_errors_and_go_stale(tmp_path):
+def test_unrefreshed_snapshots_go_stale(tmp_path):
     clock = Clock()
     frozen = Market(clock)
     snap = frozen()                                        # the poller keeps returning this old one
@@ -444,7 +451,7 @@ def test_unrefreshed_snapshots_count_as_errors_and_go_stale(tmp_path):
     eng.tick()
     clock.t += 60
     eng.tick()
-    assert eng.level == 3 and len(eng.errors) >= 2
+    assert eng.level == 3                                   # stale after 30 s, without counting errors
 
 
 def test_watchdog_retries_when_bale_fails(tmp_path):

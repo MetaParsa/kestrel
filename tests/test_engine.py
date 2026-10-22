@@ -41,7 +41,8 @@ def test_micro_and_hard_flatten_modes():
 def test_increase_is_one_10pct_step_per_day():
     p = core.plan_rebalance("USDTTMN", 0.25, 0.0, EQ, increases_today=0, adds_allowed=True, decision_id="x")
     assert p.side == "BUY" and p.size_tmn == pytest.approx(EQ * 0.10)
-    assert core.plan_rebalance("USDTTMN", 0.25, 0.10, EQ, increases_today=1, adds_allowed=True, decision_id="x") is None
+    assert core.plan_rebalance("USDTTMN", 0.25, 0.10, EQ, increases_today=1, adds_allowed=True, decision_id="x")
+    assert core.plan_rebalance("USDTTMN", 0.25, 0.20, EQ, increases_today=2, adds_allowed=True, decision_id="x") is None
 
 
 def test_reductions_are_immediate_and_carry_exact_qty():
@@ -60,7 +61,7 @@ def test_band_prevents_churn():
 
 def test_activity_floor_timing_and_exceptions():
     evening = datetime(2026, 10, 22, 18, 5, tzinfo=config.TEHRAN).timestamp()
-    noon = datetime(2026, 10, 22, 12, 0, tzinfo=config.TEHRAN).timestamp()
+    noon = datetime(2026, 10, 22, 9, 30, tzinfo=config.TEHRAN).timestamp()      # before the 10:00 floor
     kw = dict(trades_today=0, mode="normal", regime="range", daily_stopped=False)
     assert core.floor_due(evening, **kw)
     assert not core.floor_due(noon, **kw)
@@ -91,19 +92,24 @@ def test_portfolio_buy_sell_fees_and_pnl():
     assert pf.realized_pnl == pytest.approx(pf.cash - EQ)
 
 
-def test_counters_change_only_on_accept():
+def test_counters_change_on_fill_once_per_decision():
     pf = Portfolio(EQ, T0)
-    pf.note_accept(Proposal("USDTTMN", "tactical", "BUY", 1, "entry", "lgbm", "a"), T0)
-    pf.note_accept(Proposal("BTCTMN", "core", "BUY", 1, "rebalance_up", "manager", "b"), T0)
+    pf.note_accept(Proposal("USDTTMN", "core", "BUY", 1, "rebalance_up", "manager", "a"), T0)
+    assert pf.core_increases["USDTTMN"] == 0 and pf.activity_today == 0     # accepted is not filled
+    f = lambda did, m, s, side, kind: Fill("c", m, s, side, 1.0, 266_000, 0.0, "USDT", T0, did, kind)
+    pf.note_fill(f("a", "USDTTMN", "core", "BUY", "rebalance_up"))
+    pf.note_fill(f("a", "USDTTMN", "core", "BUY", "rebalance_up"))             # second partial fill: counted once
+    pf.note_fill(f("b", "BTCTMN", "tactical", "BUY", "entry"))
+    pf.note_fill(f("c", "BTCTMN", "core", "SELL", "stop"))
+    assert pf.core_increases["USDTTMN"] == 1 and pf.tactical_entries["BTCTMN"] == 1
+    assert pf.entries_today == 2 and pf.activity_today == 3                  # every filled trade is activity
     pf.note_accept(Proposal("BTCTMN", "core", "SELL", 1, "stop", "gate", "c", "market", 1.0), T0 + 5)
-    assert pf.tactical_entries["USDTTMN"] == 1 and pf.core_increases["BTCTMN"] == 1
-    assert pf.entries_today == 2 and pf.activity_today == 2          # a stop is not "activity"
     assert pf.core_stopped_at == {"BTCTMN": T0 + 5}
 
 
 def test_day_roll_resets_counters_at_tehran_midnight():
     pf = Portfolio(EQ, T0)
-    pf.note_accept(Proposal("USDTTMN", "tactical", "BUY", 1, "entry", "lgbm", "a"), T0)
+    pf.note_fill(Fill("c", "USDTTMN", "tactical", "BUY", 1.0, 266_000, 0.0, "USDT", T0, "a", "entry"))
     assert not pf.roll_day(datetime(2026, 10, 22, 23, 59, tzinfo=config.TEHRAN).timestamp(), PX)
     assert pf.roll_day(datetime(2026, 10, 23, 0, 1, tzinfo=config.TEHRAN).timestamp(), PX)
     assert pf.entries_today == 0 and pf.tactical_entries["USDTTMN"] == 0
@@ -112,7 +118,7 @@ def test_day_roll_resets_counters_at_tehran_midnight():
 def test_state_survives_restart(tmp_path):
     pf = Portfolio(EQ, T0)
     pf.apply_fill(Fill("c1", "USDTTMN", "core", "BUY", 3.0, 266_000, 0.0075, "USDT", T0))
-    pf.note_accept(Proposal("USDTTMN", "core", "BUY", 1, "rebalance_up", "manager", "a"), T0)
+    pf.note_fill(Fill("c1", "USDTTMN", "core", "BUY", 1.0, 266_000, 0.0, "USDT", T0, "a", "rebalance_up"))
     pf.day_start_equity = 4_990_000
     pf.latch_halt("test")
     pf.core_stopped_at["BTCTMN"] = T0

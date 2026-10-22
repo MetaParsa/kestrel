@@ -32,6 +32,7 @@ Max 40% exposure per market and 60% total; core increases at most 10% of equity 
 - 48-hour returns are close to a coin flip; no simple indicator rule beat holding in more than half of 48 h windows.
 
 ## How to work
+- Check `bars_age_min` in each market's stats: above 60 means the candle history is stale (data outage), so the return/volatility stats are unreliable — lean on the live snapshot and be cautious.
 - Start from the summary in the user message. Use the tools for detail — usually 2–4 calls are enough; you have at most 6.
 - Prefer stability: don't flip regimes on noise. Changing targets costs fees; keep the previous playbook's targets unless there's a reason.
 - With little time left or after losses, lean smaller. When in doubt between two regimes, pick the less risky one.

@@ -101,7 +101,7 @@ def make(fake: FakeWallex, armed=True):
     t = httpx.MockTransport(fake.handler)
     reader = WallexClient(api_key="k-test", transport=t, sleep=lambda s: None, min_interval=0)
     trader = TradingClient("k-test", armed=armed, transport=t)
-    broker = LiveBroker(reader, trader)
+    broker = LiveBroker(reader, trader, clock=lambda: NOW)
     broker.feed({"USDTTMN": MarketSnapshot("USDTTMN", 266_000, 266_040, NOW, 0, 266_000, NOW),
                  "BTCTMN": MarketSnapshot("BTCTMN", 28e9, 28.01e9, NOW, 0, 28e9, NOW)})
     return reader, trader, broker

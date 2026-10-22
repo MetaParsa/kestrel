@@ -64,9 +64,13 @@ class Executor:
                  on_event: Callable[[dict], None] = lambda e: None,
                  on_accept: Callable[[Proposal], None] = lambda p: None,
                  still_valid: Callable[[Proposal], bool] = lambda p: True,
+                 urgency_cap: Callable[[Proposal], str] = lambda p: "market",
                  cfg: config.ExecutionCfg = config.EXECUTION):
+        """`urgency_cap(p)`: the most aggressive way this order may be escalated to (e.g. a take-profit
+        stays passive; the final sell-off follows its phase). Never lower than the order's own urgency."""
         self.ex, self.on_fill, self.on_event = ex, on_fill, on_event
         self.on_accept, self.still_valid, self.cfg = on_accept, still_valid, cfg
+        self.urgency_cap = urgency_cap
         self.working: dict[str, Working] = {}
 
     # ---- public -------------------------------------------------------------
@@ -76,7 +80,7 @@ class Executor:
             return None
         if p.side == "SELL" and not p.qty:
             raise ValueError("SELL proposals must carry the exact base qty to sell")
-        key = f"{p.decision_id}-{p.market}-{p.sleeve[0]}"
+        key = self.key_of(p)
         if key in self.working:
             self._event(now, "submit_refused_duplicate_decision", p, key=key)
             return None
@@ -111,18 +115,29 @@ class Executor:
 
     def tick(self, now: float) -> None:
         for w in list(self.working.values()):
-            self._step(w, now)
+            try:                                            # one bad order never starves the others
+                self._step(w, now)
+            except Exception as e:
+                self._event(now, "order_step_error", w.p, client_id=w.client_id,
+                            error=f"{type(e).__name__}: {e}"[:200])
 
-    def pending_tmn(self, supersede: tuple[str, str, str] | None = None
+    @staticmethod
+    def key_of(p: Proposal) -> str:
+        return f"{p.decision_id}-{p.market}-{p.sleeve[0]}"
+
+    def pending_tmn(self, supersede: tuple[str, str, str] | None = None, exclude_key: str | None = None
                     ) -> tuple[dict[tuple[str, str], float], dict[tuple[str, str], float]]:
         """(pending buys, pending sells) in TMN per (market, sleeve) — feeds the gate.
 
         `supersede=(market, sleeve, urgency)`: leave out working SELLs on that (market, sleeve) that are
         LESS urgent — `submit` will cancel and replace them, so they must not block the urgent sell.
+        `exclude_key`: leave out one working order (re-checking that order must not count itself).
         """
         buys: dict[tuple[str, str], float] = {}
         sells: dict[tuple[str, str], float] = {}
         for w in self.working.values():
+            if exclude_key is not None and w.key == exclude_key:
+                continue
             if (supersede and w.side == "SELL" and (w.market, w.p.sleeve) == supersede[:2]
                     and URGENCY_RANK[w.urgency] < URGENCY_RANK[supersede[2]]):
                 continue
@@ -158,7 +173,8 @@ class Executor:
         status = st.status
         if st.active:
             if w.after_cancel is None:
-                if now - w.placed_at < self.cfg.reprice_after_s:
+                wait = self.cfg.market_reprice_s if w.urgency == "market" else self.cfg.reprice_after_s
+                if now - w.placed_at < wait:
                     return
                 w.after_cancel = self._next_step(w)
             status = self._cancel_and_confirm(w, now)
@@ -167,15 +183,18 @@ class Executor:
         self._after_terminal(w, now, status)
 
     def _next_step(self, w: Working) -> tuple[str, str]:
+        cap = URGENCY_RANK[self.urgency_cap(w.p)]
         if w.urgency == "passive":
-            if w.reprices < self.cfg.max_reprices:
+            if w.reprices < self.cfg.max_reprices or cap < URGENCY_RANK["aggressive"]:
                 w.reprices += 1
-                return ("replace", "passive")
+                return ("replace", "passive")               # re-price at the new best price, stay maker
             if not self.still_valid(w.p):
                 return ("finish", "CANCELED_NOT_VALID")
             return ("replace", "aggressive")
         if w.p.increases_risk:
             return ("finish", "CANCELED_NO_FILL")           # never chase a buy with a market order
+        if w.urgency == "aggressive" and cap < URGENCY_RANK["market"]:
+            return ("replace", "aggressive")                # re-cross at the new best price
         return ("replace", "market")
 
     def _after_terminal(self, w: Working, now: float, status: str) -> None:
@@ -245,7 +264,8 @@ class Executor:
                     self._event(now, "order_rejected", w.p, client_id=w.client_id, reason=str(e))
                     return False
                 self._event(now, "order_adopted_after_duplicate", w.p, client_id=w.client_id)
-            self._event(now, "order_placed", w.p, client_id=w.client_id, type=otype, price=w.price,
+            self._event(now, "order_placed", w.p, client_id=w.client_id, type=st.type or otype,
+                        price=st.price if st.price is not None else w.price,
                         qty=st.qty, urgency=w.urgency)
             self._report(w, st, now)
             if not st.active:
@@ -263,7 +283,7 @@ class Executor:
         base = self.ex.rules(w.market).base
         self.on_fill(Fill(client_id=st.client_id, market=w.market, sleeve=w.p.sleeve, side=w.side, qty=dq,
                           price=dv / dq, fee=df, fee_asset=base if w.side == "BUY" else "TMN", ts=now,
-                          decision_id=w.p.decision_id))
+                          decision_id=w.p.decision_id, kind=w.p.kind))
 
     def _finish(self, w: Working, now: float, status: str) -> None:
         self.working.pop(w.key, None)

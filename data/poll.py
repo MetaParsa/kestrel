@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import threading
 import time
+from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable
@@ -47,6 +48,9 @@ def depth_imbalance(depth: Depth, band: float = IMBALANCE_BAND) -> float:
 def snapshot_from(symbol: str, depth: Depth, trades: list[dict]) -> MarketSnapshot:
     if depth.best_bid is None or depth.best_ask is None:
         raise WallexError("empty order book", path=f"/v1/depth?symbol={symbol}")
+    if depth.best_bid <= 0 or depth.best_ask <= 0 or depth.best_bid >= depth.best_ask:
+        raise WallexError(f"unusable order book (bid {depth.best_bid}, ask {depth.best_ask})",
+                          path=f"/v1/depth?symbol={symbol}")
     last_p = last_t = None
     if trades:
         newest = max(trades, key=lambda x: x["timestamp"])
@@ -63,7 +67,7 @@ class Poller:
                  on_error: Callable[[str, Exception], None] | None = None):
         self.client, self.symbols, self.interval_s = client, symbols, interval_s
         self.latest: dict[str, MarketSnapshot] = {}
-        self.errors: list[tuple[float, str, str]] = []     # (unix time, symbol, error class)
+        self.errors: deque[tuple[float, str, str]] = deque(maxlen=2000)   # (unix time, symbol, error class)
         self._on_error = on_error
         self._lock = threading.Lock()
 
@@ -71,14 +75,19 @@ class Poller:
         for s in self.symbols:
             try:
                 snap = snapshot_from(s, self.client.depth(s), self.client.trades(s))
-            except (WallexError, KeyError, ValueError) as e:
+            except Exception as e:                  # any failure on one market leaves the others usable
                 self.errors.append((time.time(), s, type(e).__name__))
                 if self._on_error:
                     self._on_error(s, e)
                 continue
             with self._lock:
                 self.latest[s] = snap
-        return dict(self.latest)
+        return self.snapshot()
+
+    def snapshot(self) -> dict[str, MarketSnapshot]:
+        """Thread-safe copy of the latest snapshots (the engine reads this; the poller thread writes)."""
+        with self._lock:
+            return dict(self.latest)
 
     def errors_in_window(self, window_s: float, now: float | None = None) -> int:
         now = now or time.time()

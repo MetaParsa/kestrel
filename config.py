@@ -65,7 +65,7 @@ class Limits:
     trail_after: float = 0.015        # once up this much, stop moves to entry + trail_to
     trail_to: float = 0.005
     tactical_per_market_day: int = 2
-    core_rebalances_per_market_day: int = 1   # increases only; reductions are always allowed
+    core_rebalances_per_market_day: int = 2   # FILLED increases only; reductions are always allowed
     core_step: float = 0.10           # max increase per rebalance, fraction of equity
     daily_loss: float = 0.010         # vs day-start equity → no new entries / adds until 00:00 Tehran
     micro_drawdown: float = 0.020     # vs START_EQUITY → micro mode
@@ -75,7 +75,7 @@ class Limits:
     cushion_from_gain: float = 0.008
     cushion_buffer: float = 0.006     # added to each stop distance (fees + slippage)
     cushion_margin: float = 0.003
-    activity_floor_hour: int = 18     # Tehran
+    activity_floor_hour: int = 10     # Tehran — early enough to also work on the last day (sell-off starts T−8 h)
     min_order_tmn: float = 150_000.0
     dust_floor_tmn: float = 60_000.0  # never leave a remainder smaller than this
     exchange_min_notional_tmn: float = 50_000.0
@@ -92,6 +92,9 @@ class ExecutionCfg:
     reprice_after_s: float = 90.0
     max_reprices: int = 2
     lookup_before_retry: bool = True
+    market_protection: float = 0.03   # live "market" orders are limits at most 3% through the touch
+    market_reprice_s: float = 10.0    # ...re-priced every 10 s until filled (stops must not wait 90 s)
+    max_quote_age_s: float = 20.0     # never price an order from a quote older than this
 
 
 EXECUTION = ExecutionCfg()

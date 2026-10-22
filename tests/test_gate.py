@@ -90,7 +90,7 @@ def test_resize_below_min_order_blocks():
     (dict(daily_pnl=-0.01), "G_DAILY_LOSS"),                     # boundary: exactly −1%
     (dict(gain=-0.02, entries_today=1), "G_MICRO_FREQ"),         # boundary: exactly −2%
     (dict(adds_allowed=False), "G_NO_ADDS"),
-    (dict(core_increases_today={"USDTTMN": 1}), "G_CORE_FREQ"),
+    (dict(core_increases_today={"USDTTMN": 2}), "G_CORE_FREQ"),
     (dict(core_stopped_at={"USDTTMN": NOW - 3600}), "G_CORE_COOLDOWN"),
     (dict(equity=0.0), "G_BAD_INPUT"),
     (dict(gain=math.nan), "G_BAD_INPUT"),

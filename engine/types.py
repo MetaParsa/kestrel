@@ -46,3 +46,4 @@ class Fill:
     fee_asset: str                   # the asset received: base on BUY, TMN on SELL
     ts: float                        # unix seconds
     decision_id: str = ""
+    kind: str = ""                   # the proposal's kind (counters count FILLED decisions, not accepted ones)

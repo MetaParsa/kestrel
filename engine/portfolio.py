@@ -24,7 +24,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 import config
-from engine.types import Fill, Proposal, Sleeve
+from engine.types import RISK_INCREASING, Fill, Proposal, Sleeve
 
 
 @dataclass
@@ -68,9 +68,10 @@ class Portfolio:
     def _reset_counters(self) -> None:
         self.tactical_entries: dict[str, int] = defaultdict(int)
         self.core_increases: dict[str, int] = defaultdict(int)
-        self.entries_today = 0        # accepted risk-increasing orders (micro mode limit)
-        self.activity_today = 0       # accepted entries + rebalances (activity floor)
+        self.entries_today = 0        # filled risk-increasing decisions (micro mode limit)
+        self.activity_today = 0       # filled decisions of any kind (activity floor)
         self.fills_today = 0
+        self.counted_decisions: set[str] = set()
 
     # ---- positions ----------------------------------------------------------
     def pos(self, market: str, sleeve: Sleeve) -> Position:
@@ -96,7 +97,7 @@ class Portfolio:
         p = self.pos(f.market, f.sleeve)
         notional = f.qty * f.price
         if f.side == "BUY":
-            received = f.qty - (f.fee if f.fee_asset != "TMN" else 0.0)
+            received = max(0.0, f.qty - (f.fee if f.fee_asset != "TMN" else 0.0))
             self.cash -= notional + (f.fee if f.fee_asset == "TMN" else 0.0)
             if p.qty == 0:
                 p.opened_at, p.peak_price = f.ts, f.price
@@ -118,17 +119,24 @@ class Portfolio:
         self.fills_today += 1
 
     def note_accept(self, p: Proposal, now: float) -> None:
-        """The single place where the day's counters and cooldowns change."""
-        if p.increases_risk:
-            self.entries_today += 1
-            if p.sleeve == "tactical":
-                self.tactical_entries[p.market] += 1
-            else:
-                self.core_increases[p.market] += 1
-        if p.kind in ("entry", "add", "rebalance_up", "rebalance_down", "floor"):
-            self.activity_today += 1
+        """An order was accepted by the exchange. Only the stop cooldown starts here; the day's
+        counters change when the decision actually FILLS (note_fill), so an unfilled, cancelled
+        buy doesn't use up the day's allowance and can be retried."""
         if p.kind == "stop" and p.sleeve == "core":
             self.core_stopped_at[p.market] = now
+
+    def note_fill(self, f: Fill) -> None:
+        """First fill of a decision: count it once (entries, per-sleeve increases, activity)."""
+        if not f.decision_id or f.decision_id in self.counted_decisions:
+            return
+        self.counted_decisions.add(f.decision_id)
+        self.activity_today += 1                     # any filled trade is activity
+        if f.kind in RISK_INCREASING:
+            self.entries_today += 1
+            if f.sleeve == "tactical":
+                self.tactical_entries[f.market] += 1
+            else:
+                self.core_increases[f.market] += 1
 
     def latch_halt(self, reason: str) -> None:
         self.halted, self.halt_reason = True, reason
@@ -178,7 +186,7 @@ class Portfolio:
             "halt_reason": self.halt_reason, "core_stopped_at": self.core_stopped_at,
             "tactical_entries": dict(self.tactical_entries), "core_increases": dict(self.core_increases),
             "entries_today": self.entries_today, "activity_today": self.activity_today,
-            "fills_today": self.fills_today,
+            "fills_today": self.fills_today, "counted_decisions": sorted(self.counted_decisions),
             "positions": [asdict(p) for p in self.positions.values() if p.qty > 0],
         }
 
@@ -193,6 +201,7 @@ class Portfolio:
         pf.tactical_entries.update(d["tactical_entries"])
         pf.core_increases.update(d["core_increases"])
         pf.entries_today, pf.activity_today, pf.fills_today = d["entries_today"], d["activity_today"], d["fills_today"]
+        pf.counted_decisions = set(d.get("counted_decisions", []))
         for p in d["positions"]:
             pf.positions[(p["market"], p["sleeve"])] = Position(**p)
         return pf

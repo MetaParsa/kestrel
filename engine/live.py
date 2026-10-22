@@ -39,6 +39,7 @@ CANCELLED = {"CANCELED", "CANCELLED", "EXPIRED", "REJECTED"}
 LIVE_STATUSES = {"NEW", "PARTIALLY_FILLED"}
 START_TOLERANCE_TMN = 50_000.0
 LOOKUP_ERRORS_NOTE = 5
+FEE_SANITY_MAX = 0.01             # fees are 0.25–0.30%; anything above 1% of the fill is a unit mix-up
 
 
 class UnknownOrderState(ValueError):
@@ -70,9 +71,13 @@ def to_state(o: Order, fee_rates: tuple[float, float]) -> tuple[OrderState, bool
     fee, covered = _reported_fee(raw, filled, o.side, avg)
     uncovered = max(0.0, filled - covered)
     estimated = uncovered > 1e-12
+    taker = fee_rates[1]
     if estimated:                     # fee not reported for (part of) the fill: estimate it at the taker rate
-        taker = fee_rates[1]
         fee += uncovered * taker if o.side == "BUY" else uncovered * avg * taker
+    # Sanity: a fee above 1% of what we received is a unit mix-up (e.g. TMN read as coins), never real.
+    received = filled if o.side == "BUY" else value
+    if received > 0 and fee > received * FEE_SANITY_MAX:
+        fee, estimated = received * taker, True
     return OrderState(client_id=o.client_id, market=o.symbol, side=o.side, type=o.type,
                       price=float(o.price) if o.price is not None else None, qty=qty, filled_qty=filled,
                       filled_value=value, fee_total=fee, status=status), estimated
@@ -108,8 +113,8 @@ def floor_to(x: float, decimals: int) -> Decimal:
 
 class LiveBroker:
     def __init__(self, reader: WallexClient, trader: TradingClient, rules: dict[str, Rules] | None = None,
-                 fees: dict[str, tuple[float, float]] | None = None, on_note=lambda e: None):
-        self.reader, self.trader, self.on_note = reader, trader, on_note
+                 fees: dict[str, tuple[float, float]] | None = None, on_note=lambda e: None, clock=time.time):
+        self.reader, self.trader, self.on_note, self.clock = reader, trader, on_note, clock
         self.fees = fees or config.FEES
         if rules is None:
             mk = reader.markets()
@@ -138,11 +143,21 @@ class LiveBroker:
     def place(self, client_id, market, side, type, qty, price=None) -> OrderState:
         r = self._rules[market]
         q = floor_to(qty, r.step_decimals)
+        quote = self._quotes.get(market)
+        if quote is None or self.clock() - quote[2] > config.EXECUTION.max_quote_age_s:
+            raise OrderRejected("no fresh quote")           # never price from stale data; retried next tick
+        if type == "MARKET":
+            # Never a raw market order: a marketable LIMIT at most 3% through the touch, so a thin or
+            # glitching book can't fill us at any price. What doesn't fill is re-priced every 10 s.
+            bid, ask, _ = quote
+            type = "LIMIT"
+            price = ask * (1 + config.EXECUTION.market_protection) if side == "BUY" \
+                else bid * (1 - config.EXECUTION.market_protection)
         if side == "SELL":                                   # never sell more than we really have
             try:
                 bal = self.reader.balances().get(r.base)
-            except WallexError as e:
-                raise ExchangeTimeout(f"balance check failed: {type(e).__name__}") from e
+            except Exception as e:                           # WallexError or an odd reply: outcome unknown
+                raise ExchangeTimeout(f"balance check failed: {e.__class__.__name__}") from e   # `type` is shadowed here
             free = floor_to(float(bal.free), r.step_decimals) if bal else Decimal(0)
             if free < q:
                 self.on_note({"event": "sell_capped_to_balance", "client_id": client_id,

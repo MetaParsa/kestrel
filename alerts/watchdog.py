@@ -47,7 +47,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--run-dir", type=Path, required=True)
     a = ap.parse_args(argv)
-    print(check(a.run_dir, Alerter.from_env()))
+    print(check(a.run_dir, Alerter.from_env(sync=True)))
 
 
 if __name__ == "__main__":

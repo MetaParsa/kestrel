@@ -1,5 +1,5 @@
-# Main engine. Runs in SHADOW mode (live data, simulated fills) until go-live (C5),
-# then ExecStart switches to --mode live — only after the user says "go live".
+# Main engine. The mode comes from WALLEX_MODE in /etc/wallex-agent/env (shadow until go-live),
+# so a redeploy (which re-copies this file) can never switch live trading back to shadow.
 [Unit]
 Description=wallex-agent engine
 After=network-online.target time-sync.target
@@ -11,7 +11,7 @@ User=trader
 WorkingDirectory=/opt/wallex-agent
 EnvironmentFile=/etc/wallex-agent/env
 Environment=TZ=Asia/Tehran
-ExecStart=/opt/wallex-agent/.venv/bin/python -m engine.run --mode shadow --manager remote --run-dir /opt/wallex-agent/run/main
+ExecStart=/opt/wallex-agent/.venv/bin/python -m engine.run --mode ${WALLEX_MODE} --manager remote --run-dir /opt/wallex-agent/run/main
 Restart=always
 RestartSec=5
 
