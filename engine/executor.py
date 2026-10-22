@@ -113,11 +113,19 @@ class Executor:
         for w in list(self.working.values()):
             self._step(w, now)
 
-    def pending_tmn(self) -> tuple[dict[tuple[str, str], float], dict[tuple[str, str], float]]:
-        """(pending buys, pending sells) in TMN per (market, sleeve) — feeds the gate."""
+    def pending_tmn(self, supersede: tuple[str, str, str] | None = None
+                    ) -> tuple[dict[tuple[str, str], float], dict[tuple[str, str], float]]:
+        """(pending buys, pending sells) in TMN per (market, sleeve) — feeds the gate.
+
+        `supersede=(market, sleeve, urgency)`: leave out working SELLs on that (market, sleeve) that are
+        LESS urgent — `submit` will cancel and replace them, so they must not block the urgent sell.
+        """
         buys: dict[tuple[str, str], float] = {}
         sells: dict[tuple[str, str], float] = {}
         for w in self.working.values():
+            if (supersede and w.side == "SELL" and (w.market, w.p.sleeve) == supersede[:2]
+                    and URGENCY_RANK[w.urgency] < URGENCY_RANK[supersede[2]]):
+                continue
             bid, ask, _ = self.ex.quote(w.market)
             k = (w.market, w.p.sleeve)
             if w.side == "BUY":
@@ -129,6 +137,15 @@ class Executor:
     def cancel_all(self, now: float, reason: str) -> None:
         for w in list(self.working.values()):
             self._cancel_now(w, now, ("finish", f"CANCELED_{reason.upper()}"))
+
+    def cancel_buys(self, now: float, reason: str) -> int:
+        """Cancel every working BUY (risk must not grow in level 3, the flatten window or a hard flatten)."""
+        n = 0
+        for w in list(self.working.values()):
+            if w.side == "BUY":
+                self._cancel_now(w, now, ("finish", f"CANCELED_{reason.upper()}"))
+                n += 1
+        return n
 
     # ---- state machine ------------------------------------------------------
     def _step(self, w: Working, now: float) -> None:

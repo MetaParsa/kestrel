@@ -1,0 +1,9 @@
+[Unit]
+Description=wallex-agent heartbeat watchdog (one check)
+
+[Service]
+Type=oneshot
+User=trader
+WorkingDirectory=/opt/wallex-agent
+EnvironmentFile=/etc/wallex-agent/env
+ExecStart=/opt/wallex-agent/.venv/bin/python -m alerts.watchdog --run-dir /opt/wallex-agent/run/main

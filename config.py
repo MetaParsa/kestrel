@@ -97,6 +97,29 @@ class ExecutionCfg:
 EXECUTION = ExecutionCfg()
 
 
+# ---- engine loop (spec v2 §7.1, §7.5) ----------------------------------------
+@dataclass(frozen=True)
+class LoopCfg:
+    tick_s: float = 10.0
+    bundle_every_s: float = 60.0
+    manager_every_s: float = 3600.0
+    request_reissue_s: float = 20 * 60          # unanswered manager request → new request id
+    playbook_grace_s: float = 2 * 3600          # degrade level 2 window after valid_until
+    max_trade_age_s: float = 30 * 60            # no trade for this long → treat the market as stale for buys
+    wallex_errors_limit: int = 20               # per 10 min → degrade level 3
+    event_move_sigma: float = 2.5               # 1 h move vs 30 d hourly σ → off-cycle manager call
+    event_drawdown: float = -0.007              # daily P&L → off-cycle manager call
+    offcycle_min_gap_s: float = 3600.0
+    bars_refresh_s: float = 300.0
+    blocked_log_every_s: float = 15 * 60        # repeat log of the same blocked proposal at most this often
+    heartbeat_stale_s: float = 120.0
+
+
+LOOP = LoopCfg()
+# Typical spreads (bps) used until 30 min of live spread history exist (FINDINGS §1).
+REF_SPREAD_BPS = {"USDTTMN": 5.1, "BTCTMN": 9.5}
+
+
 # ---- flatten (spec v2 §8.3), hours before END_AT ---------------------------
 @dataclass(frozen=True)
 class FlattenCfg:

@@ -42,7 +42,8 @@ def flatten_proposals(pf: Portfolio, prices: dict[str, float], ph: FlattenPhase,
     for (m, sleeve), p in sorted(pf.positions.items()):
         if p.qty > 0:
             out.append(Proposal(m, sleeve, "SELL", p.value(prices[m]), "flatten", "flatten",
-                                f"fl-{m}-{sleeve}-{ph}", URGENCY[ph], p.qty))   # exact held qty
+                                f"fl{int(now) % 10**8:08d}", URGENCY[ph], p.qty))   # exact held qty; unique id
+                                # per tick (the engine skips it while an equally urgent sell is working)
     return out
 
 

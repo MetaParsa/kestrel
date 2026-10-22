@@ -1,0 +1,19 @@
+# Shadow baseline during the contest: same market data, rule-based manager, no Claude,
+# no Clef, simulated fills. Live vs this = the A/B evidence for "real AI use".
+[Unit]
+Description=wallex-agent shadow baseline
+After=network-online.target time-sync.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+User=trader
+WorkingDirectory=/opt/wallex-agent
+EnvironmentFile=/etc/wallex-agent/env
+Environment=TZ=Asia/Tehran
+ExecStart=/opt/wallex-agent/.venv/bin/python -m engine.run --mode shadow --manager rules --run-dir /opt/wallex-agent/run/baseline
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

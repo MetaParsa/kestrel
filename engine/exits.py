@@ -23,7 +23,7 @@ def check_exits(pf: Portfolio, bids: dict[str, float], now: float,
         if p.qty <= 0 or m not in bids:
             continue
         px, entry = bids[m], p.avg_price
-        did = f"x-{m}-{sleeve}-{int(now)}"
+        did = f"x{int(now) % 10**8:08d}"          # short: becomes part of the exchange client_id
         if sleeve == "core":
             if px <= entry * (1 - lim.core_stop):
                 out.append(Proposal(m, "core", "SELL", p.value(px), "stop", "gate", did, "market", p.qty))
@@ -47,5 +47,5 @@ def hard_flatten(pf: Portfolio, bids: dict[str, float], now: float) -> list[Prop
     """Latch the halt (only the user restarts) and sell everything at market."""
     if not pf.halted:
         pf.latch_halt(f"equity {pf.gain(bids):+.2%} vs start at {int(now)}")
-    return [Proposal(m, s, "SELL", p.value(bids[m]), "flatten", "gate", f"hf-{m}-{s}-{int(now)}", "market", p.qty)
+    return [Proposal(m, s, "SELL", p.value(bids[m]), "flatten", "gate", f"hf{int(now) % 10**8:08d}", "market", p.qty)
             for (m, s), p in sorted(pf.positions.items()) if p.qty > 0]

@@ -1,0 +1,15 @@
+# Read-only status page on 127.0.0.1:8090 (reach it with: ssh -L 8090:127.0.0.1:8090 trader@SERVER).
+[Unit]
+Description=wallex-agent status page
+After=network-online.target
+
+[Service]
+User=trader
+WorkingDirectory=/opt/wallex-agent
+Environment=STATUS_RUN_DIR=/opt/wallex-agent/run/main
+ExecStart=/opt/wallex-agent/.venv/bin/uvicorn web.status:app --host 127.0.0.1 --port 8090
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
