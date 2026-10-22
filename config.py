@@ -1,0 +1,110 @@
+"""Every number that changes trading behaviour lives here (spec v2 §2, §8).
+
+The playbook can only tighten these limits, never loosen them.
+"""
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass, field
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+TEHRAN = ZoneInfo("Asia/Tehran")
+
+# ---- contest ---------------------------------------------------------------
+START_EQUITY_TMN = 5_000_000.0
+# Unconfirmed: earliest plausible end (Torob's deadline). Override with WALLEX_END_AT (ISO 8601).
+END_AT = datetime.fromisoformat(os.environ.get("WALLEX_END_AT", "2026-10-23T23:50:00+03:30"))
+if END_AT.tzinfo is None:   # a naive time would silently use the machine's timezone
+    raise ValueError("WALLEX_END_AT must include a UTC offset, e.g. 2026-10-23T23:50:00+03:30")
+
+MARKETS = ("USDTTMN", "BTCTMN")
+BASE_ASSET = {"USDTTMN": "USDT", "BTCTMN": "BTC"}
+FEATURE_MARKETS = ("BTCUSDT",)          # read only, never traded
+
+# (maker, taker) as fractions — read from the account 2026-10-21; re-check on the sub-account
+FEES = {"USDTTMN": (0.0025, 0.0030), "BTCTMN": (0.0025, 0.0030)}
+# Typical half-spread for simulated taker fills (research/wallex/FINDINGS.md §1: 5 / 9.5 bps spreads)
+SIM_HALF_SPREAD = {"USDTTMN": 0.00026, "BTCTMN": 0.00048}
+
+
+# ---- regimes (spec v2 §2.2) ------------------------------------------------
+@dataclass(frozen=True)
+class RegimeRule:
+    default: dict[str, float]
+    bounds: dict[str, tuple[float, float]]
+    tactical: bool
+    allow_adds: bool = True       # event_shock: hold what we have, add nothing
+
+
+REGIMES: dict[str, RegimeRule] = {
+    "devaluation_drift": RegimeRule({"USDTTMN": 0.20, "BTCTMN": 0.10},
+                                    {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.00, 0.15)}, tactical=True),
+    "trend_up": RegimeRule({"USDTTMN": 0.15, "BTCTMN": 0.15},
+                           {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.05, 0.20)}, tactical=True),
+    "range": RegimeRule({"USDTTMN": 0.10, "BTCTMN": 0.05},
+                        {"USDTTMN": (0.00, 0.15), "BTCTMN": (0.00, 0.10)}, tactical=True),
+    "risk_off": RegimeRule({"USDTTMN": 0.0, "BTCTMN": 0.0},
+                           {"USDTTMN": (0.0, 0.0), "BTCTMN": (0.0, 0.0)}, tactical=False),
+    "event_shock": RegimeRule({"USDTTMN": 0.0, "BTCTMN": 0.0},
+                              {"USDTTMN": (0.0, 0.25), "BTCTMN": (0.0, 0.20)}, tactical=False, allow_adds=False),
+}
+
+
+# ---- risk limits (spec v2 §8.1) -------------------------------------------
+@dataclass(frozen=True)
+class Limits:
+    max_market: float = 0.40          # exposure per market, core + tactical
+    max_total: float = 0.60
+    tactical_slot: float = 0.15
+    core_stop: float = 0.025          # from average cost, per market
+    core_cooldown_h: float = 12.0
+    tactical_stop: float = 0.015
+    tactical_tp: float = 0.025
+    tactical_time_h: float = 36.0
+    trail_after: float = 0.015        # once up this much, stop moves to entry + trail_to
+    trail_to: float = 0.005
+    tactical_per_market_day: int = 2
+    core_rebalances_per_market_day: int = 1   # increases only; reductions are always allowed
+    core_step: float = 0.10           # max increase per rebalance, fraction of equity
+    daily_loss: float = 0.010         # vs day-start equity → no new entries / adds until 00:00 Tehran
+    micro_drawdown: float = 0.020     # vs START_EQUITY → micro mode
+    micro_max_total: float = 0.10
+    micro_trades_per_day: int = 1
+    hard_flatten_drawdown: float = 0.030
+    cushion_from_gain: float = 0.008
+    cushion_buffer: float = 0.006     # added to each stop distance (fees + slippage)
+    cushion_margin: float = 0.003
+    activity_floor_hour: int = 18     # Tehran
+    min_order_tmn: float = 150_000.0
+    dust_floor_tmn: float = 60_000.0  # never leave a remainder smaller than this
+    exchange_min_notional_tmn: float = 50_000.0
+    stale_after_s: float = 30.0
+    spread_mult_max: float = 3.0      # vs 24 h median spread
+
+
+LIMITS = Limits()
+
+
+# ---- execution (spec v2 §2.10, §8.2) ---------------------------------------
+@dataclass(frozen=True)
+class ExecutionCfg:
+    reprice_after_s: float = 90.0
+    max_reprices: int = 2
+    lookup_before_retry: bool = True
+
+
+EXECUTION = ExecutionCfg()
+
+
+# ---- flatten (spec v2 §8.3), hours before END_AT ---------------------------
+@dataclass(frozen=True)
+class FlattenCfg:
+    no_new_h: float = 8.0            # no tactical entries, no adds; core → 0 via passive limits
+    aggressive_h: float = 3.0
+    market_h: float = 1.0
+    alert_h: float = 2.0             # Bale alert if any non-TMN above dust remains
+    verify_min: float = 30.0
+
+
+FLATTEN = FlattenCfg()

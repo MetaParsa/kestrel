@@ -13,6 +13,7 @@ dependencies = [
     "numpy>=2.0",
     "fastapi>=0.115",
     "uvicorn>=0.30",
+    "tzdata>=2024.1",     # zoneinfo("Asia/Tehran") on Windows
 ]
 
 [project.optional-dependencies]

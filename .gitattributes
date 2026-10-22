@@ -1,0 +1,3 @@
+# The engine runs on Linux; keep LF everywhere.
+* text=auto eol=lf
+*.parquet binary
