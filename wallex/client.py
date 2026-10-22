@@ -8,6 +8,7 @@ logged, never included in exception messages, and never stored on disk.
 """
 from __future__ import annotations
 
+import json
 import os
 import time
 from dataclasses import dataclass, field
@@ -268,8 +269,10 @@ def _parse_order(o: dict) -> Order:
 def _error_message(r: httpx.Response) -> str:
     try:
         body = r.json()
-        if isinstance(body, dict):
-            return str(body.get("message") or body.get("result") or "error")[:300]
+        if isinstance(body, dict):              # keep the field-level details of a validation error
+            detail = body.get("result") or body.get("errors") or body.get("data")
+            msg = str(body.get("message") or "error")
+            return (f"{msg} {json.dumps(detail, ensure_ascii=False)}" if detail else msg)[:500]
     except ValueError:
         pass
     return r.text[:300] or "error"
