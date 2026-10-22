@@ -18,7 +18,10 @@ END_AT = datetime.fromisoformat(os.environ.get("WALLEX_END_AT", "2026-10-23T23:5
 if END_AT.tzinfo is None:   # a naive time would silently use the machine's timezone
     raise ValueError("WALLEX_END_AT must include a UTC offset, e.g. 2026-10-23T23:50:00+03:30")
 
-MARKETS = ("USDTTMN", "BTCTMN")
+MARKETS = ("USDTTMN", "BTCTMN")         # read, forecast and scored by the manager
+# The prop account only accepts orders in BTCTMN (Wallex: «امکان ثبت سفارش در بازار USDTTMN وجود ندارد»,
+# 2026-10-23). USDTTMN stays an input; its regime bounds are forced to 0 below and the gate refuses it.
+TRADABLE = tuple(m for m in os.environ.get("WALLEX_TRADABLE", "BTCTMN").split(",") if m in MARKETS)
 BASE_ASSET = {"USDTTMN": "USDT", "BTCTMN": "BTC"}
 FEATURE_MARKETS = ("BTCUSDT",)          # read only, never traded
 
@@ -38,10 +41,10 @@ class RegimeRule:
 
 
 REGIMES: dict[str, RegimeRule] = {
-    "devaluation_drift": RegimeRule({"USDTTMN": 0.20, "BTCTMN": 0.10},
-                                    {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.00, 0.15)}, tactical=True),
-    "trend_up": RegimeRule({"USDTTMN": 0.15, "BTCTMN": 0.15},
-                           {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.05, 0.20)}, tactical=True),
+    "devaluation_drift": RegimeRule({"USDTTMN": 0.20, "BTCTMN": 0.15},
+                                    {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.00, 0.25)}, tactical=True),
+    "trend_up": RegimeRule({"USDTTMN": 0.15, "BTCTMN": 0.20},
+                           {"USDTTMN": (0.10, 0.25), "BTCTMN": (0.05, 0.30)}, tactical=True),
     "range": RegimeRule({"USDTTMN": 0.10, "BTCTMN": 0.05},
                         {"USDTTMN": (0.00, 0.15), "BTCTMN": (0.00, 0.10)}, tactical=True),
     "risk_off": RegimeRule({"USDTTMN": 0.0, "BTCTMN": 0.0},
@@ -49,6 +52,11 @@ REGIMES: dict[str, RegimeRule] = {
     "event_shock": RegimeRule({"USDTTMN": 0.0, "BTCTMN": 0.0},
                               {"USDTTMN": (0.0, 0.25), "BTCTMN": (0.0, 0.20)}, tactical=False, allow_adds=False),
 }
+# Markets we can't trade get target 0 in every regime, so the manager, the gate and the core sleeve agree.
+REGIMES = {name: RegimeRule({m: (v if m in TRADABLE else 0.0) for m, v in r.default.items()},
+                            {m: (b if m in TRADABLE else (0.0, 0.0)) for m, b in r.bounds.items()},
+                            r.tactical, r.allow_adds)
+           for name, r in REGIMES.items()}
 
 
 # ---- risk limits (spec v2 §8.1) -------------------------------------------

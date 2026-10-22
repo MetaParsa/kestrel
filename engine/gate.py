@@ -84,7 +84,7 @@ def mode(ctx: GateContext, lim: config.Limits = config.LIMITS) -> str:
 
 
 def check(p: Proposal, ctx: GateContext, lim: config.Limits = config.LIMITS) -> Verdict:
-    if p.market not in config.MARKETS:
+    if p.market not in config.TRADABLE:
         return Verdict("block", 0.0, ("G_MARKET_NOT_ALLOWED",))
     if not _finite(p.size_tmn) or p.size_tmn <= 0:
         return Verdict("block", 0.0, ("G_BAD_SIZE",))

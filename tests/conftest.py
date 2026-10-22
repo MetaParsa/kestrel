@@ -1,3 +1,9 @@
+import os
+
+# The engine's tests cover the general two-market engine; the prop account's BTCTMN-only
+# restriction (the default outside tests) is covered by tests/test_prop_markets.py.
+os.environ.setdefault("WALLEX_TRADABLE", "USDTTMN,BTCTMN")
+
 import json
 from pathlib import Path
 
