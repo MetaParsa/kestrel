@@ -12,7 +12,7 @@ APP=/opt/wallex-agent
 MIRROR=https://package-mirror.liara.ir/repository/pypi/simple
 PUSH_USER=${SUDO_USER:-ubuntu}      # the SSH login the laptop uses to push playbooks
 
-python3 -m venv --help >/dev/null 2>&1 || apt-get install -y python3-venv >/dev/null
+python3 -c "import ensurepip" >/dev/null 2>&1 || apt-get install -y python3-venv >/dev/null
 command -v rsync >/dev/null || apt-get install -y rsync >/dev/null
 
 id trader >/dev/null 2>&1 || useradd --system --create-home --shell /bin/bash trader
@@ -27,7 +27,7 @@ mkdir -p "$APP/data/store"
 [ -d data/store ] && rsync -a data/store/ "$APP/data/store/" || true
 for d in main baseline; do mkdir -p "$APP/run/$d/inbox" "$APP/run/$d/outbox" "$APP/run/$d/logs"; done
 
-[ -x "$APP/.venv/bin/python" ] || python3 -m venv "$APP/.venv"
+[ -x "$APP/.venv/bin/pip" ] || { rm -rf "$APP/.venv"; python3 -m venv "$APP/.venv"; }   # rebuild a half-made venv
 PIP="$APP/.venv/bin/pip"
 $PIP install --quiet --index-url "$MIRROR" --upgrade pip
 # the engine runs as `python -m ...` from $APP, so only the dependencies are installed
