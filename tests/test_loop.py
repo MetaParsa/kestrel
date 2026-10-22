@@ -323,6 +323,19 @@ def test_watchdog_alerts_once_down_and_once_up(tmp_path):
     assert len(al.texts) == 2
 
 
+def test_watchdog_alerts_when_the_laptop_manager_goes_quiet(tmp_path):
+    al = SentAlerts()
+    assert watchdog.check_manager(tmp_path, al, now=NOW) == "no_playbook"     # baseline: nothing to watch
+    (tmp_path / "playbook.json").write_text(json.dumps({"valid_until": NOW}), encoding="utf-8")
+    assert watchdog.check_manager(tmp_path, al, now=NOW + 60) == "ok"          # just expired: grace
+    assert watchdog.check_manager(tmp_path, al, now=NOW + 400) == "alerted_late"
+    assert watchdog.check_manager(tmp_path, al, now=NOW + 1000) == "ok"        # no spam
+    assert watchdog.check_manager(tmp_path, al, now=NOW + 4100) == "alerted_late"   # hourly reminder
+    (tmp_path / "playbook.json").write_text(json.dumps({"valid_until": NOW + 7200}), encoding="utf-8")
+    assert watchdog.check_manager(tmp_path, al, now=NOW + 4200) == "alerted_back"
+    assert len(al.texts) == 3
+
+
 def test_status_page_renders_and_lights(tmp_path, monkeypatch):
     from fastapi.testclient import TestClient
     from web import status as web
