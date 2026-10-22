@@ -76,8 +76,10 @@ class ScpTransport:
 
     @property
     def _opts(self) -> list[str]:
+        # ControlMaster off: Windows OpenSSH can't share connections ("getsockname failed: Not a socket").
         return ["-o", "BatchMode=yes", "-o", f"ConnectTimeout={self.timeout_s}",
-                "-o", "ServerAliveInterval=10", "-o", "ServerAliveCountMax=2"]
+                "-o", "ServerAliveInterval=10", "-o", "ServerAliveCountMax=2",
+                "-o", "ControlMaster=no", "-o", "ControlPath=none"]
 
     def _run(self, cmd: list[str], cwd: Path) -> bool:
         try:
