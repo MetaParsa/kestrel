@@ -37,3 +37,6 @@ VERSION
 .kronos/
 research/kronos_out/*.npy
 research/kronos_out/*.log
+reports/out/backtest/runs/
+reports/out/backtest/log-*.txt
+reports/out/backtest/shard-*.jsonl
