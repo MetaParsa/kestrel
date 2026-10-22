@@ -29,3 +29,6 @@ logs/*.log
 Thumbs.db
 .vscode/
 .idea/
+
+# written at deploy time
+VERSION

@@ -11,13 +11,19 @@ from pathlib import Path
 
 
 def git_sha(repo: Path) -> str:
+    """The commit that is running. Deployed copies have no .git, so the deploy step writes VERSION."""
     try:
         out = subprocess.run(["git", "rev-parse", "--short=12", "HEAD"], cwd=repo, capture_output=True,
                              text=True, timeout=10)
-        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=repo,
-                               capture_output=True, text=True, timeout=10).stdout.strip()
-        return out.stdout.strip() + ("-dirty" if dirty else "") if out.returncode == 0 else "unknown"
+        if out.returncode == 0:
+            dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=repo,
+                                   capture_output=True, text=True, timeout=10).stdout.strip()
+            return out.stdout.strip() + ("-dirty" if dirty else "")
     except (OSError, subprocess.TimeoutExpired):
+        pass
+    try:
+        return (repo / "VERSION").read_text(encoding="utf-8").strip() or "unknown"
+    except OSError:
         return "unknown"
 
 
