@@ -18,8 +18,9 @@ dependencies = [
 
 [project.optional-dependencies]
 quant = ["lightgbm>=4.5", "scikit-learn>=1.5"]
-# Laptop only: Claude calls and the self-hosted Clef judge
-ai-box = ["anthropic>=0.60", "torch>=2.8", "transformers>=4.50", "bitsandbytes>=0.45", "accelerate>=1.0", "huggingface-hub>=0.30"]
+# Laptop only: Claude calls (manager) and the self-hosted Clef judge (clef, step T3)
+manager = ["anthropic>=0.60"]
+clef = ["torch>=2.8", "transformers>=4.50", "bitsandbytes>=0.45", "accelerate>=1.0", "huggingface-hub>=0.30"]
 
 [dependency-groups]
 dev = ["pytest>=8.3"]

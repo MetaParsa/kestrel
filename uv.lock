@@ -1826,13 +1826,15 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-ai-box = [
+clef = [
     { name = "accelerate" },
-    { name = "anthropic" },
     { name = "bitsandbytes" },
     { name = "huggingface-hub" },
     { name = "torch" },
     { name = "transformers" },
+]
+manager = [
+    { name = "anthropic" },
 ]
 quant = [
     { name = "lightgbm" },
@@ -1846,24 +1848,24 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "accelerate", marker = "extra == 'ai-box'", specifier = ">=1.0" },
-    { name = "anthropic", marker = "extra == 'ai-box'", specifier = ">=0.60" },
-    { name = "bitsandbytes", marker = "extra == 'ai-box'", specifier = ">=0.45" },
+    { name = "accelerate", marker = "extra == 'clef'", specifier = ">=1.0" },
+    { name = "anthropic", marker = "extra == 'manager'", specifier = ">=0.60" },
+    { name = "bitsandbytes", marker = "extra == 'clef'", specifier = ">=0.45" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "httpx", specifier = ">=0.27" },
-    { name = "huggingface-hub", marker = "extra == 'ai-box'", specifier = ">=0.30" },
+    { name = "huggingface-hub", marker = "extra == 'clef'", specifier = ">=0.30" },
     { name = "lightgbm", marker = "extra == 'quant'", specifier = ">=4.5" },
     { name = "numpy", specifier = ">=2.0" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pyarrow", specifier = ">=17" },
     { name = "pydantic", specifier = ">=2.8" },
     { name = "scikit-learn", marker = "extra == 'quant'", specifier = ">=1.5" },
-    { name = "torch", marker = "extra == 'ai-box'", specifier = ">=2.8" },
-    { name = "transformers", marker = "extra == 'ai-box'", specifier = ">=4.50" },
+    { name = "torch", marker = "extra == 'clef'", specifier = ">=2.8" },
+    { name = "transformers", marker = "extra == 'clef'", specifier = ">=4.50" },
     { name = "tzdata", specifier = ">=2024.1" },
     { name = "uvicorn", specifier = ">=0.30" },
 ]
-provides-extras = ["quant", "ai-box"]
+provides-extras = ["quant", "manager", "clef"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.3" }]

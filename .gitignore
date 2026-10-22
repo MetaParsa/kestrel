@@ -18,7 +18,7 @@ models/*.bin
 models/*.safetensors
 *.parquet
 
-# Runtime
+# Runtime (bundles, playbooks, transcripts and the spend ledger are copied into logs/ for delivery)
 run/
 logs/*.jsonl
 logs/*.log
