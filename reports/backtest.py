@@ -135,7 +135,7 @@ def main(argv=None):
     ap.add_argument("--every-h", type=float, default=24.0, help="hours between window starts")
     ap.add_argument("--limit", type=int, default=0, help="only the first N windows")
     ap.add_argument("--warmup-h", type=float, default=72.0, help="history before the first window")
-    ap.add_argument("--out", type=Path, default=Path("reports/out/backtest"))
+    ap.add_argument("--out", type=Path, default=Path("run/backtest"))   # git-ignored scratch; summary copied to reports/out
     ap.add_argument("--shard", default="0/1", help="k/n: run every n-th window starting at k (parallel runs)")
     ap.add_argument("--merge", action="store_true", help="only merge shard results into summary.json")
     a = ap.parse_args(argv)
@@ -181,6 +181,8 @@ def main(argv=None):
         "results": results,
     }
     (a.out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
+    Path("reports/out").mkdir(parents=True, exist_ok=True)
+    Path("reports/out/backtest-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps({k: v for k, v in summary.items() if k != "results"}, ensure_ascii=False))
 
 
