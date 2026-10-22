@@ -40,6 +40,8 @@ LOCAL = HERE / "run" / "ai_box"
 SPEND_CAP_USD = 15.0
 MAX_BUNDLE_AGE_S = 600
 MAX_ATTEMPTS_PER_REQUEST = 2
+MAX_PUSH_RETRIES = 5
+EVENT_MIN_GAP_S = 5 * 60          # even market events wait this long after the previous decision
 
 
 class Transport(Protocol):
@@ -81,11 +83,19 @@ class ScpTransport:
                 "-o", "ServerAliveInterval=10", "-o", "ServerAliveCountMax=2",
                 "-o", "ControlMaster=no", "-o", "ControlPath=none"]
 
+    last_error: str = ""
+
     def _run(self, cmd: list[str], cwd: Path) -> bool:
+        # stdin=DEVNULL: under Task Scheduler there is no console, and ssh must not try to read one.
         try:
-            return subprocess.run(cmd, cwd=cwd, timeout=self.timeout_s + 15, capture_output=True).returncode == 0
-        except (subprocess.TimeoutExpired, OSError):
+            r = subprocess.run(cmd, cwd=cwd, timeout=self.timeout_s + 15, capture_output=True,
+                               stdin=subprocess.DEVNULL)
+        except (subprocess.TimeoutExpired, OSError) as e:
+            self.last_error = f"{cmd[0]}: {type(e).__name__}"
             return False
+        if r.returncode != 0:
+            self.last_error = f"{cmd[0]} exit {r.returncode}: {r.stderr.decode(errors='replace').strip()[-200:]}"
+        return r.returncode == 0
 
     # Local paths are passed relative to `cwd`, so a Windows "C:\..." is never read as a host.
     def pull_bundle(self, dest: Path) -> bool:
@@ -96,7 +106,7 @@ class ScpTransport:
         tmp_remote = f"{self.remote_run_dir}/inbox/.{src.name}.tmp"     # never half a file in the inbox
         if not self._run(["scp", "-q", *self._opts, src.name, f"{self.host}:{tmp_remote}"], cwd=src.parent):
             return False
-        return self._run(["ssh", *self._opts, self.host,
+        return self._run(["ssh", "-n", *self._opts, self.host,
                           f"mv -f '{tmp_remote}' '{self.remote_run_dir}/inbox/{src.name}'"], cwd=src.parent)
 
 
@@ -128,6 +138,7 @@ class AiBox:
         self.done_requests: set[str] = set()
         self.attempts: dict[str, int] = {}
         self.unpushed: Path | None = None        # finished playbook whose push failed
+        self.push_retries = 0
         self.last_decision_at = -1e18
 
     def cycle(self) -> Playbook | None:
@@ -139,13 +150,21 @@ class AiBox:
 
     def _cycle(self) -> Playbook | None:
         if self.unpushed is not None:              # retry the push only — no new decision
+            self.push_retries += 1
             if self.t.push_playbook(self.unpushed):
                 self.log({"event": "playbook_pushed_on_retry", "file": self.unpushed.name})
                 self.unpushed = None
+            elif self.push_retries >= MAX_PUSH_RETRIES:   # stale by now anyway; don't block future decisions
+                self.log({"event": "push_given_up", "file": self.unpushed.name,
+                          "error": getattr(self.t, "last_error", "")})
+                self.unpushed = None
+            else:
+                self.log({"event": "push_retry_failed", "file": self.unpushed.name,
+                          "error": getattr(self.t, "last_error", "")})
             return None
         bundle_path = self.dir / "bundle.json"
         if not self.t.pull_bundle(bundle_path):
-            self.log({"event": "pull_failed"})
+            self.log({"event": "pull_failed", "error": getattr(self.t, "last_error", "")})
             return None
         try:
             bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
@@ -165,7 +184,8 @@ class AiBox:
             self.log({"event": "bundle_stale", "age_s": round(now - bundle.get("created_at", 0))})
             return None
         is_event = str(bundle.get("reason", "")).startswith("event")
-        if not is_event and now - self.last_decision_at < self.min_gap_s:
+        gap = min(self.min_gap_s, EVENT_MIN_GAP_S) if is_event else self.min_gap_s
+        if now - self.last_decision_at < gap:
             return None
         self.attempts[req] = self.attempts.get(req, 0) + 1
         if self.attempts[req] > MAX_ATTEMPTS_PER_REQUEST:
@@ -191,8 +211,8 @@ class AiBox:
             (self.dir / f"transcript-{pb.playbook_id}.json").write_text(
                 json.dumps(transcript, ensure_ascii=False, default=str), encoding="utf-8")
         if not self.t.push_playbook(out):
-            self.unpushed = out
-            self.log({"event": "push_failed", "playbook_id": pb.playbook_id})
+            self.unpushed, self.push_retries = out, 0
+            self.log({"event": "push_failed", "playbook_id": pb.playbook_id, "error": getattr(self.t, "last_error", "")})
             return pb
         self.log({"event": "playbook_pushed", "playbook_id": pb.playbook_id, "source": pb.source,
                   "regime": pb.regime, "cost_usd": round(pb.cost_usd, 4), "clamps": pb.clamps})

@@ -473,3 +473,15 @@ def test_crash_restart_does_not_spam_start_alerts(tmp_path):
     make_engine(tmp_path, alerter=al)
     make_engine(tmp_path, alerter=al)
     assert sum("روشن شد" in t for t in al.texts) == 1
+
+
+def test_recovery_to_level_0_is_not_an_event_and_fresh_playbooks_suppress_events(tmp_path):
+    eng, clock, market, alerts = make_engine(tmp_path)
+    eng.tick()
+    give_playbook(eng)
+    clock.t += 10
+    eng.tick()                                                 # level 3 → 0
+    clock.t += 61
+    eng.tick()
+    reqs = [e for e in eng.logs.tail("events", 200) if e["event"] == "manager_request"]
+    assert [r["reason"] for r in reqs] == ["scheduled"]       # no "event: degrade level 0"

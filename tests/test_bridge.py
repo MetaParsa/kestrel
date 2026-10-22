@@ -225,7 +225,30 @@ def test_stale_bundle_and_min_gap(tmp_path):
     write_bundle(make_bundle(request_id="req-2"), run / "outbox")
     assert box.cycle() is None                                   # 20-minute gap not over
     write_bundle(make_bundle(request_id="req-3", reason="event: 1h move 3 sigma"), run / "outbox")
-    assert box.cycle() is not None                               # events skip the gap
+    assert box.cycle() is None                                   # even events wait 5 min after a decision
+    clock["t"] = NOW + 30 + 301
+    assert box.cycle() is not None                               # events skip the 20-minute gap
+
+
+def test_undeliverable_playbook_is_given_up_and_decisions_resume(tmp_path):
+    calls = []
+
+    def decide(bundle):
+        calls.append(1)
+        return mock_decider(bundle)
+
+    class Dead(LocalTransport):
+        def push_playbook(self, src):
+            return False
+    run, box, events = box_with(tmp_path, decide, transport=Dead(tmp_path / "run"))
+    write_bundle(make_bundle(), run / "outbox")
+    box.cycle()
+    for _ in range(5):
+        box.cycle()
+    assert events[-1]["event"] == "push_given_up" and box.unpushed is None
+    write_bundle(make_bundle(request_id="req-9"), run / "outbox")
+    box.cycle()
+    assert len(calls) == 2
 
 
 def test_tampered_and_unreadable_bundles(tmp_path):
@@ -251,9 +274,10 @@ def test_scp_transport_uses_relative_local_paths_and_temp_rename(tmp_path, monke
     from ai_box import loop
     seen = []
 
-    def fake_run(cmd, cwd=None, timeout=None, capture_output=None):
+    def fake_run(cmd, cwd=None, timeout=None, capture_output=None, stdin=None):
+        assert stdin is loop.subprocess.DEVNULL                  # no console under Task Scheduler
         seen.append((cmd, cwd))
-        return NS(returncode=0)
+        return NS(returncode=0, stderr=b"")
     monkeypatch.setattr(loop.subprocess, "run", fake_run)
     t = loop.ScpTransport("trader@1.2.3.4", "/opt/wa/run")
     f = tmp_path / "playbook-x.json"
@@ -263,6 +287,7 @@ def test_scp_transport_uses_relative_local_paths_and_temp_rename(tmp_path, monke
     assert scp_up[-2:] == ["playbook-x.json", "trader@1.2.3.4:/opt/wa/run/inbox/.playbook-x.json.tmp"]
     assert cwd1 == tmp_path and cwd2 == tmp_path and scp_down[-1] == "bundle.json"
     assert "mv -f" in ssh_mv[-1] and "ServerAliveInterval=10" in scp_up
+    assert ssh_mv[1] == "-n" and "ControlMaster=no" in scp_up
 
 
 def test_event_shock_mock_holds_current_core():

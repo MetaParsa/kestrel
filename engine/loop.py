@@ -54,6 +54,7 @@ KIND_FA = {"rebalance_up": "افزایش سهم پایه", "rebalance_down": "ک
 LEVEL_FA = {0: "عادی", 2: "نقشه‌ی مدیر منقضی شده — نگه‌داری، بدون خرید جدید", 3: "توقف خرید (فقط خروج‌ها فعال)"}
 EARLY_REQUEST_S = 20 * 60          # ask for the next playbook this long before the current one expires
 START_ALERT_EVERY_S = 10 * 60      # a crash-restart loop must not spam the phone
+EVENT_AFTER_PLAYBOOK_S = 15 * 60   # no off-cycle request within this long after a playbook arrived
 
 
 @dataclass
@@ -262,7 +263,7 @@ class Engine:
         else:
             level = 3
         if level != self.level:
-            self.level_changed = self.level is not None
+            self.level_changed = self.level is not None and level >= 2     # recovering to 0 is not an event
             alert = None
             if self.level is not None and level >= 2:
                 alert = f"⚠️ سطح احتیاط {level}: {LEVEL_FA[level]}"
@@ -478,7 +479,8 @@ class Engine:
         if (pb is None or now - self.last_manager_at >= self.L.manager_every_s
                 or pb.valid_until - now <= EARLY_REQUEST_S):
             reason = "scheduled"
-        elif now - self.last_offcycle >= self.L.offcycle_min_gap_s:
+        elif (now - self.last_offcycle >= self.L.offcycle_min_gap_s
+              and now - self.last_manager_at >= EVENT_AFTER_PLAYBOOK_S):     # a fresh playbook already saw it
             for m, sec in markets.items():
                 st = sec["stats"]
                 if st["vol_1h_30d"] > 0 and abs(st["ret_1h"]) > self.L.event_move_sigma * st["vol_1h_30d"]:
