@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import math
+import sys
 import time
 from pathlib import Path
 
@@ -23,7 +24,13 @@ from wallex.trading import TradingClient, env_armed
 MARKET = "USDTTMN"
 
 
+def _tmn(reader) -> dict:
+    b = reader.balances().get("TMN")
+    return {"free": str(b.free), "locked": str(b.locked)} if b else {}
+
+
 def main() -> None:
+    rest_s = float(sys.argv[sys.argv.index("--rest") + 1]) if "--rest" in sys.argv else 1.5
     if not env_armed():
         raise SystemExit("refusing: WALLEX_LIVE_ARMED is not set")
     reader = WallexClient.from_env()
@@ -37,10 +44,13 @@ def main() -> None:
     r = broker.rules(MARKET)
     qty = math.ceil(r.min_notional * 1.05 / price * 10**r.step_decimals) / 10**r.step_decimals
     cid = f"d-canary{int(time.time()) % 10**8:08d}"
-    out: dict = {"market": MARKET, "bid": bid, "price": price, "qty": qty, "client_id": cid}
+    out: dict = {"market": MARKET, "bid": bid, "price": price, "qty": qty, "client_id": cid,
+                 "tmn_before": _tmn(reader)}
     st = broker.place(cid, MARKET, "BUY", "LIMIT", qty, price)
     out["after_place"] = st.__dict__
-    time.sleep(1.5)
+    print(json.dumps({"resting": cid, "for_s": rest_s, "placed_at": time.time()}), flush=True)
+    time.sleep(rest_s)                   # while it rests: check which account shows the TMN as locked
+    out["tmn_while_resting"] = _tmn(reader)
     o = reader.order(cid)
     out["read_back_raw"] = o.raw if o else None
     out["after_cancel"] = (broker.cancel(cid) or st).__dict__
@@ -48,11 +58,12 @@ def main() -> None:
     o2 = reader.order(cid)
     out["final_raw"] = o2.raw if o2 else None
     out["open_orders_after"] = [x.client_id for x in reader.open_orders()]
+    out["tmn_after"] = _tmn(reader)
     out["notes"] = notes
     Path("run").mkdir(exist_ok=True)
     Path("run/canary.json").write_text(json.dumps(out, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     ok = out["after_cancel"]["status"] == "CANCELED" and cid not in out["open_orders_after"]
-    print(json.dumps({"ok": ok, "client_id": cid, "status_after_cancel": out["after_cancel"]["status"],
+    print(json.dumps({"ok": ok, "client_id": cid, "tmn": [out["tmn_before"], out["tmn_while_resting"], out["tmn_after"]], "status_after_cancel": out["after_cancel"]["status"],
                       "still_open": cid in out["open_orders_after"], "notes": notes}, ensure_ascii=False))
 
 
