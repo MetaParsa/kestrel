@@ -60,7 +60,7 @@ def test_market_order_goes_out_as_a_protected_limit():
     _, _, broker = make(fake)
     broker.place("d-m1-USDTTMN-c", "USDTTMN", "SELL", "MARKET", 3.0)
     body = json.loads([r for r in fake.requests if r.method == "POST"][-1].content)
-    assert body["type"] == "LIMIT" and body["price"] == str(int(-(-266_000 * 0.97 // 1)))   # bid −3%, ceil
+    assert body["type"] == "LIMIT" and body["price"] == str(int(-(-266_000 * 0.98 // 1)))   # bid −2%, ceil
 
 
 def test_no_order_is_priced_from_a_stale_quote():

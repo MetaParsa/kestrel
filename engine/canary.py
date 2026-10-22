@@ -30,23 +30,24 @@ def _tmn(reader) -> dict:
 
 
 def main() -> None:
-    rest_s = float(sys.argv[sys.argv.index("--rest") + 1]) if "--rest" in sys.argv else 1.5
+    arg = lambda name, default: type(default)(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
+    rest_s, market, below = arg("--rest", 1.5), arg("--market", MARKET), arg("--below", 0.04)
     if not env_armed():
         raise SystemExit("refusing: WALLEX_LIVE_ARMED is not set")
     reader = WallexClient.from_env()
     trader = TradingClient.from_env(armed=True)
     notes: list[dict] = []
     broker = LiveBroker(reader, trader, on_note=notes.append)
-    snaps = Poller(reader, [MARKET]).poll_once()
+    snaps = Poller(reader, [market]).poll_once()
     broker.feed(snaps)
-    bid = snaps[MARKET].bid
-    price = math.floor(bid * 0.90)
-    r = broker.rules(MARKET)
+    bid = snaps[market].bid
+    r = broker.rules(market)
+    price = math.floor(bid * (1 - below) * 10**r.tick_decimals) / 10**r.tick_decimals   # inside Wallex's ~3% band
     qty = math.ceil(r.min_notional * 1.05 / price * 10**r.step_decimals) / 10**r.step_decimals
     cid = f"d-canary{int(time.time()) % 10**8:08d}"
-    out: dict = {"market": MARKET, "bid": bid, "price": price, "qty": qty, "client_id": cid,
+    out: dict = {"market": market, "bid": bid, "price": price, "qty": qty, "client_id": cid,
                  "tmn_before": _tmn(reader)}
-    st = broker.place(cid, MARKET, "BUY", "LIMIT", qty, price)
+    st = broker.place(cid, market, "BUY", "LIMIT", qty, price)
     out["after_place"] = st.__dict__
     print(json.dumps({"resting": cid, "for_s": rest_s, "placed_at": time.time()}), flush=True)
     time.sleep(rest_s)                   # while it rests: check which account shows the TMN as locked

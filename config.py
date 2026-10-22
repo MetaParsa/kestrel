@@ -92,7 +92,8 @@ class ExecutionCfg:
     reprice_after_s: float = 90.0
     max_reprices: int = 2
     lookup_before_retry: bool = True
-    market_protection: float = 0.03   # live "market" orders are limits at most 3% through the touch
+    market_protection: float = 0.02   # live "market" orders are limits at most 2% through the touch
+                                      # (Wallex rejects prices more than ~3% from its fair price)
     market_reprice_s: float = 10.0    # ...re-priced every 10 s until filled (stops must not wait 90 s)
     max_quote_age_s: float = 20.0     # never price an order from a quote older than this
 
