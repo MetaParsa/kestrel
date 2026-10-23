@@ -158,7 +158,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
     # 2 — architecture
     out.append(("""<h2>معماری: دو مغز، یک ترمز</h2>
 <div class='grid' style='grid-template-columns:1fr 90px 1fr 90px 1fr;align-items:stretch;margin-top:20px'>
-<div class='box'><div class='acc' style='font-size:34px;font-weight:800'>Claude Opus 5.5</div><div class='small'>روی لپ‌تاپ · هر ساعت<br>رژیم بازار، سهم هدف، ضریب ریسک<br>پیش‌بینی ۴ ساعته + دلیل فارسی<br>۸ ابزار فقط‌خواندنی</div></div>
+<div class='box'><div class='acc' style='font-size:34px;font-weight:800'>Claude Opus 5.5</div><div class='small'>روی لپ‌تاپ · هر ساعت (عصر آخر هر ۱۵ دقیقه)<br>رژیم بازار، سهم هدف، ضریب ریسک<br>پیش‌بینی ۴ ساعته + دلیل فارسی<br>۸ ابزار فقط‌خواندنی</div></div>
 <div class='arrow'>←</div>
 <div class='box'><div class='warn' style='font-size:34px;font-weight:800'>دروازه‌ی ریسک</div><div class='small'>کد قطعی روی سرور ایران<br>سقف حجم، حد ضرر، توقف روزانه<br>فروش اضطراری در افت ۳٪<br>مدل نمی‌تواند دورش بزند</div></div>
 <div class='arrow'>←</div>
@@ -167,7 +167,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <div class='card'><div class='k'>اتصال</div><div class='small'>سرور ایران به Anthropic دسترسی ندارد؛ لپ‌تاپ هر ۶۰ ثانیه وضعیت را می‌کشد و برنامه را می‌فرستد. بدون تونل.</div></div>
 <div class='card'><div class='k'>نظارت</div><div class='small'>هشدار پیام‌رسان بله، واچ‌داگ دقیقه‌ای، صفحه‌ی وضعیت فارسی.</div></div>
 <div class='card'><div class='k'>شفافیت</div><div class='small'>هر تصمیم با «چه دید، چه کسی تصمیم گرفت، دروازه چه گفت، چرا» و شناسه‌ی نسخه‌ی کد ثبت می‌شود.</div></div></div>""",
-                "معماری سه لایه دارد. لایه‌ی اول Claude Opus است که هر ساعت روی لپ‌تاپ اجرا می‌شود، بازار را با "
+                "معماری سه لایه دارد. لایه‌ی اول Claude Opus است که هر ساعت، و در عصر آخر هر پانزده دقیقه، روی لپ‌تاپ اجرا می‌شود، بازار را با "
                 "ابزارهای فقط‌خواندنی بررسی می‌کند و یک برنامه می‌نویسد: رژیم بازار، سهم هدف، ضریب ریسک، "
                 "پیش‌بینی چهار ساعته و دلیلش به فارسی. لایه‌ی دوم دروازه‌ی ریسک است؛ کد قطعی روی سرور که هیچ "
                 "برنامه‌ای نمی‌تواند از آن عبور کند. لایه‌ی سوم اجراست: سفارش لیمیت با اولویت میکر تا کارمزد کمتری بدهیم. "
@@ -207,15 +207,15 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <div class='card'><div class='k'>پیش‌بینی ۴ ساعته‌ی ارزیابی‌شده</div><div class='v'>{fa(s1.get('forecasts_resolved', 0))}</div></div>
 <div class='card'><div class='k'>جهت درست — Claude</div><div class='v acc'>{r(s1.get('direction_hit'))}٪</div></div>
 <div class='card'><div class='k'>مبنای «مثل ۴ ساعت قبل»</div><div class='v'>{r(s1.get('naive_hit'))}٪</div></div>
-<div class='card'><div class='k'>برنامه‌هایی که به کارنامه واکنش نشان دادند</div><div class='v ok'>{fa(s1.get('playbooks_citing_own_scorecard', 0))}</div></div></div>
+<div class='card'><div class='k'>برنامه‌هایی که به کارنامه استناد کردند</div><div class='v ok'>{fa(s1.get('playbooks_citing_own_scorecard', 0))}</div></div></div>
 <div class='card'><div class='k' style='margin-bottom:14px'>از لاگ خود Claude (ترجمه):</div>{qhtml}</div>
 <div class='small'>چهار ساعت بعد از هر پیش‌بینی، کد بدون نگاه به آینده نمره می‌دهد و کارنامه به چرخه‌ی بعد Claude برمی‌گردد. صادقانه: «همیشه خنثی» {r(s1.get('always_flat_hit'))}٪ می‌گیرد چون بیشتر ساعت‌ها بازار آرام بود.</div>""",
                 f"ایده‌ی اول: هوش مصنوعی‌ای که به خودش نمره می‌دهد. Claude در هر برنامه جهت چهار ساعت بعد را پیش‌بینی می‌کند. "
                 f"چهار ساعت بعد، کد پیش‌بینی را با بازار واقعی و با یک مبنای ساده مقایسه می‌کند و کارنامه را به خود Claude برمی‌گرداند. "
-                f"Claude از آن یاد می‌گیرد: در {fa(s1.get('playbooks_citing_own_scorecard', 0))} برنامه صریحاً به کارنامه‌ی خودش واکنش نشان داده؛ "
+                f"Claude از آن یاد می‌گیرد: در {fa(s1.get('playbooks_citing_own_scorecard', 0))} برنامه از {fa(s1.get('claude_playbooks', 0))} به کارنامه‌ی خودش استناد کرده؛ "
                 f"مثلاً نوشته دو بار گفتم تتر بالا می‌رود و نرفت، پس این بار خنثی می‌گویم. تا اینجا جهت را {r(s1.get('direction_hit'))} درصد "
                 f"درست گفته، در برابر {r(s1.get('naive_hit'))} درصد برای مبنای ساده. و صادقانه می‌گوییم که چون بازار بیشتر آرام بود، "
-                f"حدس همیشه خنثی هم عدد خوبی می‌گیرد."))
+                f"حدس همیشه خنثی هم {r(s1.get('always_flat_hit'))} درصد می‌گیرد."))
 
     # 5 — idea 2: the control group
     ab = d.get("ab") or {}
@@ -231,12 +231,13 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <div class='card'><div class='k'>بازپخش منصفانه: همان ۲۴ ساعت واقعی والکس، همان شبیه‌ساز و همان کمربند؛ فقط مدیر فرق می‌کند (فقط BTCTMN)</div>
 <table style='margin-top:10px'><tr><th>مدیر</th><th>بازده</th><th>بعد از فروش به تومان</th><th>بیشترین افت</th><th>معاملات</th><th>کارمزد (تومان)</th></tr>
 {row('Claude', c, 'acc')}{row('دوقلوی قاعده‌محور', t)}<tr><td>ماندن در تومان</td><td>۰٪</td><td><b>۰٪</b></td><td>۰٪</td><td>۰</td><td>۰</td></tr></table></div>
-<div class='grid g2'><div class='card'><div class='k'>نتیجه</div><div style='font-size:30px;line-height:1.7;margin-top:8px'>نتیجه‌ی نهایی تقریباً مساوی، با <b class='ok'>حدود یک‌هفتم افت حساب</b> و <b class='ok'>یک‌هشتم کارمزد</b>.</div></div>
+<div class='grid g2'><div class='card'><div class='k'>نتیجه</div><div style='font-size:30px;line-height:1.7;margin-top:8px'>نتیجه‌ی نهایی مساوی، با <b class='ok'>حدود یک‌هفتم افت حساب</b> و <b class='ok'>یک‌هشتم کارمزد</b> — بیشتر چون Claude سهم کوچک‌تری انتخاب کرد.</div></div>
 <div class='card'><div class='k'>Claude دوقلو را می‌بیند و باید توضیح دهد (از لاگ):</div><div style='font-size:20px;line-height:1.6;margin-top:8px;direction:ltr;text-align:left'>{html.escape(vs[:330])}</div></div></div>""",
                     "ایده‌ی دوم: گروه کنترل. کنار موتور اصلی، یک دوقلو با همان موتور و همان کمربند ایمنی کار می‌کند، فقط به‌جای Claude یک "
                     "قاعده‌ی ثابت تصمیم می‌گیرد. همان بیست و چهار ساعت واقعی والکس را دو بار از همان شبیه‌ساز گذراندیم: یک بار با برنامه‌های "
                     "ثبت‌شده‌ی Claude و یک بار با قاعده. بعد از فروش همه‌چیز به تومان، که مسابقه همین را می‌سنجد، نتیجه تقریباً مساوی است؛ ولی "
-                    "افت حساب Claude حدود یک‌هفتم و کارمزدش یک‌هشتم دوقلوست. از ظهر جمعه هم Claude برنامه‌ی دوقلو را می‌بیند و باید بنویسد "
+                    "افت حساب Claude حدود یک‌هفتم و کارمزدش یک‌هشتم دوقلوست؛ بیشتر به این دلیل که Claude سهم کوچک‌تری انتخاب کرد، یعنی همان نتیجه با ریسک کمتر. "
+                    "از ظهر جمعه هم Claude برنامه‌ی دوقلو را می‌بیند و باید بنویسد "
                     "کجا با آن مخالف است و چرا؛ مثلاً اینکه یک جهش یک‌ساعته در جمعه‌ی کم‌حجم دلیل خوبی برای چهار برابر کردن موقعیت نیست."))
 
     # 6 — idea 3: the seatbelt
@@ -288,7 +289,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
                 f"این حساب واقعی والکس است. معامله‌ی زنده از بامداد جمعه شروع شد. قبل از شروع، یک سفارش آزمایشی "
                 f"که پر نمی‌شد ثبت کردیم تا مطمئن شویم کلید دقیقاً روی زیرحساب پراپ معامله می‌کند؛ مبلغ همان سفارش "
                 f"در زیرحساب فریز شد و بعد لغو کردیم. حساب پراپ فقط بازار بیت‌کوین به تومان را می‌پذیرد، پس تتر را "
-                f"فقط برای تحلیل نگه داشتیم. تا این لحظه ارزش حساب {money(eq)} تومان است و {fa(len(live_fills))} "
+                f"فقط برای تحلیل نگه داشتیم. در لحظه‌ی ساخت این ویدئو ارزش حساب {money(eq)} تومان است و {fa(len(live_fills))} "
                 f"معامله پر شده. هر سطر این جدول در لاگ تصمیم‌ها، دلیل فارسی کامل خودش را دارد."))
 
     # 7 — backtest
@@ -313,16 +314,18 @@ def scenes(d: dict) -> list[tuple[str, str]]:
     # 9 — the end
     out.append(("""<h2>پایان مسابقه و ایمنی</h2>
 <div class='grid g4'>
-<div class='card'><div class='k'>۸ ساعت مانده</div><div class='v' style='font-size:34px'>خرید متوقف · فروش با لیمیت</div></div>
-<div class='card'><div class='k'>۳ ساعت مانده</div><div class='v' style='font-size:34px'>فروش تهاجمی‌تر</div></div>
-<div class='card'><div class='k'>۱ ساعت مانده</div><div class='v' style='font-size:34px'>فروش محافظت‌شده</div></div>
-<div class='card'><div class='k'>۳۰ دقیقه‌ی آخر</div><div class='v' style='font-size:34px'>تطبیق و تأیید تمام‌تومان</div></div></div>
+<div class='card'><div class='k'>جمعه ۲۱:۲۰</div><div class='v' style='font-size:34px'>خرید متوقف · فروش با لیمیت</div></div>
+<div class='card'><div class='k'>۲۲:۲۰</div><div class='v' style='font-size:34px'>فروش تهاجمی‌تر</div></div>
+<div class='card'><div class='k'>۲۲:۵۰</div><div class='v' style='font-size:34px'>فروش محافظت‌شده</div></div>
+<div class='card'><div class='k'>۲۳:۲۰ تا ۲۳:۵۰</div><div class='v' style='font-size:34px'>تطبیق و تأیید تمام‌تومان</div></div></div>
 <div class='grid g3'><div class='card small'>هشدار پیام‌رسان بله برای هر رویداد مهم؛ واچ‌داگ مستقل هر دقیقه ضربان موتور و تازگی برنامه‌ی Claude را چک می‌کند.</div>
-<div class='card small'>دو قفل برای پول واقعی؛ پس از هر ری‌استارت، سفارش‌های باز و موجودی با والکس تطبیق داده می‌شود.</div>
-<div class='card small'>کد، لاگ تصمیم‌ها، بک‌تست و تست سایه: <span class='ltr'>github.com/MetaParsa/kestrel</span></div></div>""",
-                "و در پایان مسابقه، سیستم خودش همه‌چیز را به تومان برمی‌گرداند: هشت ساعت مانده به پایان خرید متوقف می‌شود "
-                "و فروش با سفارش‌های لیمیت شروع می‌شود، بعد تهاجمی‌تر، و در نیم ساعت آخر موجودی با والکس تطبیق داده می‌شود. مدل‌هایی مثل Kronos را هم آزمودیم و چون از مبنای ساده بدتر بودند کنار گذاشتیم. "
-                "در تمام این مدت هشدارهای بله و یک واچ‌داگ مستقل مراقب‌اند. کد، لاگ تصمیم‌ها، بک‌تست و تست سایه در گیت‌هاب است. ممنون."))
+<div class='card small'>قفل سود: اگر بعد از هزینه‌ی فروش در سود باشیم، همه‌چیز فروخته و خرید بسته می‌شود. نظارت انسانی فقط ترمز است، نه معامله.</div>
+<div class='card small'>بازسازی همه‌ی شواهد بدون کلید: <span class='ltr'>uv run python -m judge.demo</span> · <span class='ltr'>github.com/MetaParsa/kestrel</span></div></div>""",
+                "و در پایان مسابقه، سیستم خودش همه‌چیز را به تومان برمی‌گرداند: در روز آخر خرید تا ساعت نه و بیست دقیقه‌ی شب باز بود، "
+                "بعد فروش با سفارش‌های لیمیت شروع شد، سپس تهاجمی‌تر و در ساعت آخر سریع، و از یازده و بیست دقیقه موجودی با والکس تطبیق داده می‌شود. "
+                "یک قفل سود هم داریم: اگر بعد از هزینه‌ی فروش در سود باشیم، همه‌چیز فروخته و خرید بسته می‌شود. مدل‌هایی مثل Kronos را هم آزمودیم "
+                "و چون از مبنای ساده بدتر بودند کنار گذاشتیم. هشدارهای بله و یک واچ‌داگ مستقل مراقب‌اند، و هر داوری می‌تواند با یک دستور و بدون کلید "
+                "همه‌ی این عددها را دوباره بسازد. کد، لاگ تصمیم‌ها، بک‌تست و تست سایه در گیت‌هاب است. ممنون."))
     return out
 
 

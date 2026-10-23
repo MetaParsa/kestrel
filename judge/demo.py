@@ -194,12 +194,14 @@ def main(argv=None) -> int:
         return 2
     print(f"data/sample OK (SHA-256 manifest) · writing to {a.work}")
     marker = a.work / ".judge_demo"
-    if a.work.exists() and any(a.work.iterdir()) and not marker.exists():
-        print(f"refusing to empty {a.work}: it is not a folder this demo created (pick another --work)")
+    ours = marker.exists() or a.work.resolve() == (REPO / "judge_out").resolve()     # the git-ignored default
+    if a.work.exists() and any(a.work.iterdir()) and not ours:
+        print(f"refusing to write into {a.work}: it is not a folder this demo created (pick another --work)")
         return 2
-    shutil.rmtree(a.work, ignore_errors=True)
-    a.work.mkdir(parents=True)
-    marker.write_text("scratch folder of judge/demo.py; safe to delete", encoding="utf-8")
+    a.work.mkdir(parents=True, exist_ok=True)
+    for old in [a.work / s for s in STEPS] + [a.work / "RESULTS.md"] + list(a.work.glob("*.log")):
+        shutil.rmtree(old, ignore_errors=True) if old.is_dir() else old.unlink(missing_ok=True)
+    marker.write_text("scratch folder of judge/demo.py; safe to delete", encoding="utf-8")   # judge.film's film/ stays
     jobs = [("self_grading", ""), ("crash_drill", ""), ("ab_replay", ab_end())]
     windows = 0 if a.quick else max(0, min(a.windows, 25))
     jobs = [("backtest", f"{k}/{windows}") for k in range(windows)] + jobs     # slowest first
@@ -220,6 +222,7 @@ def main(argv=None) -> int:
 
 
 STEP_TIMEOUT_S = 45 * 60
+STEPS = ("self_grading", "crash_drill", "ab_replay", "backtest")
 
 
 def _run_all(a, jobs: list, running: list, done: list, t0: float) -> None:

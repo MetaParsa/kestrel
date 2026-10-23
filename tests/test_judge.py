@@ -27,3 +27,16 @@ def test_headline_numbers_only_touch_marked_text(tmp_path, monkeypatch):
     assert text.startswith("before <!-- SG:en -->10 forecasts: Claude 50 %") and text.endswith("<!-- /SG --> after")
     headline_numbers.main()
     assert (tmp_path / "README.md").read_text(encoding="utf-8") == text
+
+
+def test_judge_demo_keeps_the_film_in_its_default_folder(tmp_path, monkeypatch):
+    from judge import demo
+    film = demo.REPO / "judge_out" / "film"
+    film.mkdir(parents=True, exist_ok=True)
+    keep = film / "keep.txt"
+    keep.write_text("x", encoding="utf-8")
+    monkeypatch.setattr(demo, "_run_all", lambda *a, **k: None)     # no child processes: only the folder logic
+    monkeypatch.setattr(demo, "compare", lambda *a, **k: [])
+    demo.main(["--quick"])
+    assert keep.exists() and (demo.REPO / "judge_out" / ".judge_demo").exists()
+    keep.unlink()
