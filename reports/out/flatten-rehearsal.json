@@ -1,0 +1,49 @@
+{
+ "replayed": "03:47 → 12:34 (END_AT 12:23)",
+ "phases": [
+  [
+   "03:47",
+   "normal"
+  ],
+  [
+   "04:23",
+   "no_new"
+  ],
+  [
+   "09:23",
+   "aggressive"
+  ],
+  [
+   "11:23",
+   "market"
+  ],
+  [
+   "11:53",
+   "verify"
+  ],
+  [
+   "12:23",
+   "ended"
+  ]
+ ],
+ "decisions": [
+  [
+   "04:23",
+   "SELL",
+   "flatten",
+   "passive",
+   "allow"
+  ]
+ ],
+ "fills": [
+  [
+   "04:39",
+   "SELL",
+   9.02e-06,
+   22075729956
+  ]
+ ],
+ "btc_left": 2.849999999999473e-09,
+ "btc_left_tmn": 64,
+ "final_equity": 4998495
+}
