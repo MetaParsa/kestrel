@@ -1,0 +1,20 @@
+# The Bale command channel for human oversight (NOT installed by deploy/setup_server.sh; not used in the contest).
+# To use it: copy to /etc/systemd/system/, and switch the main engine's ExecStart from `-m engine.run` to
+# `-m oversight.run` (same flags). See oversight/README.md.
+[Unit]
+Description=wallex-agent human oversight (Bale commands)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+User=trader
+WorkingDirectory=/opt/wallex-agent
+EnvironmentFile=/etc/wallex-agent/env
+Environment=TZ=Asia/Tehran
+ExecStart=/opt/wallex-agent/.venv/bin/python -m oversight.bot --run-dir /opt/wallex-agent/run/main
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

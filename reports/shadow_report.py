@@ -58,13 +58,15 @@ def main(argv=None):
     ap.add_argument("--logs", type=Path, required=True)
     ap.add_argument("--name", required=True)
     ap.add_argument("--mode", default=None, help="only records of this mode (shadow/live)")
+    ap.add_argument("--to", type=float, default=None, help="only records up to this unix time (same-period comparisons)")
     a = ap.parse_args(argv)
-    keep = (lambda r: r.get("mode") == a.mode) if a.mode else (lambda r: True)
+    keep = lambda r: (not a.mode or r.get("mode") == a.mode) and (a.to is None or r.get("ts", r.get("created_at", 0)) <= a.to)
     dec = [r for r in read(a.logs / "decisions.jsonl") if keep(r)]
     fills = [r for r in read(a.logs / "fills.jsonl") if keep(r)]
     orders = [r for r in read(a.logs / "orders.jsonl") if keep(r)]
     pbs = [r for r in read(a.logs / "playbooks.jsonl") if keep(r)]
     events = [r for r in read(a.logs / "events.jsonl") if keep(r)]
+    human = read(a.logs / "oversight.jsonl")          # oversight/bot.py: who / when / why of every human command
 
     grids = {m: bars_mod.to_minute_grid(fetch.load(m)) for m in config.MARKETS}
     last_px = {m: float(g["c"].iloc[-1]) for m, g in grids.items()}
@@ -92,6 +94,7 @@ def main(argv=None):
         "pnl_from_fills": replay_pnl(fills, last_px),
         "degrade_levels": dict(Counter(e.get("level") for e in events if e["event"] == "degrade_level")),
         "errors": dict(Counter(e["event"] for e in events if "error" in e["event"] or "fail" in e["event"])),
+        "human_oversight": dict(Counter(h["event"] for h in human)),
     }
     out = Path("reports/out")
     out.mkdir(parents=True, exist_ok=True)
@@ -114,6 +117,18 @@ def main(argv=None):
         lines.append(f"| {tehran(d['ts'])} | {d['mode']} | {MARKET_FA.get(d['market'], d['market'])} | {d['side']} | "
                      f"{d['kind']} | {d['decided_by']} | {d.get('regime') or '—'} | {gate} | "
                      f"`{d.get('order_client_id') or '—'}` | {filled} | {reason} |")
+    shown = [h for h in human if h["event"] in ("applied", "review", "needs_confirm", "rejected", "stale")]
+    if shown:
+        lines += ["", "## نظارت انسانی", "",
+                  "دستورهای انسانی (`oversight/`): فقط توقف خرید، کم کردن ریسک، شروع فروش پایانی یا برگرداندن کنترل؛ "
+                  "هیچ سفارشی دستی نیست. منبع: `oversight.jsonl`.", "",
+                  "| زمان (تهران) | چه کسی | رویداد | دستور | دلیل / یادداشت | وضعیت بعد |", "|---|---|---|---|---|---|"]
+        for h in shown:
+            who = h.get("who") or {}
+            why = (h.get("reason") or h.get("note") or h.get("error") or "—").replace("|", "/")
+            lines.append(f"| {tehran(h['ts'])} | {who.get('name') or who.get('id') or '—'} ({who.get('via', '—')}) | "
+                         f"{h['event']} | {h.get('command') or '—'}{'' if h.get('value') is None else ' ' + str(h['value'])} | "
+                         f"{why} | {h.get('after') or '—'} |")
     Path("delivery").mkdir(exist_ok=True)
     (Path("delivery") / f"DECISIONS-{a.name}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=1))
