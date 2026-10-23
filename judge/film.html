@@ -57,11 +57,18 @@ body.prompter .wrap{max-width:none;padding:12px 24px} body.prompter #chart{heigh
 body.prompter .feed ul{max-height:490px;min-height:0} body.prompter .hint{display:none}
 body.prompter .grid{grid-template-columns:1.25fr 1fr} body.prompter .stats{grid-template-columns:repeat(6,1fr)}   /* the frame is always 1600 px wide */
 body.prompter #strip{display:block;position:fixed;left:0;right:0;bottom:0;background:#0b1220;color:#f8fafc;
-  border-top:4px solid #fbbf24;padding:12px 28px 14px;direction:rtl;text-align:right;overflow:auto}
+  border-top:4px solid #fbbf24;padding:10px 28px 10px;direction:rtl;text-align:right;overflow:auto}
 #strip .meta{display:flex;gap:16px;align-items:baseline;color:#fbbf24;font-size:15px;font-weight:600;margin-bottom:4px}
 #strip .meta .crop{margin-inline-start:auto;color:#64748b;font-weight:400;font-size:13px}
-#strip .read{font-size:clamp(17px,1.45vw,27px);line-height:1.8;font-weight:600}
-#strip .cue{color:#94a3b8;font-size:clamp(14px,1.1vw,18px);margin-top:6px}
+#strip .col{max-width:min(58vw,1050px);margin:0 auto}   /* narrow column: the eyes don't travel */
+#strip .prevl,#strip .nextl{color:#64748b;font-size:clamp(14px,1.05vw,19px);line-height:1.75;font-weight:500;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#strip .prevl{margin-bottom:4px;-webkit-line-clamp:1}#strip .nextl{margin-top:6px}
+#strip .read{font-size:clamp(17px,1.38vw,26px);line-height:1.85;font-weight:600;color:#cbd5e1}
+#strip .read .w.done{color:#64748b}
+#strip .read .w.on{color:#0b1220;background:#fbbf24;border-radius:6px;box-shadow:0 0 0 3px #fbbf24}
+#strip .cue{color:#94a3b8;font-size:clamp(13px,1vw,17px);margin-top:2px;display:flex;gap:18px}
+#strip .keys{margin-inline-start:auto;color:#475569;direction:ltr;unicode-bidi:isolate}
 #strip bdi{unicode-bidi:isolate;font-family:Vazirmatn,Tahoma,sans-serif}
 </style>
 </head>
@@ -94,8 +101,13 @@ body.prompter #strip{display:block;position:fixed;left:0;right:0;bottom:0;backgr
   </div>
   <div class="hint">Space یا → = مرحله‌ی بعد · ← = قبلی · همه‌چیز از اجرای واقعی موتور روی دقیقه‌های واقعی والکس است؛ تصمیم‌های Claude از لاگ زنده‌ی امروز. <span id="built"></span></div>
 </div></div>
-<div id="strip" dir="rtl" lang="fa"><div class="meta"><span id="readn"></span><span class="crop" id="crop"></span></div>
-<div class="read" id="readtxt"></div><div class="cue" id="cue"></div></div>
+<div id="strip" dir="rtl" lang="fa"><div class="col">
+<div class="meta"><span id="readn"></span><span class="crop" id="crop"></span></div>
+<div class="prevl" id="prevtxt"></div>
+<div class="read" id="readtxt"></div>
+<div class="nextl" id="nexttxt"></div>
+<div class="cue"><span id="cue"></span><span class="keys">highlight: P pause · [ slower · ] faster · ↑↓ word · R restart · <span id="pace"></span></span></div>
+</div></div>
 <script>
 const DATA = /*DATA*/null;
 const PROMPTER = /*PROMPTER*/false;
@@ -103,9 +115,29 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 // Latin runs (Claude, DECISIONS-live.md, /risk …) are isolated left-to-right inside the right-to-left line
 const bidi = s => String(s).split(/([A-Za-z\/][A-Za-z0-9_.\-\/]*(?:[ ][A-Za-z0-9_.\-\/]+)*)/g)
   .map((part, i) => i % 2 ? `<bdi dir="ltr">${esc(part)}</bdi>` : esc(part)).join("");
+// karaoke: the current line is split into words; the highlight moves at a steady reading pace from the moment the
+// step starts (longer words take longer, a comma or full stop adds a pause). Keys adjust it while you read.
+let words = [], wi = 0, wtimer = null, paused = false, pace = 1.0, voiceStep = -1;
+function wordsHtml(text){
+  return String(text).split(/\s+/).filter(Boolean).map((w, i) =>
+    `<span class="w" data-i="${i}">${/[A-Za-z]/.test(w) ? `<bdi dir="ltr">${esc(w)}</bdi>` : esc(w)}</span>`).join(" ");
+}
+function wordMs(w){ return (180 + 62 * w.replace(/[^\p{L}\p{N}]/gu, "").length + (/[،.؛:!?»]$/.test(w) ? 380 : 0)) / pace; }
+function mark(){
+  const spans = $("readtxt").querySelectorAll(".w");
+  spans.forEach((sp, i) => { sp.classList.toggle("on", i === wi); sp.classList.toggle("done", i < wi); });
+  const cur = spans[wi]; if (cur) cur.scrollIntoView({block: "nearest"});
+  $("pace").textContent = (paused ? "paused" : "pace ×" + pace.toFixed(1));
+}
+function tick(){
+  clearTimeout(wtimer);
+  if (paused || wi >= words.length) { mark(); return; }
+  mark(); wtimer = setTimeout(() => { wi++; tick(); }, wordMs(words[wi]));
+}
+function startWords(text){ words = String(text).split(/\s+/).filter(Boolean); wi = 0; $("readtxt").innerHTML = wordsHtml(text); tick(); }
 function fit(){
   if (!PROMPTER) return;
-  const k = Math.min(innerWidth / 1600, innerHeight * 0.70 / 900), w = Math.floor(1600 * k), h = Math.floor(900 * k);
+  const k = Math.min(innerWidth / 1600, innerHeight * 0.60 / 900), w = Math.floor(1600 * k), h = Math.floor(900 * k);
   $("stage").style.transform = `scale(${k})`;
   $("strip").style.top = h + "px";
   $("crop").innerHTML = `<span dir="ltr">crop the video to the top-left ${w} × ${h} px</span>`;
@@ -170,7 +202,13 @@ function render(){
   if (PROMPTER){
     const v = (DATA.voice || [])[step] || {read: "", cue: ""};
     $("readn").textContent = `بخوانید · مرحله‌ی ${fa(step+1)} از ${fa(steps.length)}`;
-    $("readtxt").innerHTML = bidi(v.read); $("cue").innerHTML = bidi(v.cue);
+    $("cue").innerHTML = bidi(v.cue);
+    if (voiceStep !== step) {                          // only when the step changes, not on every replayed minute
+      voiceStep = step;
+      $("prevtxt").innerHTML = step > 0 ? bidi(DATA.voice[step - 1].read) : "";
+      $("nexttxt").innerHTML = step + 1 < steps.length ? "بعد: " + bidi(DATA.voice[step + 1].read) : "";
+      startWords(v.read);
+    }
   }
 }
 
@@ -190,7 +228,16 @@ function prev(){ stop(); if(step>0) step--; minute = steps[step].m; shownFeed=0;
 $("next").onclick=next; $("prev").onclick=prev;
 $("speed").onclick=()=>{ sp=(sp+1)%speeds.length; $("speed").textContent=`سرعت ×${fa(speeds[sp])}`; };
 $("speed").textContent=`سرعت ×${fa(speeds[sp])}`;
-document.addEventListener("keydown",e=>{ if(e.key===" "||e.key==="ArrowRight"){ e.preventDefault(); next(); } if(e.key==="ArrowLeft"){ e.preventDefault(); prev(); } });
+document.addEventListener("keydown",e=>{
+  if (PROMPTER) {
+    const k = e.key.toLowerCase();
+    if (k === "p") { paused = !paused; tick(); return; }
+    if (k === "r") { wi = 0; paused = false; tick(); return; }
+    if (k === "]") { pace = Math.min(2.5, pace + 0.1); tick(); return; }
+    if (k === "[") { pace = Math.max(0.4, pace - 0.1); tick(); return; }
+    if (e.key === "ArrowDown") { e.preventDefault(); wi = Math.min(words.length - 1, wi + 1); tick(); return; }
+    if (e.key === "ArrowUp") { e.preventDefault(); wi = Math.max(0, wi - 1); tick(); return; }
+  } if(e.key===" "||e.key==="ArrowRight"){ e.preventDefault(); next(); } if(e.key==="ArrowLeft"){ e.preventDefault(); prev(); } });
 $("built").textContent = `· ساخته‌شده ${DATA.built} · کد ${DATA.sha}`;
 if (PROMPTER){ document.body.classList.add("prompter"); addEventListener("resize", fit); fit(); }
 minute = steps[0].m; render();
