@@ -27,6 +27,20 @@ import config  # noqa: E402
 OUT = ROOT / "run" / "video"
 DATA = OUT / "data"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+
+def edge_shot(cmd, **kw):
+    """Edge's launcher can return before the screenshot is written: delete the old file, then wait for the new one."""
+    out = Path(next(a for a in cmd if a.startswith("--screenshot=")).split("=", 1)[1])
+    out.unlink(missing_ok=True)
+    kw.pop("check", None)
+    subprocess.run(cmd, **kw)
+    for _ in range(150):
+        if out.exists() and out.stat().st_size > 0:
+            time.sleep(0.4)
+            return
+        time.sleep(0.2)
+    raise RuntimeError(f"no screenshot: {out}")
+
 TTS = ROOT / ".kronos" / ".venv-tts" / "Scripts" / "edge-tts.exe"
 FFMPEG = shutil.which("ffmpeg") or str(next(Path.home().glob(
     "AppData/Local/Microsoft/WinGet/Packages/*FFmpeg*/*/bin/ffmpeg.exe")))
@@ -136,7 +150,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
     out.append(("""<div style='margin:auto 0'><span class='tag'>چالش والکس · هکاتون Agentic AI استارکوچ</span>
 <h1 style='font-size:92px;margin-top:30px'>موتور معاملاتی هوشمند والکس</h1>
 <div class='sub' style='font-size:40px;margin-top:20px'>Claude مسیر را تعیین می‌کند، کد ترمز می‌گیرد.</div>
-<div class='small' style='margin-top:40px'>تیم یک‌نفره: پارسا، با Claude Code به‌عنوان ایجنت کدنویس · github.com/MetaParsa/wallex-agent</div></div>""",
+<div class='small' style='margin-top:40px'>تیم یک‌نفره: پارسا، با Claude Code به‌عنوان ایجنت کدنویس · github.com/MetaParsa/kestrel</div></div>""",
                 "سلام. این موتور معاملاتی هوشمند ما برای چالش والکس است. سؤال ما این بود: از کجا بفهمیم هوش مصنوعی "
                 "واقعاً چیزی اضافه می‌کند، و مطمئن باشیم نمی‌تواند پول را به باد بدهد؟ جواب سه ایده است: هوش مصنوعی‌ای که به خودش "
                 "نمره می‌دهد، یک گروه کنترل بدون هوش مصنوعی، و یک کمربند ایمنی که مدل نمی‌تواند دورش بزند. همه را روی حساب واقعی والکس نشان می‌دهیم."))
@@ -305,7 +319,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <div class='card'><div class='k'>۳۰ دقیقه‌ی آخر</div><div class='v' style='font-size:34px'>تطبیق و تأیید تمام‌تومان</div></div></div>
 <div class='grid g3'><div class='card small'>هشدار پیام‌رسان بله برای هر رویداد مهم؛ واچ‌داگ مستقل هر دقیقه ضربان موتور و تازگی برنامه‌ی Claude را چک می‌کند.</div>
 <div class='card small'>دو قفل برای پول واقعی؛ پس از هر ری‌استارت، سفارش‌های باز و موجودی با والکس تطبیق داده می‌شود.</div>
-<div class='card small'>کد، لاگ تصمیم‌ها، بک‌تست و تست سایه: <span class='ltr'>github.com/MetaParsa/wallex-agent</span></div></div>""",
+<div class='card small'>کد، لاگ تصمیم‌ها، بک‌تست و تست سایه: <span class='ltr'>github.com/MetaParsa/kestrel</span></div></div>""",
                 "و در پایان مسابقه، سیستم خودش همه‌چیز را به تومان برمی‌گرداند: هشت ساعت مانده به پایان خرید متوقف می‌شود "
                 "و فروش با سفارش‌های لیمیت شروع می‌شود، بعد تهاجمی‌تر، و در نیم ساعت آخر موجودی با والکس تطبیق داده می‌شود. مدل‌هایی مثل Kronos را هم آزمودیم و چون از مبنای ساده بدتر بودند کنار گذاشتیم. "
                 "در تمام این مدت هشدارهای بله و یک واچ‌داگ مستقل مراقب‌اند. کد، لاگ تصمیم‌ها، بک‌تست و تست سایه در گیت‌هاب است. ممنون."))
@@ -332,7 +346,7 @@ def render(items: list[tuple[str, str]]) -> Path:
     for i, (body, say) in enumerate(items, 1):
         h, png, mp3, mp4 = (work / f"s{i:02d}.{x}" for x in ("html", "png", "mp3", "mp4"))
         h.write_text(page(body, i, len(items)), encoding="utf-8")
-        subprocess.run([EDGE, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--window-size=1920,1080",
+        edge_shot([EDGE, "--headless=new", f"--user-data-dir={Path.home() / 'AppData' / 'Local' / 'Temp' / 'edge-headless-render'}", "--disable-gpu", "--hide-scrollbars", "--window-size=1920,1080",
                         "--virtual-time-budget=4000", f"--screenshot={png}", h.resolve().as_uri()],
                        capture_output=True, timeout=120, check=True)
         subprocess.run([str(TTS), "--voice", VOICE, "--rate=+4%", "--text", say, "--write-media", str(mp3)],
