@@ -286,12 +286,13 @@ def main(argv=None):
     ap.add_argument("--cap", type=float, default=SPEND_CAP_USD, help="hard spend cap in USD")
     ap.add_argument("--once", action="store_true")
     ap.add_argument("--interval", type=float, default=60.0)
+    ap.add_argument("--gap-min", type=float, default=20.0, help="minimum minutes between paid decisions")
     a = ap.parse_args(argv)
     transport = LocalTransport(a.local_run_dir) if a.local_run_dir else ScpTransport(a.host, a.remote_dir)
     if a.paid:
         import anthropic   # only imported when real calls are allowed
         client = anthropic.Anthropic(max_retries=0, timeout=240.0)   # no silent, unrecorded retries
-        decide, gap = claude_decider(client, SpendLedger(LOCAL / "spend.jsonl", a.cap)), 20 * 60
+        decide, gap = claude_decider(client, SpendLedger(LOCAL / "spend.jsonl", a.cap)), a.gap_min * 60
     else:
         decide, gap = mock_decider, 0
     box = AiBox(transport, decide, min_gap_s=gap)

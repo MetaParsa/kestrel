@@ -120,7 +120,7 @@ def test_mock_manager_is_deterministic_and_reacts_to_drift():
 # ---- spend ledger -------------------------------------------------------------------
 def test_cost_math_and_cap(tmp_path):
     u = Usage(input_tokens=2000, output_tokens=1500, cache_creation_input_tokens=1000, cache_read_input_tokens=4000)
-    assert cost_usd("claude-opus-5-5", u) == pytest.approx((2000 * 4 + 1000 * 5 + 4000 * 0.2 + 1500 * 20) / 1e6)
+    assert cost_usd("claude-opus-5-5", u) == pytest.approx((2000 * 4 + 1000 * 8 + 4000 * 0.2 + 1500 * 20) / 1e6)
     assert cost_usd("unknown-model", u) > cost_usd("claude-opus-5-5", u)          # never under-counts
     led = SpendLedger(tmp_path / "s.jsonl", cap_usd=0.05)
     led.record(model="claude-opus-5-5", usage=u, request_id="r", purpose="t")
@@ -167,7 +167,7 @@ def test_manager_tool_loop_then_structured_playbook(tmp_path):
     assert kw["model"] == "claude-opus-5-5" and kw["fallbacks"] == "default"
     assert kw["betas"] == ["server-side-fallback-2026-07-01"]
     assert kw["output_config"]["effort"] == "high" and kw["output_config"]["format"]["type"] == "json_schema"
-    assert kw["system"][0]["cache_control"] == {"type": "ephemeral"}
+    assert kw["system"][0]["cache_control"] == {"type": "ephemeral", "ttl": "1h"}
     assert "thinking" not in kw and "tool_choice" not in kw            # Opus 5.5: both would 400
     second = fake.calls[1]["messages"]
     assert second[-1]["content"][0]["type"] == "tool_result" and second[-1]["content"][0]["is_error"] is False

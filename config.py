@@ -114,7 +114,8 @@ EXECUTION = ExecutionCfg()
 class LoopCfg:
     tick_s: float = 10.0
     bundle_every_s: float = 60.0
-    manager_every_s: float = 3600.0
+    # WALLEX_MANAGER_EVERY_MIN asks Claude more often (e.g. 15 on the last evening); default hourly
+    manager_every_s: float = float(os.environ.get("WALLEX_MANAGER_EVERY_MIN", "60")) * 60
     request_reissue_s: float = 20 * 60          # unanswered manager request → new request id
     playbook_grace_s: float = 2 * 3600          # degrade level 2 window after valid_until
     max_trade_age_s: float = 30 * 60            # no trade for this long → treat the market as stale for buys

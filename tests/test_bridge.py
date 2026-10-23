@@ -24,7 +24,7 @@ def test_manager_continues_after_pause_turn(tmp_path):
 
 
 def test_spend_cap_hit_mid_loop(tmp_path):
-    led = SpendLedger(tmp_path / "s.jsonl", cap_usd=0.36)          # first request fits, the second can't
+    led = SpendLedger(tmp_path / "s.jsonl", cap_usd=0.39)          # first request fits, the second can't
     fake = FakeClaude([resp("tool_use", [tool_use(1, "calendar", {})]), resp("end_turn", [text("{}")])])
     with pytest.raises(SpendCapReached):
         run_manager(make_bundle(), fake, led)

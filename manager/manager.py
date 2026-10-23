@@ -3,7 +3,8 @@
 - Model `claude-opus-5-5`, adaptive thinking (always on for this model), effort `high`.
 - Structured output (`output_config.format`) guarantees the final answer is PlaybookOut JSON.
 - Tools are `strict`; forced tool_choice isn't allowed on Opus 5.5, so the prompt steers.
-- System prompt + tools are cached (stable prefix); the bundle summary comes after.
+- System prompt + tools are cached for 1 hour (stable prefix; decisions come every 15-60 min, so the
+  5-minute default expired between them); the bundle summary comes after.
 - Server-side refusal fallback on (`fallbacks="default"`, beta server-side-fallback-2026-07-01).
 - Every request is checked against the spend cap before it is sent, and recorded after.
 - The full transcript (inputs, tool calls, tool results, outputs) is returned for the logs.
@@ -90,7 +91,7 @@ def _block_dict(b) -> dict:
 
 def run_manager(bundle: dict, client, ledger: SpendLedger, *, model: str = MODEL,
                 max_tool_calls: int = MAX_TOOL_CALLS, max_requests: int = 8) -> ManagerResult:
-    system = [{"type": "text", "text": PROMPT, "cache_control": {"type": "ephemeral"}}]
+    system = [{"type": "text", "text": PROMPT, "cache_control": {"type": "ephemeral", "ttl": "1h"}}]
     messages: list[dict] = [{"role": "user", "content": summary_message(bundle)}]
     transcript: list[dict] = [{"role": "user", "content": messages[0]["content"]}]
     cost, tool_calls = 0.0, 0

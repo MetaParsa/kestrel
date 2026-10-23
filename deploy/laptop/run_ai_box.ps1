@@ -13,7 +13,7 @@ if (-not $env:ANTHROPIC_API_KEY) {
 $uv = (Get-Command uv -ErrorAction SilentlyContinue).Source
 if (-not $uv) { $uv = Join-Path $env:LOCALAPPDATA "Microsoft\WinGet\Packages\astral-sh.uv_Microsoft.Winget.Source_8wekyb3d8bbwe\uv.exe" }
 "$(Get-Date -Format s) starting ai_box loop (paid, cap 15 USD)" | Out-File -Append -Encoding utf8 $log
-& $uv run python -u -m ai_box.loop --host wallex-iran --remote-dir /opt/wallex-agent/run/main --paid --cap 15 2>&1 |
+& $uv run python -u -m ai_box.loop --host wallex-iran --remote-dir /opt/wallex-agent/run/main --paid --cap 15 --gap-min 10 2>&1 |
     ForEach-Object { "$(Get-Date -Format s) $_" } | Out-File -Append -Encoding utf8 $log
 "$(Get-Date -Format s) ai_box loop exited with code $LASTEXITCODE" | Out-File -Append -Encoding utf8 $log
 exit 1   # make Task Scheduler restart it

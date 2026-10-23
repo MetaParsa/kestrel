@@ -1,7 +1,7 @@
 """Spend ledger for Claude calls: every call's usage and dollar cost, plus a hard cap.
 
 Prices (USD per million tokens, Anthropic first-party, from the claude-api skill's
-model table cached 2026-10-06). Cache writes are billed at 1.25× input (5-minute TTL).
+model table cached 2026-10-06). Cache writes are billed at 2× input (1-hour TTL).
 Unknown models (e.g. a server-side fallback) are costed at the most expensive known
 rate, so the ledger never under-counts.
 """
@@ -21,7 +21,7 @@ PRICES = {  # model: (input, output, cache_read)
     "claude-fable-5-1": (10.00, 50.00, 0.25),
 }
 WORST = max(PRICES.values(), key=lambda p: p[1])
-CACHE_WRITE_MULT = 1.25
+CACHE_WRITE_MULT = 2.0
 
 
 class SpendCapReached(RuntimeError):
