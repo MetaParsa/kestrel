@@ -2,7 +2,7 @@
  "name": "main-all",
  "mode_filter": null,
  "from": "10-22 10:45",
- "to": "10-23 03:27",
+ "to": "10-23 05:29",
  "code_versions": [
   "301364bd981d",
   "386a6fbdb772",
@@ -15,17 +15,17 @@
   "eec06ad28472"
  ],
  "playbooks": {
-  "total": 19,
+  "total": 22,
   "by_source": {
    "mock": 1,
-   "claude": 18
+   "claude": 21
   },
   "regimes": {
    "devaluation_drift": 9,
    "event_shock": 2,
-   "range": 8
+   "range": 11
   },
-  "claude_cost_usd": 1.265,
+  "claude_cost_usd": 1.462,
   "clamped": 0
  },
  "claude_forecasts_4h": {
@@ -127,8 +127,8 @@
  },
  "fills": 2,
  "pnl_from_fills": {
-  "equity_tmn": 4999036,
-  "return_pct": -0.019,
+  "equity_tmn": 4998949,
+  "return_pct": -0.021,
   "volume_tmn": 449503,
   "fees_tmn": 1349,
   "holdings": {
