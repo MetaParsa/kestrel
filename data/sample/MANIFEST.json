@@ -1,24 +1,24 @@
 {
  "source": "Wallex public UDF candles (/v1/udf/history, resolution 1), downloaded with `python -m data.fetch`",
- "frozen_at": "2026-10-23 16:00 Tehran (copy of data/store used by the committed reports)",
+ "frozen_at": "2026-10-23 20:17 Tehran (copy of data/store used by the committed reports)",
  "files": {
   "USDTTMN_1m.parquet": {
-   "sha256": "703915a8af8962e047b45dd7c5b1f10e6b20ff490146b96f905702d0b6f7e7b2",
-   "bars": 43335,
+   "sha256": "b44176e7d7f1821b2de4ba641a22873bc75719a391162fe5a5651257a398c23c",
+   "bars": 43594,
    "first_utc": "2026-09-22T05:51+00:00",
-   "last_utc": "2026-10-23T12:29+00:00"
+   "last_utc": "2026-10-23T16:48+00:00"
   },
   "BTCTMN_1m.parquet": {
-   "sha256": "d615dc07be4d1dd724d2bd2ab9385a8a201654d43748f634ced8d0c94c2c5dbc",
-   "bars": 44944,
+   "sha256": "42f75311ae7c13c5faf747f613f0b0dbba3c0ddc6208b6b78d50bce76f75a32c",
+   "bars": 45202,
    "first_utc": "2026-09-22T05:51+00:00",
-   "last_utc": "2026-10-23T12:30+00:00"
+   "last_utc": "2026-10-23T16:48+00:00"
   },
   "BTCUSDT_1m.parquet": {
-   "sha256": "ec47a04400b4f03c3378052b51b0aa8ef483f1851ddc422a306f637c5f7679b5",
-   "bars": 44916,
+   "sha256": "e44d5f1a134433d4dd98e849d0259e4ae1bd10c3ba505a5c0fab56c81ed8d897",
+   "bars": 45174,
    "first_utc": "2026-09-22T05:51+00:00",
-   "last_utc": "2026-10-23T12:29+00:00"
+   "last_utc": "2026-10-23T16:47+00:00"
   }
  }
 }

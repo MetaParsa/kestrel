@@ -42,7 +42,7 @@ uv run pytest -q                     # بیش از ۲۵۰ تست، حدود ۲۵
 
 | ادعا | اسکریپت | شاهد ثبت‌شده | عدد |
 |---|---|---|---|
-| هوش مصنوعی‌ای که به خودش نمره می‌دهد | `reports/self_grading.py` | [`delivery/SELF-GRADING.md`](delivery/SELF-GRADING.md) | ۵۸ پیش‌بینی ۴ ساعته (دو در هر برنامه): Claude ۴۷٪، مبنای ساده ۴۱٪، «همیشه خنثی» ۴۸٪؛ در ۳۰ برنامه از ۳۷ Claude به کارنامه‌ی خودش استناد کرد |
+| هوش مصنوعی‌ای که به خودش نمره می‌دهد | `reports/self_grading.py` | [`delivery/SELF-GRADING.md`](delivery/SELF-GRADING.md) | <!-- SG:fa_short -->۷۲ پیش‌بینی ۴ ساعته (دو در هر برنامه): Claude ۴۶٪، مبنای ساده ۳۳٪، «همیشه خنثی» ۴۲٪؛ در ۴۶ برنامه از ۵۳ Claude به کارنامه‌ی خودش استناد کرد<!-- /SG --> |
 | گروه کنترل (همان موتور، همان دقیقه‌ها، قاعده به‌جای Claude) | `reports/ab_replay.py` | [`delivery/CONTROL-GROUP.md`](delivery/CONTROL-GROUP.md) | بعد از فروش به تومان هر دو ⁦+۰٫۰۱۴٪⁩؛ افت ۰٫۰۲۶٪ در برابر ۰٫۱۷۷٪؛ کارمزد ۶۰۱ در برابر ۴٬۸۷۹ تومان |
 | کمربند ایمنی (آزمون سقوط) | `reports/crash_drill.py` | [`delivery/SEATBELT.md`](delivery/SEATBELT.md) | سقوط ۱۰٪: با کمربند ⁦−۰٫۷۷٪⁩، بدون آن ⁦−۱٫۹۷٪⁩؛ قیمت خراب ⁦−۳۰٪⁩: هیچ فروشی |
 | بک‌تست با همان موتور | `reports/backtest.py` | [`reports/out/backtest-summary.json`](reports/out/backtest-summary.json) | ۲۵ پنجره‌ی ۳ روزه: میانگین ⁦−۰٫۱۴٪⁩، بدترین افت ۰٫۶۰٪، همه تمام‌تومان |
