@@ -48,10 +48,25 @@ svg text{font-family:Vazirmatn,Tahoma,sans-serif}
 .feed li.new{animation:pop .8s ease-out}
 @keyframes pop{from{background:#fde68a}}
 .hint{color:var(--muted);font-size:12.5px;text-align:center;margin-top:10px}
+/* read-aloud mode (prompter.html): the demo is drawn in a fixed 16:9 frame at the top-left, scaled to fit;
+   the strip with the lines to read sits under it, outside the frame, so the recording can be cropped to the frame */
+#strip{display:none}
+body.prompter{overflow:hidden;background:#0b1220;height:100vh}
+body.prompter #stage{position:fixed;top:0;left:0;width:1600px;height:900px;overflow:hidden;background:var(--bg);transform-origin:0 0}
+body.prompter .wrap{max-width:none;padding:12px 24px} body.prompter #chart{height:250px}
+body.prompter .feed ul{max-height:490px;min-height:0} body.prompter .hint{display:none}
+body.prompter .grid{grid-template-columns:1.25fr 1fr} body.prompter .stats{grid-template-columns:repeat(6,1fr)}   /* the frame is always 1600 px wide */
+body.prompter #strip{display:block;position:fixed;left:0;right:0;bottom:0;background:#0b1220;color:#f8fafc;
+  border-top:4px solid #fbbf24;padding:12px 28px 14px;direction:rtl;text-align:right;overflow:auto}
+#strip .meta{display:flex;gap:16px;align-items:baseline;color:#fbbf24;font-size:15px;font-weight:600;margin-bottom:4px}
+#strip .meta .crop{margin-inline-start:auto;color:#64748b;font-weight:400;font-size:13px}
+#strip .read{font-size:clamp(17px,1.45vw,27px);line-height:1.8;font-weight:600}
+#strip .cue{color:#94a3b8;font-size:clamp(14px,1.1vw,18px);margin-top:6px}
+#strip bdi{unicode-bidi:isolate;font-family:Vazirmatn,Tahoma,sans-serif}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div id="stage"><div class="wrap">
   <header>
     <h1>ربات معامله‌گر والکس</h1>
     <span class="sub" id="sub"></span>
@@ -78,9 +93,23 @@ svg text{font-family:Vazirmatn,Tahoma,sans-serif}
     <div class="card feed"><h3>چه اتفاقی افتاد (از لاگ موتور)</h3><ul id="feed"></ul></div>
   </div>
   <div class="hint">Space یا → = مرحله‌ی بعد · ← = قبلی · همه‌چیز از اجرای واقعی موتور روی دقیقه‌های واقعی والکس است؛ تصمیم‌های Claude از لاگ زنده‌ی امروز. <span id="built"></span></div>
-</div>
+</div></div>
+<div id="strip" dir="rtl" lang="fa"><div class="meta"><span id="readn"></span><span class="crop" id="crop"></span></div>
+<div class="read" id="readtxt"></div><div class="cue" id="cue"></div></div>
 <script>
 const DATA = /*DATA*/null;
+const PROMPTER = /*PROMPTER*/false;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// Latin runs (Claude, DECISIONS-live.md, /risk …) are isolated left-to-right inside the right-to-left line
+const bidi = s => String(s).split(/([A-Za-z\/][A-Za-z0-9_.\-\/]*(?:[ ][A-Za-z0-9_.\-\/]+)*)/g)
+  .map((part, i) => i % 2 ? `<bdi dir="ltr">${esc(part)}</bdi>` : esc(part)).join("");
+function fit(){
+  if (!PROMPTER) return;
+  const k = Math.min(innerWidth / 1600, innerHeight * 0.70 / 900), w = Math.floor(1600 * k), h = Math.floor(900 * k);
+  $("stage").style.transform = `scale(${k})`;
+  $("strip").style.top = h + "px";
+  $("crop").innerHTML = `<span dir="ltr">crop the video to the top-left ${w} × ${h} px</span>`;
+}
 const LIGHT = {green:["#15803d","سبز — عادی"], yellow:["#d97706","زرد — با احتیاط"], red:["#dc2626","قرمز — خرید ممنوع"]};
 const PHASE = {normal:"عادی", no_new:"بدون خرید تازه", aggressive:"فروش فعال", market:"فروش سریع", verify:"تطبیق با والکس", ended:"پایان — همه تومان"};
 const ICON = {plan:"🧠", human:"🙋", fill:"✅", block:"⛔", bale:"📱", shock:"⚡", engine:"⚙️", decision:"🛡️", note:"•"};
@@ -138,6 +167,11 @@ function render(){
   const ul = $("feed"); const fresh = items.length - shownFeed;
   ul.innerHTML = items.slice().reverse().slice(0,40).map((x,i)=>`<li class="${x.kind} ${x.side||""} ${i<fresh&&fresh<20?"new":""}"><span class="tm">${hhmm(x.t)}</span><span>${ICON[x.kind]||"•"} ${x.text}</span></li>`).join("");
   shownFeed = items.length;
+  if (PROMPTER){
+    const v = (DATA.voice || [])[step] || {read: "", cue: ""};
+    $("readn").textContent = `بخوانید · مرحله‌ی ${fa(step+1)} از ${fa(steps.length)}`;
+    $("readtxt").innerHTML = bidi(v.read); $("cue").innerHTML = bidi(v.cue);
+  }
 }
 
 function stop(){ if(timer){ clearInterval(timer); timer=null; } }
@@ -158,6 +192,7 @@ $("speed").onclick=()=>{ sp=(sp+1)%speeds.length; $("speed").textContent=`سرع
 $("speed").textContent=`سرعت ×${fa(speeds[sp])}`;
 document.addEventListener("keydown",e=>{ if(e.key===" "||e.key==="ArrowRight"){ e.preventDefault(); next(); } if(e.key==="ArrowLeft"){ e.preventDefault(); prev(); } });
 $("built").textContent = `· ساخته‌شده ${DATA.built} · کد ${DATA.sha}`;
+if (PROMPTER){ document.body.classList.add("prompter"); addEventListener("resize", fit); fit(); }
 minute = steps[0].m; render();
 </script>
 </body>

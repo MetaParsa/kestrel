@@ -301,11 +301,15 @@ def write_page(days: dict) -> Path:
     data = {"built": datetime.now(config.TEHRAN).strftime("%Y-%m-%d %H:%M"), "sha": sha(), "days": [
         {"key": k, "start": d.start, "date": datetime.fromtimestamp(d.start, tz=config.TEHRAN).strftime("%Y-%m-%d"),
          "frames": d.frames, "feed": d.feed(),
-         "acts": [{"m": m, "title": t, "say": s} for m, t, s in ACTS[k]]} for k, d in days.items()]}
+         "acts": [{"m": m, "title": t, "say": s} for m, t, s in ACTS[k]]} for k, d in days.items()],
+            "voice": json.loads((REPO / "judge" / "film_voice_fa.json").read_text(encoding="utf-8"))}   # read-aloud lines
     OUT.mkdir(parents=True, exist_ok=True)
     tpl = (REPO / "judge" / "film.html").read_text(encoding="utf-8")
     page = OUT / "index.html"
-    page.write_text(tpl.replace("/*DATA*/null", json.dumps(data, ensure_ascii=False)), encoding="utf-8")
+    tpl = tpl.replace("/*DATA*/null", json.dumps(data, ensure_ascii=False))
+    page.write_text(tpl, encoding="utf-8")
+    # the same page with a read-aloud strip below a fixed 16:9 frame (crop the strip off the recording)
+    (OUT / "prompter.html").write_text(tpl.replace("/*PROMPTER*/false", "true"), encoding="utf-8")
     (OUT / "film.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     return page
 
@@ -315,6 +319,8 @@ def main(argv=None) -> int:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--open", action="store_true", help="open the page when done")
+    ap.add_argument("--prompter", action="store_true",
+                    help="with --open: open the version with your lines in a strip under a 16:9 frame (crop it off)")
     a = ap.parse_args(argv)
     days = build()
     page = write_page(days)
@@ -326,7 +332,7 @@ def main(argv=None) -> int:
     print("checks:", "all passed" if not fails else "\n  " + "\n  ".join(fails))
     print("page:", page)
     if a.open:
-        webbrowser.open(page.as_uri())
+        webbrowser.open((page.with_name("prompter.html") if a.prompter else page).as_uri())
     return 1 if fails else 0
 
 
