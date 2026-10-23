@@ -1,0 +1,15 @@
+# لاگ تصمیم‌ها — baseline-shadow
+
+هر سطر یک تصمیم موتور است: چه دید، چه کسی تصمیم گرفت (`manager` = Claude، `gate` = کنترل ریسک، `flatten` = فروش پایانی، `floor` = حداقل فعالیت)، کنترل ریسک چه گفت، چه سفارشی رفت و چه پر شد. منبع: `decisions.jsonl` و `fills.jsonl` (هر سطر با شناسه‌ی کد `git_sha`).
+
+| زمان (تهران) | حالت | بازار | سمت | نوع | تصمیم‌گیرنده | رژیم | کنترل ریسک | سفارش | پر شد | دلیل |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 10-22 10:45 | shadow | تتر/تومان | BUY | rebalance_up | manager | devaluation_drift | block (G_STALE_DATA) | `—` | — | افزایش سهم پایه در تتر/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: رد شد (G_STALE_DATA) |
+| 10-22 10:45 | shadow | بیت‌کوین/تومان | BUY | rebalance_up | manager | devaluation_drift | allow (G_CORE_STEP) | `d-9265335302-BTCTMN-c` | — | افزایش سهم پایه در بیت‌کوین/تومان (سهم فعلی 0.0%، هدف 10.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: مجاز |
+| 10-22 11:00 | shadow | تتر/تومان | BUY | rebalance_up | manager | devaluation_drift | block (G_STALE_DATA) | `—` | — | افزایش سهم پایه در تتر/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: رد شد (G_STALE_DATA) |
+| 10-22 11:15 | shadow | تتر/تومان | BUY | rebalance_up | manager | devaluation_drift | block (G_STALE_DATA) | `—` | — | افزایش سهم پایه در تتر/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: رد شد (G_STALE_DATA) |
+| 10-22 11:28 | shadow | تتر/تومان | BUY | rebalance_up | manager | devaluation_drift | allow (G_CORE_STEP) | `d-9265588380-USDTTMN-c` | — | افزایش سهم پایه در تتر/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: مجاز |
+| 10-22 14:07 | shadow | تتر/تومان | BUY | rebalance_up | manager | devaluation_drift | allow (G_CORE_STEP) | `d-9266546901-USDTTMN-c` | 1.84 @ 271,040 | افزایش سهم پایه در تتر/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: مجاز |
+| 10-22 14:07 | shadow | بیت‌کوین/تومان | BUY | rebalance_up | manager | devaluation_drift | allow (G_CORE_STEP) | `d-9266546902-BTCTMN-c` | 2.248e-05 @ 22,275,745,104 | افزایش سهم پایه در بیت‌کوین/تومان (سهم فعلی 0.0%، هدف 10.0%، حجم 500,000 تومان) · تصمیم‌گیرنده: manager · حالت «devaluation_drift» · کنترل ریسک: مجاز |
+| 10-22 22:47 | shadow | بیت‌کوین/تومان | SELL | rebalance_down | manager | range | allow | `d-9269663638-BTCTMN-c` | 1.11e-05 @ 22,112,282,997 | کاهش سهم پایه در بیت‌کوین/تومان (سهم فعلی 9.9%، هدف 5.0%، حجم 245,352 تومان) · تصمیم‌گیرنده: manager · حالت «range» · کنترل ریسک: مجاز |
+| 10-23 01:20 | shadow | تتر/تومان | SELL | rebalance_down | manager | range | block (G_MARKET_NOT_ALLOWED) | `—` | — | کاهش سهم پایه در تتر/تومان (سهم فعلی 10.0%، هدف 0.0%، حجم 498,281 تومان) · تصمیم‌گیرنده: manager · حالت «range» · کنترل ریسک: رد شد (G_MARKET_NOT_ALLOWED) |

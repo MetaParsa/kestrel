@@ -5,9 +5,10 @@
  ],
  "from": "2026-10-22T12:10+03:30",
  "to": "2026-10-23T12:22+03:30",
- "claude_playbooks": 32,
+ "claude_playbooks": 30,
  "claude": {
   "return_pct": 0.012,
+  "after_selling_to_tmn_pct": -0.0,
   "max_drawdown_pct": 0.066,
   "fills": 3,
   "fees_tmn": 1965,
@@ -211,11 +212,11 @@
     5000125
    ]
   ],
-  "seconds": 75,
-  "after_selling_to_tmn_pct": -0.0
+  "seconds": 54
  },
  "rules_twin": {
   "return_pct": 0.135,
+  "after_selling_to_tmn_pct": 0.03,
   "max_drawdown_pct": 0.251,
   "fills": 8,
   "fees_tmn": 10623,
@@ -419,8 +420,7 @@
     5003006
    ]
   ],
-  "seconds": 85,
-  "after_selling_to_tmn_pct": 0.029
+  "seconds": 225
  },
  "stay_in_tmn": {
   "return_pct": 0.0

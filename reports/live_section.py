@@ -28,11 +28,11 @@ def main() -> None:
     rows = [
         f"به‌روزشده: جمعه ۱ آبان ساعت {fa(now)} تهران (این بخش با `run/refresh_delivery.sh` از لاگ سرور ساخته می‌شود).", "",
         "| | |", "|---|---|",
-        f"| بازه | {fa(r['from'])} تا {fa(r['to'])} (کد `{', '.join(c[:7] for c in r['code_versions'])}`، تگ `live-v1`) |",
+        f"| بازه | {fa(r['from'])} تا {fa(r['to'])} (کد `{', '.join(c[:7] for c in r['code_versions'])}`، تگ‌های `live-v1` و `live-v2`) |",
         f"| برنامه‌های Claude | {fa(pb['total'])} برنامه، {fa(f'{pb['claude_cost_usd']:.2f}')} دلار؛ رژیم‌ها: {regimes} |",
         f"| تصمیم‌ها | {fa(d['total'])} (رأی دروازه: {', '.join(f'{k} {fa(v)}' for k, v in d['gate'].items())}) |",
         f"| معاملات پرشده | {fa(r['fills'])}، حجم {fa(f'{p['volume_tmn']:,}')} تومان، کارمزد {fa(f'{p['fees_tmn']:,}')} تومان |",
-        f"| ارزش حساب (از روی پر شدن‌ها، به قیمت آخر) | {fa(f'{p['equity_tmn']:,}')} تومان ({fa(f'{p['return_pct']:+.3f}')}٪) |",
+        f"| ارزش دفتر موتور (از روی پر شدن‌ها، به قیمت آخر؛ موجودی واقعی والکس در متن زیر) | {fa(f'{p['equity_tmn']:,}')} تومان ({fa(f'{p['return_pct']:+.3f}')}٪) |",
         f"| پیش‌بینی ۴ ساعته‌ی Claude در دوره‌ی زنده | " + (f"{fa(fc['n'])} مورد، جهت {fa(round(fc['direction_hit_rate'] * 100))}٪ درست "
                                                        f"(مبنا {fa(round(fc['baseline_hit_rate'] * 100))}٪)" if fc.get("n") else "هنوز ۴ ساعت نگذشته")
         + " |",

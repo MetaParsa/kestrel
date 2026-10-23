@@ -99,6 +99,7 @@ def main(argv=None):
     lo, hi = rp.span()
     start = (pbs[0].created_at // 60) * 60
     end = min(a.end or hi, hi)
+    pbs = [p for p in pbs if p.created_at <= end]       # only the playbooks that existed inside the window
     tag = "+".join(config.TRADABLE)
     res = {"tradable": list(config.TRADABLE),
            "from": datetime.fromtimestamp(start, tz=config.TEHRAN).isoformat(timespec="minutes"),
