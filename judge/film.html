@@ -70,6 +70,8 @@ body.prompter #strip{display:block;position:fixed;left:0;right:0;bottom:0;backgr
 #strip .cue{color:#94a3b8;font-size:clamp(13px,1vw,17px);margin-top:2px;display:flex;gap:18px}
 #strip .keys{margin-inline-start:auto;color:#475569;direction:ltr;unicode-bidi:isolate}
 #strip bdi{unicode-bidi:isolate;font-family:Vazirmatn,Tahoma,sans-serif}
+#strip ruby{ruby-position:over} #strip rt{font-size:.55em;color:#fbbf24;font-weight:600;direction:ltr;unicode-bidi:isolate;font-family:Consolas,Menlo,monospace;letter-spacing:.02em}   /* how to say a loanword: [رنج|range] */
+#strip .w.on rt{color:#0b1220}
 </style>
 </head>
 <body>
@@ -115,14 +117,22 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 // Latin runs (Claude, DECISIONS-live.md, /risk …) are isolated left-to-right inside the right-to-left line
 const bidi = s => String(s).split(/([A-Za-z\/][A-Za-z0-9_.\-\/]*(?:[ ][A-Za-z0-9_.\-\/]+)*)/g)
   .map((part, i) => i % 2 ? `<bdi dir="ltr">${esc(part)}</bdi>` : esc(part)).join("");
+// [رنج|range] in a line = say it like the hint (shown small above the word)
+const GLOSS = /(\[[^|\]]+\|[^\]]+\])/;
+const rich = s => String(s).split(GLOSS).map((part, i) => {
+  if (i % 2 === 0) return bidi(part);
+  const [base, hint] = part.slice(1, -1).split("|");
+  return `<ruby>${esc(base)}<rt dir="ltr">${esc(hint)}</rt></ruby>`;
+}).join("");
+const plain = s => String(s).replace(/\[([^|\]]+)\|[^\]]+\]/g, "$1");
 // karaoke: the current line is split into words; the highlight moves at a steady reading pace from the moment the
 // step starts (longer words take longer, a comma or full stop adds a pause). Keys adjust it while you read.
 let words = [], wi = 0, wtimer = null, paused = false, pace = 1.0, voiceStep = -1;
 function wordsHtml(text){
   return String(text).split(/\s+/).filter(Boolean).map((w, i) =>
-    `<span class="w" data-i="${i}">${/[A-Za-z]/.test(w) ? `<bdi dir="ltr">${esc(w)}</bdi>` : esc(w)}</span>`).join(" ");
+    `<span class="w" data-i="${i}">${rich(w)}</span>`).join(" ");
 }
-function wordMs(w){ return (180 + 62 * w.replace(/[^\p{L}\p{N}]/gu, "").length + (/[،.؛:!?»]$/.test(w) ? 380 : 0)) / pace; }
+function wordMs(w){ w = plain(w); return (180 + 62 * w.replace(/[^\p{L}\p{N}]/gu, "").length + (/[،.؛:!?»]$/.test(w) ? 380 : 0)) / pace; }
 function mark(){
   const spans = $("readtxt").querySelectorAll(".w");
   spans.forEach((sp, i) => { sp.classList.toggle("on", i === wi); sp.classList.toggle("done", i < wi); });
@@ -205,8 +215,8 @@ function render(){
     $("cue").innerHTML = bidi(v.cue);
     if (voiceStep !== step) {                          // only when the step changes, not on every replayed minute
       voiceStep = step;
-      $("prevtxt").innerHTML = step > 0 ? bidi(DATA.voice[step - 1].read) : "";
-      $("nexttxt").innerHTML = step + 1 < steps.length ? "بعد: " + bidi(DATA.voice[step + 1].read) : "";
+      $("prevtxt").innerHTML = step > 0 ? rich(DATA.voice[step - 1].read) : "";
+      $("nexttxt").innerHTML = step + 1 < steps.length ? "بعد: " + rich(DATA.voice[step + 1].read) : "";
       startWords(v.read);
     }
   }
