@@ -1,8 +1,8 @@
 # نظارت انسانی (Human oversight)
 
-> **وضعیت:** ساخته و آزموده شده (`tests/test_oversight.py`)، اما **روی سرور مسابقه نصب نشده است** و هیچ معامله‌ی مسابقه با آن انجام نشد. کدی که معامله کرد همان تگ‌های `live-v1` و `live-v2` است و این پوشه آن را تغییر نمی‌دهد.
+> **وضعیت:** ساخته و آزموده شده (`tests/test_oversight.py`)، اما **روی سرور مسابقه نصب نشده است** و هیچ معامله‌ی مسابقه با آن انجام نشد. کدی که معامله کرد با تگ‌های `live-*` مشخص است؛ موتور این پوشه را import یا اجرا نمی‌کند (از `live-v4` به بعد فایل‌هایش روی سرور هستند، اما خاموش).
 >
-> **Status:** built and tested, **not deployed**; no contest trade ran with it. The code that traded is tags `live-v1`/`live-v2`; this folder doesn't change it.
+> **Status:** built and tested, **not deployed**; no contest trade ran with it. The code that traded is the `live-*` tags; the engine never imports or starts this folder (from `live-v4` its files are on the server, unused).
 
 ## چرا فقط «ترمز» و نه «فرمان»؟
 قوانین چالش می‌گویند هر معامله‌ی ارزیابی‌شده باید الگوریتمی باشد و معامله‌ی دستی می‌تواند به حذف تیم برسد. پس انسان اینجا **فقط می‌تواند موتور را محتاط‌تر کند**: هیچ سفارشی ثبت، تأیید یا اندازه‌گذاری نمی‌کند. هر فروش همچنان از کد فروش پایانی (`engine/flatten.py`) یا هسته (`engine/core.py`) می‌آید و از همان دروازه‌ی ریسک رد می‌شود. یک تست (`test_oversight_code_never_trades`) چک می‌کند که این پوشه هیچ کلاینت معامله یا ساخت سفارشی ندارد.

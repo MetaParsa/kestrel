@@ -96,12 +96,13 @@ flowchart LR
 
 ## ۳. کدام کد معامله کرد؟
 
-- هر سطر لاگ شناسه‌ی کامیت (`git_sha`) را دارد و هر نسخه‌ای که روی سرور با پول واقعی کار کرد یک تگ `live-*` دارد (`git tag -l "live-*"`):
+- هر سطر لاگ شناسه‌ی کامیت (`git_sha`) را دارد و هر نسخه‌ای که روی سرور با پول واقعی کار کرد یک تگ `live-*` دارد (`git tag -n1 -l "live-*"`):
   - [`live-v1`](https://github.com/MetaParsa/kestrel/tree/live-v1) (`301364b`) — شروع زنده، جمعه ۱ آبان ۰۱:۲۰ تهران؛
-  - [`live-v2`](https://github.com/MetaParsa/kestrel/tree/live-v2) (`10bc993`) — از ۱۲:۳۳: دو ایرادی که آزمون سقوط پیدا کرد؛
-  - [`live-v3`](https://github.com/MetaParsa/kestrel/tree/live-v3) — عصر جمعه: پنجره‌ی فروش پایانی کوتاه‌تر شد (`WALLEX_FLATTEN_H`) تا خرید تا ۲۱:۲۰ باز باشد.
-- هر تغییر بعدی در مسیر معامله: `git log --oneline live-v3..HEAD -- engine wallex bridge ai_box manager config.py deploy`. پوشه‌های `judge/` و `oversight/` جدیدند و موتور زنده را صدا نمی‌زنند؛ `oversight/` فقط با `python -m oversight.run` روشن می‌شود.
-- پرامپت Claude سمت لپ‌تاپ است و تغییرهایش کامیت‌های جدا دارند؛ در طول مسابقه سه بار عوض شد و هر سه در تاریخچه‌اند: حداقل سفارش و این که فعالیت هم نمره دارد (`75c2700`، `612c972`)، نمای دوقلو (`79d2f13`)، و راهنمای صاحب حساب برای عصر جمعه (`13730f6`). این تغییرها به دروازه‌ی ریسک دست نزدند و تصمیم هر بار با خود Claude ماند.
+  - [`live-v2`](https://github.com/MetaParsa/kestrel/tree/live-v2) (`10bc993`) — از حدود ۱۲:۳۰: دو ایرادی که آزمون سقوط پیدا کرد؛
+  - [`live-v3`](https://github.com/MetaParsa/kestrel/tree/live-v3) (`e123198`) — عصر جمعه: پنجره‌ی فروش پایانی کوتاه‌تر (`WALLEX_FLATTEN_H`): خرید تا ۲۱:۲۰، همه‌چیز تومان تا ۲۳:۲۰؛
+  - [`live-v4`](https://github.com/MetaParsa/kestrel/tree/live-v4) (`0e2d29b`) — از حدود ۱۷:۴۵: در عصر آخر هر ۱۵ دقیقه از Claude برنامه خواسته می‌شود (`a808dc7`)؛ پوشه‌های `judge/` و `oversight/` هم در این نسخه هستند اما موتور آن‌ها را import یا اجرا نمی‌کند.
+- هر تغییر بعدی در مسیر معامله: `git log --oneline live-v4..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
+- تغییرهای سمت لپ‌تاپ در طول مسابقه کامیت‌های جدا دارند: پرامپت (`75c2700` حداقل سفارش و نمره‌ی فعالیت، `612c972`، `13730f6` راهنمای صاحب حساب برای عصر جمعه)، نمای دوقلو برای Claude (`79d2f13`، پرامپت و `ai_box/`)، و فاصله‌ی ۱۵ دقیقه‌ای و کش ۱ ساعته‌ی پرامپت در عصر آخر (`a808dc7`). هیچ‌کدام به دروازه‌ی ریسک دست نزدند و تصمیم هر بار با خود Claude ماند.
 
 ## ۴. نقشه‌ی معیارهای فنی داوری → شاهد
 
@@ -140,4 +141,4 @@ It verifies the committed the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤
 
 **Where to look:** the 10-second tick is `Engine.tick()` in [`engine/loop.py`](engine/loop.py); the risk gate Claude can't override is `check()` in [`engine/gate.py`](engine/gate.py) with every limit in [`config.py`](config.py); Claude's prompt is [`manager/prompts/manager.md`](manager/prompts/manager.md) with 8 read-only tools in [`manager/tools.py`](manager/tools.py); every live decision with its Persian reason is in [`delivery/DECISIONS-live.md`](delivery/DECISIONS-live.md), raw logs (each line with its `git_sha`) in `delivery/server-logs/`, and Claude's full tool transcripts in `delivery/ai-box/`.
 
-**What traded:** every live deployment has a `live-*` tag — `live-v1` (`301364b`), `live-v2` (`10bc993`), `live-v3` (Friday evening, shorter sell-off window); prompt edits during the contest are separate commits (`75c2700`, `612c972`, `79d2f13`, `13730f6`). **Human oversight** (`oversight/`: Bale `/pause`, `/risk`, `/flatten`, `/resume`, `/review`, all logged with who/when/why) is built and tested but was not deployed; it can only make the engine more careful, never place or size a trade, as the contest rules require.
+**What traded:** every live deployment has a `live-*` tag — `live-v1` (`301364b`), `live-v2` (`10bc993`), `live-v3` (`e123198`, shorter Friday-evening sell-off window), `live-v4` (`0e2d29b`, manager every 15 min on the last evening; it also carries `judge/` and `oversight/`, which the engine never imports). Laptop-side manager changes are separate commits (`75c2700`, `612c972`, `79d2f13`, `13730f6`, `a808dc7`). **Human oversight** (`oversight/`: Bale `/pause`, `/risk`, `/flatten`, `/resume`, `/review`, all logged with who/when/why) is built and tested but was not deployed; it can only make the engine more careful, never place or size a trade, as the contest rules require.
