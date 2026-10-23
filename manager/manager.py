@@ -69,6 +69,8 @@ def summary_message(bundle: dict) -> str:
         "forecast_scorecard": bundle["forecast_scorecard"],
         "last_playbook": bundle["previous_playbooks"][0] if bundle["previous_playbooks"] else None,
     }
+    if bundle.get("control_group"):
+        view["control_group"] = bundle["control_group"]
     return ("Context bundle summary (all numbers from the trading server). Use the tools for bars, "
             "decisions and earlier playbooks, then return one playbook.\n" + canonical_json(view))
 

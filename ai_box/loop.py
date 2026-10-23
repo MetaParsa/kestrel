@@ -49,6 +49,37 @@ class Transport(Protocol):
     def push_playbook(self, src: Path) -> bool: ...
 
 
+TWIN_SPLIT = "@@TWIN-STATE@@"
+
+
+def twin_view(pb: dict, state: dict | None, now: float) -> dict:
+    """What the rule-based twin (same engine and gate, simulated money, no Claude) currently thinks and holds."""
+    view = {"what": "rule-based twin: same engine and risk gate, simulated money, no Claude",
+            "playbook_id": pb.get("playbook_id"), "age_min": round((now - float(pb.get("created_at", now))) / 60, 1),
+            "regime": pb.get("regime"), "core_targets": pb.get("core_targets"),
+            "risk_multiplier": pb.get("risk_multiplier"), "forecast_4h": pb.get("forecast_4h"),
+            "rationale_fa": pb.get("rationale_fa")}
+    if state:
+        view["position_qty"] = {x["market"]: x["qty"] for x in state.get("positions", []) if x.get("qty")}
+        view["cash_tmn"] = round(float(state.get("cash", 0.0)))
+        view["realized_pnl_tmn"] = round(float(state.get("realized_pnl", 0.0)))
+        view["fees_tmn"] = round(float(state.get("fees_tmn", 0.0)))
+    return view
+
+
+def parse_twin(text: str, now: float) -> dict | None:
+    pb_txt, _, st_txt = text.partition(TWIN_SPLIT)
+    try:
+        pb = json.loads(pb_txt)
+    except ValueError:
+        return None
+    try:
+        st = json.loads(st_txt) if st_txt.strip() else None
+    except ValueError:
+        st = None
+    return twin_view(pb, st, now) if isinstance(pb, dict) else None
+
+
 @dataclass
 class LocalTransport:
     """Server and AI box on one machine (tests, single-host runs)."""
@@ -60,6 +91,14 @@ class LocalTransport:
             return False
         shutil.copyfile(src, dest)
         return True
+
+    def fetch_twin(self, now: float) -> dict | None:
+        d = self.run_dir.parent / "baseline"
+        if not (d / "playbook.json").exists():
+            return None
+        st = d / "state.json"
+        return parse_twin((d / "playbook.json").read_text(encoding="utf-8") + TWIN_SPLIT
+                          + (st.read_text(encoding="utf-8") if st.exists() else ""), now)
 
     def push_playbook(self, src: Path) -> bool:
         inbox = self.run_dir / "inbox"
@@ -101,6 +140,17 @@ class ScpTransport:
     def pull_bundle(self, dest: Path) -> bool:
         return self._run(["scp", "-q", *self._opts, f"{self.host}:{self.remote_run_dir}/outbox/bundle.json",
                           dest.name], cwd=dest.parent)
+
+    def fetch_twin(self, now: float) -> dict | None:
+        """The rule-based twin's playbook and state in one ssh call (the server limits new connections)."""
+        base = self.remote_run_dir.rstrip("/").rsplit("/", 1)[0] + "/baseline"
+        try:
+            r = subprocess.run(["ssh", "-n", *self._opts, self.host,
+                                f"cat {base}/playbook.json; echo; echo {TWIN_SPLIT}; cat {base}/state.json"],
+                               timeout=self.timeout_s + 15, capture_output=True, stdin=subprocess.DEVNULL)
+        except (subprocess.TimeoutExpired, OSError):
+            return None
+        return parse_twin(r.stdout.decode("utf-8", errors="replace"), now) if r.returncode == 0 else None
 
     def push_playbook(self, src: Path) -> bool:
         tmp_remote = f"{self.remote_run_dir}/inbox/.{src.name}.tmp"     # never half a file in the inbox
@@ -193,6 +243,14 @@ class AiBox:
             self.log({"event": "request_given_up", "request_id": req})
             return None
         self.last_decision_at = now
+        fetch = getattr(self.t, "fetch_twin", None)
+        if fetch is not None:                       # control group for Claude; optional, never blocks a decision
+            try:
+                twin = fetch(now)
+            except Exception:
+                twin = None
+            if twin:
+                bundle["control_group"] = twin      # added after the hash check; the hash stays the server's
         try:
             pb, transcript = self.decide(bundle)
         except SpendCapReached as e:

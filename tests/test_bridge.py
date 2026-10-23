@@ -319,3 +319,47 @@ def test_scorecard_uses_only_closes_known_at_the_time():
     rows = scorecard.score([{"created_at": t0, "forecast_4h": {"USDTTMN": {"direction": "flat", "vol": "normal"}}}],
                            {"USDTTMN": b}, now=idx[-1].timestamp())["recent"]
     assert rows[0]["baseline"] == "flat"
+
+
+# ---- control group: Claude sees the rule-based twin ------------------------------------------
+TWIN_PB = {"playbook_id": "pb-twin", "created_at": NOW - 600, "regime": "devaluation_drift",
+           "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0,
+           "forecast_4h": {"BTCTMN": {"direction": "up", "vol": "low"}}, "rationale_fa": "قاعده"}
+TWIN_STATE = {"cash": 4_750_000.4, "realized_pnl": -100.2, "fees_tmn": 600.1,
+              "positions": [{"market": "BTCTMN", "sleeve": "core", "qty": 1.1e-05}]}
+
+
+def test_claude_sees_the_twin_and_the_hash_still_checks(tmp_path):
+    import json as _json
+    from ai_box.loop import parse_twin, TWIN_SPLIT
+    from manager.manager import summary_message
+    seen = {}
+
+    def decide(bundle):
+        seen.update(bundle)
+        return mock_decider(bundle)
+    run, box, _ = box_with(tmp_path, decide)
+    (tmp_path / "baseline").mkdir()
+    (tmp_path / "baseline" / "playbook.json").write_text(_json.dumps(TWIN_PB), encoding="utf-8")
+    (tmp_path / "baseline" / "state.json").write_text(_json.dumps(TWIN_STATE), encoding="utf-8")
+    b = make_bundle()
+    write_bundle(b, run / "outbox")
+    inbox = Inbox(run / "inbox")
+    inbox.note_issued(b["hash"], b["created_at"])
+    pb = box.cycle()
+    twin = seen["control_group"]
+    assert twin["regime"] == "devaluation_drift" and twin["position_qty"] == {"BTCTMN": 1.1e-05}
+    assert twin["age_min"] == 10.5 and twin["cash_tmn"] == 4_750_000
+    assert "control_group" in summary_message(seen)
+    accepted, _ = inbox.poll(NOW + 60)                       # the server still accepts it: same bundle hash
+    assert accepted.playbook_id == pb.playbook_id
+    assert parse_twin("not json" + TWIN_SPLIT, NOW) is None
+
+
+def test_a_failing_twin_fetch_never_blocks_a_decision(tmp_path):
+    class Broken(LocalTransport):
+        def fetch_twin(self, now):
+            raise RuntimeError("ssh down")
+    run, box, _ = box_with(tmp_path, mock_decider, transport=Broken(tmp_path / "run"))
+    write_bundle(make_bundle(), run / "outbox")
+    assert box.cycle() is not None
