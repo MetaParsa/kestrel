@@ -32,7 +32,7 @@ sudo bash /opt/wallex-agent/deploy/arm_live.sh      # type yes-real-money
 At start, live mode moves the shadow `state.json` aside, cancels any of our own `d-…` orders left on the exchange (refuses to trade if one won't cancel), starts from the real balances, reconciles, and sends a Bale summary. From then on a shadow engine refuses to start on that run dir (it holds live state).
 
 ## After
-- First real fill: check `orders.jsonl` / `fills.jsonl` and `fee_estimated` events. Reconcile runs every 30 min, at T−30 min and at the end; at T−1 h and T−30 min the books are re-synced to the real balances so the final sell-off sells what Wallex really holds.
+- First real fill: check `orders.jsonl` / `fills.jsonl` and `fee_estimated` events. Reconcile runs every 30 min, at T−30 min and at the end; at T−1 h and T−30 min the books are re-synced to the real balances so the final sell-off sells what the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ really holds.
 
 ## Stopping
 - **Pause without selling** (positions stay; stops pause too — only for a short fix): `sudo systemctl stop wallex-agent`.

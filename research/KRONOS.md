@@ -1,4 +1,4 @@
-# Kronos on Wallex data — walk-forward test (2026-10-22)
+# Kronos on the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ data — walk-forward test (2026-10-22)
 
 **Verdict: no-go.** Kronos-small does not call the direction or size of 4-hour moves in USDTTMN or
 BTCTMN better than lazy baselines, and trading on it loses money after fees. Its band width carries a
@@ -8,7 +8,7 @@ month and mostly overlaps with plain trailing volatility. It is **not** wired in
 ## Setup
 
 - Model: official `NeoQuasar/Kronos-small` + `Kronos-Tokenizer-base`, code from `github.com/shiyu-coder/Kronos` (commit 67b630e).
-- Data: our 30 days of Wallex 1-minute candles (22 Sep – 22 Oct 2026), resampled to 15-minute bars.
+- Data: our 30 days of the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ 1-minute candles (22 Sep – 22 Oct 2026), resampled to 15-minute bars.
 - Walk-forward: every 4 hours (non-overlapping), Kronos sees only the past **128 bars (32 h)** and
   forecasts the next 16 bars (4 h) as **20 sampled paths**. Windows whose 4 h target has more than
   60 missing minutes are dropped (USDTTMN's trading gaps).
