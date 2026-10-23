@@ -99,3 +99,19 @@
 {"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792718532.6353233, "event": "bars_stale", "ages_min": {"USDTTMN": 180.2}}
 {"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792720632.6680968, "event": "manager_request", "request_id": "req-1792720632", "reason": "scheduled"}
 {"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792720632.6680968, "event": "playbook_active", "playbook_id": "pb-20261023-0527-dfcdad", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792722132.6910973, "event": "bars_stale", "ages_min": {"USDTTMN": 240.2}}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792723032.7048676, "event": "manager_request", "request_id": "req-1792723032", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792723032.7048676, "event": "playbook_active", "playbook_id": "pb-20261023-0607-041b04", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792725432.7392137, "event": "manager_request", "request_id": "req-1792725432", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792725432.7392137, "event": "playbook_active", "playbook_id": "pb-20261023-0647-5063d0", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792725732.7438338, "event": "bars_stale", "ages_min": {"USDTTMN": 300.2}}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792727832.7758498, "event": "manager_request", "request_id": "req-1792727832", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792727832.7758498, "event": "playbook_active", "playbook_id": "pb-20261023-0727-9c4152", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792729332.7998106, "event": "bars_stale", "ages_min": {"USDTTMN": 360.2}}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792730232.8128572, "event": "manager_request", "request_id": "req-1792730232", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792730232.8128572, "event": "playbook_active", "playbook_id": "pb-20261023-0807-97ad62", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792732632.850592, "event": "manager_request", "request_id": "req-1792732632", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792732632.850592, "event": "playbook_active", "playbook_id": "pb-20261023-0847-de083d", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792732932.8548424, "event": "bars_stale", "ages_min": {"USDTTMN": 420.2}}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792735042.8880374, "event": "manager_request", "request_id": "req-1792735042", "reason": "scheduled"}
+{"git_sha": "301364bd981d", "mode": "shadow", "ts": 1792735042.8880374, "event": "playbook_active", "playbook_id": "pb-20261023-0927-0226dd", "source": "mock", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.05}, "risk_multiplier": 1.0}

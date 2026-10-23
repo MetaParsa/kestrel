@@ -2,19 +2,19 @@
  "name": "live",
  "mode_filter": "live",
  "from": "10-23 01:20",
- "to": "10-23 05:29",
+ "to": "10-23 09:37",
  "code_versions": [
   "301364bd981d"
  ],
  "playbooks": {
-  "total": 6,
+  "total": 12,
   "by_source": {
-   "claude": 6
+   "claude": 12
   },
   "regimes": {
-   "range": 6
+   "range": 12
   },
-  "claude_cost_usd": 0.419,
+  "claude_cost_usd": 0.833,
   "clamped": 0
  },
  "claude_forecasts_4h": {
@@ -41,8 +41,8 @@
  },
  "fills": 1,
  "pnl_from_fills": {
-  "equity_tmn": 4999117,
-  "return_pct": -0.018,
+  "equity_tmn": 5000407,
+  "return_pct": 0.008,
   "volume_tmn": 200193,
   "fees_tmn": 601,
   "holdings": {

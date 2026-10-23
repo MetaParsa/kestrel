@@ -2,7 +2,7 @@
  "name": "baseline",
  "mode_filter": null,
  "from": "10-22 10:45",
- "to": "10-23 05:35",
+ "to": "10-23 09:35",
  "code_versions": [
   "301364bd981d",
   "386a6fbdb772",
@@ -15,14 +15,14 @@
   "eec06ad28472"
  ],
  "playbooks": {
-  "total": 31,
+  "total": 37,
   "by_source": {
-   "mock": 31
+   "mock": 37
   },
   "regimes": {
    "devaluation_drift": 18,
    "event_shock": 2,
-   "range": 11
+   "range": 17
   },
   "claude_cost_usd": 0,
   "clamped": 0
@@ -32,21 +32,21 @@
   "note": "no forecast resolved yet (needs 4 h)"
  },
  "decisions": {
-  "total": 26,
+  "total": 42,
   "by_kind": {
    "rebalance_up": 7,
-   "rebalance_down": 19
+   "rebalance_down": 35
   },
   "by_decider": {
-   "manager": 26
+   "manager": 42
   },
   "gate": {
-   "block": 21,
+   "block": 37,
    "allow": 5
   },
   "block_reasons": {
    "G_STALE_DATA": 3,
-   "G_MARKET_NOT_ALLOWED": 18
+   "G_MARKET_NOT_ALLOWED": 34
   }
  },
  "orders": {
@@ -56,8 +56,8 @@
  },
  "fills": 3,
  "pnl_from_fills": {
-  "equity_tmn": 4993534,
-  "return_pct": -0.129,
+  "equity_tmn": 4995152,
+  "return_pct": -0.097,
   "volume_tmn": 1244919,
   "fees_tmn": 3612,
   "holdings": {

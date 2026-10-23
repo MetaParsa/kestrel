@@ -49,3 +49,9 @@
 2026-10-23T04:04:53 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0404-3aac28", "source": "claude", "regime": "range", "cost_usd": 0.0709, "clamps": []}
 2026-10-23T04:46:54 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0446-b2614e", "source": "claude", "regime": "range", "cost_usd": 0.0709, "clamps": []}
 2026-10-23T05:28:52 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0528-2a2e26", "source": "claude", "regime": "range", "cost_usd": 0.055, "clamps": []}
+2026-10-23T06:10:51 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0610-8f4727", "source": "claude", "regime": "range", "cost_usd": 0.0718, "clamps": []}
+2026-10-23T06:52:57 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0652-fc5062", "source": "claude", "regime": "range", "cost_usd": 0.0706, "clamps": []}
+2026-10-23T07:34:00 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0733-1c7748", "source": "claude", "regime": "range", "cost_usd": 0.07, "clamps": []}
+2026-10-23T08:15:06 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0815-05a60f", "source": "claude", "regime": "range", "cost_usd": 0.0692, "clamps": []}
+2026-10-23T08:56:10 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0856-ce77fe", "source": "claude", "regime": "range", "cost_usd": 0.0561, "clamps": []}
+2026-10-23T09:37:11 {"event": "playbook_pushed", "playbook_id": "pb-20261023-0937-f1942e", "source": "claude", "regime": "range", "cost_usd": 0.077, "clamps": []}
