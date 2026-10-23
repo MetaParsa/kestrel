@@ -142,4 +142,19 @@ class FlattenCfg:
     verify_min: float = 30.0
 
 
-FLATTEN = FlattenCfg()
+def _flatten_cfg() -> FlattenCfg:
+    """WALLEX_FLATTEN_H="no_new,aggressive,market" (hours before END_AT) shortens the sell-off window,
+    e.g. "2.5,1.5,1.0" keeps buying until 2.5 h before the end. Unset = the defaults above."""
+    raw = os.environ.get("WALLEX_FLATTEN_H", "").strip()
+    if not raw:
+        return FlattenCfg()
+    no_new, aggressive, market = (float(x) for x in raw.split(","))
+    verify_h = FlattenCfg.verify_min / 60
+    if not no_new > aggressive > market > verify_h:
+        raise ValueError(f"WALLEX_FLATTEN_H must be decreasing and above {verify_h} h, got {raw!r}")
+    # alert if anything non-TMN is still held 15 min into the forced-sell phase
+    return FlattenCfg(no_new_h=no_new, aggressive_h=aggressive, market_h=market,
+                      alert_h=max(verify_h + 0.1, market - 0.25))
+
+
+FLATTEN = _flatten_cfg()
