@@ -29,7 +29,7 @@
 | `bot.py` | `Controller` (one message → state change + log + reply) and the Bale long-polling `Bot`; `--local` for a terminal |
 | `engine.py` | `OverseenEngine(Engine)`: reads the state file each tick; caps the risk multiplier, blocks adds, moves `end_at` for a flatten |
 | `run.py` | `python -m oversight.run …` = `engine.run` with `OverseenEngine` (same flags, same safety checks) |
-| `wallex-oversight.service` | systemd unit for the bot (deliberately outside `deploy/`, so `setup_server.sh` never installs it) |
+| `wallex-oversight.service` | systemd unit for the bot (deliberately outside `deploy/`, so `deploy/setup_server.sh` never installs it) |
 
 ## Try it without Bale (shadow mode, no money, no key)
 ```bash
@@ -41,7 +41,7 @@ uv run python -m oversight.bot --run-dir run/try --local "/resume done" --yes
 
 ## If the user decides to deploy it (not done)
 1. copy `oversight/wallex-oversight.service` to `/etc/systemd/system/` and enable it;
-2. in `kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣.service` change `-m engine.run` to `-m oversight.run` (same flags);
+2. in `deploy/kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣.service` (installed as `/etc/systemd/system/kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣.service`) change `-m engine.run` to `-m oversight.run` (same flags);
 3. optionally set `BALE_ADMIN_IDS` in `/etc/kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣/env`.
 
 ## Privacy

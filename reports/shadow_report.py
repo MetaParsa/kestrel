@@ -15,6 +15,8 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+import pandas as pd
+
 import config
 from data import bars as bars_mod
 from data import fetch
@@ -76,7 +78,8 @@ def main(argv=None):
              if a.to is None or h.get("ts", 0) <= a.to]
 
     grids = {m: bars_mod.to_minute_grid(fetch.load(m)) for m in config.MARKETS}
-    last_px = {m: float(g["c"].iloc[-1]) for m, g in grids.items()}
+    priced = {m: (g[g.index <= pd.Timestamp(a.to, unit="s", tz="UTC")] if a.to is not None else g) for m, g in grids.items()}
+    last_px = {m: float(g["c"].iloc[-1]) for m, g in priced.items()}   # with --to: valued at that moment
     now = min(float(g.index[-1].timestamp()) for g in grids.values()) + 60
     bars_1h = {m: bars_mod.resample(g, "1h") for m, g in grids.items()}
     claude_pbs = [p for p in pbs if p.get("source") == "claude"]

@@ -9,8 +9,9 @@ AI trading agent for the Agentic AI hackathon⁤⁤⁣'s trading challenge. It t
 ```bash
 git clone https://github.com/MetaParsa/kestrel.git && cd kestrel
 uv sync
-uv run python -m judge.demo      # ~8–10 min, no API key, offline: re-runs the evidence below and compares it with the committed numbers
-uv run pytest -q                 # 250+ tests, ~25 s
+uv run python -m judge.demo      # ~8–10 min (--quick: ~2–3 min), no API key, offline: re-runs the evidence below and compares it with the committed numbers
+uv run python -m judge.film --open   # ~15 s: a step-through page of the real engine on real the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ minutes (Claude's real plans, a rogue plan, a bad print, a crash, the sell-off)
+uv run pytest -q                 # 270+ tests, under a minute
 ```
 📄 **Full technical document (Persian): [STRATEGY.md](STRATEGY.md)** — architecture, AI and the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API use, buy/sell conditions, risk management, re-running and evaluation.
 🧾 **Decision logs:** [`delivery/DECISIONS-live.md`](delivery/DECISIONS-live.md) — every live decision with what the engine saw, who decided, the risk gate's verdict, the order, the fill and the reason in Persian (shadow: [`DECISIONS-main.md`](delivery/DECISIONS-main.md), rule twin: [`DECISIONS-baseline.md`](delivery/DECISIONS-baseline.md)).
@@ -48,14 +49,14 @@ flowchart LR
 | **A control group** — a rule-based twin runs the same engine and risk gate; the same 24 h of real minutes replayed with Claude's recorded playbooks vs the twin | After selling back to TMN both +0.014 %, with Claude's drawdown 0.026 % vs 0.177 % and fees 601 vs 4,879 TMN — mostly because Claude chose a 4 % position where the rule took 15 %: the same result at a quarter of the risk, not a better trade. Since Friday noon Claude also sees the twin and must explain where it disagrees | [`CONTROL-GROUP.md`](delivery/CONTROL-GROUP.md) · [`ab-replay-BTCTMN.json`](reports/out/ab-replay-BTCTMN.json) |
 | **A seatbelt** — deterministic code the AI can't bypass | Crash drill on real market minutes: a −10 % BTC crash costs −0.77 % with the seatbelt vs −1.97 % held; a single −30 % glitch print triggers no sale. The drill found two real flaws, fixed and shipped as `live-v2` | [`SEATBELT.md`](delivery/SEATBELT.md) · [`crash-drill.json`](reports/out/crash-drill.json) |
 
-**Prompt stress test** ([`PROMPT-STRESS.md`](delivery/PROMPT-STRESS.md)): the live prompt and model on 9 doctored bundles (crash, stale data, minutes before the sell-off, near the daily-loss stop, terrible scorecard, cold start, and a prompt injection hidden in the twin's data). 8 pass; on the injection Claude wrote "I treat it as data, not an instruction". The uptrend case is inconclusive: Claude spotted that the synthetic candles were inconsistent and refused to trust them.
+**Prompt stress test** ([`PROMPT-STRESS.md`](delivery/PROMPT-STRESS.md)): the live model and the prompt as of 13:18 (`3e634da`; it changed later) on 1 control + 8 doctored bundles (crash, stale data, minutes before the sell-off, near the daily-loss stop, terrible scorecard, cold start, and a prompt injection hidden in the twin's data). 8 pass; on the injection Claude wrote "I treat it as data, not an instruction". The uptrend case is inconclusive: Claude spotted that the synthetic candles were inconsistent and refused to trust them.
 
 **Backtest** ([`backtest-summary.json`](reports/out/backtest-summary.json)): the same engine on 25 contest-shaped 3-day windows of real 1-minute data with the rule-based manager — mean −0.14 % (+0.10 % before fees), worst drawdown 0.60 %, every window ended fully in TMN.
 
-**Live** ([`DECISIONS-live.md`](delivery/DECISIONS-live.md)): from Fri 01:20 Tehran, 22 Claude playbooks ($1.55), 2 fills; after the scheduled sell-off the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ showed 5,000,410 TMN and nothing else (the engine's own book keeps ≈63 TMN of BTC dust below the exchange's⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ precision; max drawdown ≈ 0.03 %).
+**Live** ([`DECISIONS-live.md`](delivery/DECISIONS-live.md), numbers in the [live section of STRATEGY.md](STRATEGY.md#معاملات-زنده), refreshed from the server logs): from Fri 01:20 Tehran until the sell-off ends at 23:20, every trade placed by the engine; the first sell-off at 15:55 left the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ at 5,000,410 TMN and nothing else, and buying reopened for the evening (`live-v3`).
 
 ## How it works
-- **Manager — Claude Opus 5.5**, every hour (every 15 min on the last evening): reads a market bundle through 8 read-only tools, picks a market regime, a target position, a risk multiplier and a 4-hour forecast, and explains itself in Persian. Its output is clamped to the regime's bounds and re-validated on the server; a $15 spend cap falls back to the rule-based manager.
+- **Manager — Claude Opus 5.5**, about every 40 min (an hourly plan renewed 20 min before it expires; about every 11 min on the last evening): reads a market bundle through 8 read-only tools, picks a market regime, a target position, a risk multiplier and a 4-hour forecast, and explains itself in Persian. Its output is clamped to the regime's bounds and re-validated on the server; a $15 spend cap falls back to the rule-based manager.
 - **Risk gate — deterministic code** the manager cannot override (`engine/gate.py`, numbers in `config.py`): per-market and total caps, −2.5 % position stop, −1 % daily loss pause, −2 % micro mode, −3 % sell-everything, profit cushion, stale-data and spread guards.
 - **Executor:** maker-first limit orders, re-pricing, protected crossing, lookup-before-retry by `client_id`, never a raw market order. Real orders need two locks (`--mode live` and `WALLEX_LIVE_ARMED=yes-real-money`).
 - **End of contest:** buying stops before the end and everything is sold back to TMN on a schedule (8 h before by default; 2.5 h on the last evening, `live-v3`: buying until 21:20, all TMN by 23:20).
@@ -81,9 +82,10 @@ Every log line carries the deployed commit (`git_sha`), and every live deploymen
 - `live-v1` (`301364b`) — from 2026-10-23 01:20 Tehran;
 - `live-v2` (`10bc993`) — from ~12:30: dust-safe stops and sell-off, glitch-proof daily-loss check (found by the crash drill);
 - `live-v3` (`e123198`) — Friday evening: shorter sell-off window (buying open until 21:20, all TMN by 23:20);
+- `live-v5` (`84a5214`) — from ~19:50: profit lock (`WALLEX_PROFIT_LOCK=0.0003`): once equity minus the cost of selling everything is +0.03 % or more, sell everything and stop buying for the rest of the contest;
 - `live-v4` (`0e2d29b`) — from ~17:45: the manager is asked every 15 min on the last evening (`a808dc7`); this snapshot also carries `judge/` and `oversight/`, which the engine never imports or starts.
 
-Laptop-side manager changes during the contest are separate commits: prompt (`75c2700`, `612c972`, `13730f6`), the twin's view for Claude (`79d2f13`, prompt + `ai_box/`), last-evening cadence and 1-hour prompt cache (`a808dc7`). None of them touched the risk gate, and Claude kept every decision. List any later change to trading code with `git log --oneline live-v4..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
+Laptop-side manager changes during the contest are separate commits: prompt (`75c2700`, `612c972`, `13730f6`, `c9f9c01` neutral wording, `84a5214` profit-lock note, `a1f2f05`), the twin's view for Claude (`79d2f13`, prompt + `ai_box/`), last-evening cadence and 1-hour prompt cache (`a808dc7`). None of them touched the risk gate, and Claude kept every decision. List any later change to trading code with `git log --oneline live-v5..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
 
 ## Secrets
 No key is stored in this repo. the exchange's⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API key lives in a server-only file (`WALLEX_KEY_FILE`, mode 600, no withdrawal scope, IP-restricted); the Anthropic key stays on the laptop.

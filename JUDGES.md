@@ -26,13 +26,14 @@ git clone https://github.com/MetaParsa/kestrel.git
 cd kestrel
 uv sync                              # نصب وابستگی‌ها (تنها مرحله‌ای که اینترنت می‌خواهد)
 uv run python -m judge.demo          # ≈ ۸–۱۰ دقیقه؛ خروجی: judge_out/RESULTS.md
-uv run pytest -q                     # بیش از ۲۵۰ تست، حدود ۲۵ ثانیه
+uv run python -m judge.film --open   # ≈ ۱۵ ثانیه: صفحه‌ی قدم‌به‌قدمِ موتور واقعی روی دقیقه‌های واقعی صرافی⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣
+uv run pytest -q                     # بیش از ۲۷۰ تست، کمتر از یک دقیقه
 ```
 
 | گزینه | زمان | چه می‌کند |
 |---|---|---|
-| `uv run python -m judge.demo --quick` | ≈ ۳ دقیقه | همه به‌جز بک‌تست |
-| `uv run python -m judge.demo` | ≈ ۸–۱۰ دقیقه | + اولین پنجره‌ی ۳ روزه‌ی بک‌تست |
+| `uv run python -m judge.demo --quick` | ≈ ۲–۳ دقیقه | همه به‌جز بک‌تست |
+| `uv run python -m judge.demo` | ≈ ۸–۱۰ دقیقه | + اولین پنجره‌ی ۳ روزه‌ی بک‌تست (۱ از ۲۵) |
 | `uv run python -m judge.demo --windows 25` | ≈ ۸ دقیقه × (۲۵ ÷ تعداد هسته‌ها) | هر ۲۵ پنجره‌ی بک‌تست، موازی |
 
 `judge.demo` چه می‌کند:
@@ -101,8 +102,9 @@ flowchart LR
   - [`live-v2`](https://github.com/MetaParsa/kestrel/tree/live-v2) (`10bc993`) — از حدود ۱۲:۳۰: دو ایرادی که آزمون سقوط پیدا کرد؛
   - [`live-v3`](https://github.com/MetaParsa/kestrel/tree/live-v3) (`e123198`) — عصر جمعه: پنجره‌ی فروش پایانی کوتاه‌تر (`WALLEX_FLATTEN_H`): خرید تا ۲۱:۲۰، همه‌چیز تومان تا ۲۳:۲۰؛
   - [`live-v4`](https://github.com/MetaParsa/kestrel/tree/live-v4) (`0e2d29b`) — از حدود ۱۷:۴۵: در عصر آخر هر ۱۵ دقیقه از Claude برنامه خواسته می‌شود (`a808dc7`)؛ پوشه‌های `judge/` و `oversight/` هم در این نسخه هستند اما موتور آن‌ها را import یا اجرا نمی‌کند.
-- هر تغییر بعدی در مسیر معامله: `git log --oneline live-v4..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
-- تغییرهای سمت لپ‌تاپ در طول مسابقه کامیت‌های جدا دارند: پرامپت (`75c2700` حداقل سفارش و نمره‌ی فعالیت، `612c972`، `13730f6` راهنمای صاحب حساب برای عصر جمعه)، نمای دوقلو برای Claude (`79d2f13`، پرامپت و `ai_box/`)، و فاصله‌ی ۱۵ دقیقه‌ای و کش ۱ ساعته‌ی پرامپت در عصر آخر (`a808dc7`). هیچ‌کدام به دروازه‌ی ریسک دست نزدند و تصمیم هر بار با خود Claude ماند.
+  - [`live-v5`](https://github.com/MetaParsa/kestrel/tree/live-v5) (`84a5214`) — از حدود ۱۹:۵۰: **قفل سود** (`WALLEX_PROFIT_LOCK=0.0003`): اگر دارایی منهای هزینه‌ی فروش همه‌چیز به ⁦+۰٫۰۳٪⁩ برسد، همه‌چیز فروخته و خرید تا پایان بسته می‌شود.
+- هر تغییر بعدی در مسیر معامله: `git log --oneline live-v5..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
+- تغییرهای سمت لپ‌تاپ در طول مسابقه کامیت‌های جدا دارند: پرامپت (`75c2700` حداقل سفارش و نمره‌ی فعالیت، `612c972`، `13730f6` راهنمای صاحب حساب برای عصر جمعه)، نمای دوقلو برای Claude (`79d2f13`، پرامپت و `ai_box/`)، فاصله‌ی ۱۵ دقیقه‌ای و کش ۱ ساعته‌ی پرامپت در عصر آخر (`a808dc7`)، و ویرایش‌های عصر جمعه (`c9f9c01` لحن خنثی، `84a5214` قفل سود، `a1f2f05`). هیچ‌کدام به دروازه‌ی ریسک دست نزدند و تصمیم هر بار با خود Claude ماند.
 
 ## ۴. نقشه‌ی معیارهای فنی داوری → شاهد
 
@@ -114,10 +116,10 @@ flowchart LR
 | قابلیت اجرای مجدد (۲۵) | همین صفحه: `judge.demo` + `pytest`؛ [`deploy/`](deploy/) برای سرور |
 | بک‌تست و تست سایه (۲۰) | [`reports/backtest.py`](reports/backtest.py)؛ [`STRATEGY.md`](STRATEGY.md) بخش ۵؛ [`DECISIONS-main.md`](delivery/DECISIONS-main.md) (سایه) |
 | پایداری (۱۵) | نردبان احتیاط و واچ‌داگ: [`engine/loop.py`](engine/loop.py)، [`alerts/watchdog.py`](alerts/watchdog.py)؛ `tests/test_loop.py` |
-| افت سرمایه (۳۰) | زنده: بیشترین افت حدود ۰٫۰۳٪؛ بک‌تست: بدترین ۰٫۶۰٪؛ حد −۳٪ فروش همه‌چیز |
+| افت سرمایه (۳۰) | زنده: جدول بخش زنده‌ی [`STRATEGY.md`](STRATEGY.md) (از لاگ سرور)؛ بک‌تست: بدترین ۰٫۶۰٪؛ حد −۳٪ فروش همه‌چیز |
 
 ## ۵. صادقانه
-- حساب پراپ فقط BTCTMN را پذیرفت؛ زنده دیر شروع شد (بامداد روز آخر) و Claude در دوره‌ی زنده محتاط بود: ۲ معامله، موجودی نهایی واقعی **۵٬۰۰۰٬۴۱۰ تومان** (بررسی فقط‌خواندنی صرافی⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣).
+- حساب پراپ فقط BTCTMN را پذیرفت؛ زنده دیر شروع شد (بامداد روز آخر) و Claude محتاط بود. فروش پایانی اول (۱۵:۵۵) حساب را روی ۵٬۰۰۰٬۴۱۰ تومان بست؛ عصر خرید دوباره باز شد (`live-v3`)، یک خرید ۱۷:۴۰ با تصمیم «ریسک‌گریز» Claude ساعت ۱۹:۳۲ با زیان کوچک فروخته شد. عدد نهایی در بخش زنده‌ی `STRATEGY.md` است.
 - بک‌تست با دوقلوی قاعده‌محور است، نه Claude (Claude را نمی‌شود صادقانه روی گذشته اجرا کرد). ارزش Claude با گروه کنترل و کارنامه‌ی پیش‌بینی سنجیده می‌شود، و نمونه‌ها کوچک‌اند.
 - `judge.demo` نشان می‌دهد عددها از همین کد و داده تکرار می‌شوند (تکرارپذیری)، نه اینکه استراتژی خوب است؛ و گزارش‌ها را بازسازی می‌کند، نه تماس با Claude را؛ برنامه‌های Claude همان‌هایی هستند که در زنده ثبت شدند.
 - در گروه کنترل، کمتر بودن افت و کارمزد Claude بیشتر از سهم کوچک‌ترش می‌آید (۴٪ در برابر ۱۵٪): همان نتیجه با یک‌چهارم ریسک، نه معامله‌ی بهتر.
@@ -141,4 +143,4 @@ It verifies the committed the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤
 
 **Where to look:** the 10-second tick is `Engine.tick()` in [`engine/loop.py`](engine/loop.py); the risk gate Claude can't override is `check()` in [`engine/gate.py`](engine/gate.py) with every limit in [`config.py`](config.py); Claude's prompt is [`manager/prompts/manager.md`](manager/prompts/manager.md) with 8 read-only tools in [`manager/tools.py`](manager/tools.py); every live decision with its Persian reason is in [`delivery/DECISIONS-live.md`](delivery/DECISIONS-live.md), raw logs (each line with its `git_sha`) in `delivery/server-logs/`, and Claude's full tool transcripts in `delivery/ai-box/`.
 
-**What traded:** every live deployment has a `live-*` tag — `live-v1` (`301364b`), `live-v2` (`10bc993`), `live-v3` (`e123198`, shorter Friday-evening sell-off window), `live-v4` (`0e2d29b`, manager every 15 min on the last evening; it also carries `judge/` and `oversight/`, which the engine never imports). Laptop-side manager changes are separate commits (`75c2700`, `612c972`, `79d2f13`, `13730f6`, `a808dc7`). **Human oversight** (`oversight/`: Bale `/pause`, `/risk`, `/flatten`, `/resume`, `/review`, all logged with who/when/why) is built and tested but was not deployed; it can only make the engine more careful, never place or size a trade, as the contest rules require.
+**What traded:** every live deployment has a `live-*` tag — `live-v1` (`301364b`), `live-v2` (`10bc993`), `live-v3` (`e123198`, buying reopened until 21:20), `live-v4` (`0e2d29b`, manager every ~11 min on the last evening; also carries `judge/` and `oversight/`, which the engine never imports), `live-v5` (`84a5214`, profit lock at +0.03 % net). Laptop-side prompt edits are separate commits (`75c2700`, `612c972`, `79d2f13`, `13730f6`, `a808dc7`, `c9f9c01`, `84a5214`, `a1f2f05`). **Demo film:** `uv run python -m judge.film --open` steps through the real engine on real the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ minutes (Claude's real plans, a rogue 90 % plan, a −30 % bad print, a human `/risk`, the sell-off, a 10 % crash). **Human oversight** (`oversight/`: Bale `/pause`, `/risk`, `/flatten`, `/resume`, `/review`, all logged with who/when/why) is built and tested but was not deployed; it can only make the engine more careful, never place or size a trade, as the contest rules require.

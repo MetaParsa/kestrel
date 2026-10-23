@@ -56,8 +56,8 @@
  },
  "fills": 3,
  "pnl_from_fills": {
-  "equity_tmn": 4998464,
-  "return_pct": -0.031,
+  "equity_tmn": 4994445,
+  "return_pct": -0.111,
   "volume_tmn": 1244919,
   "fees_tmn": 3612,
   "holdings": {

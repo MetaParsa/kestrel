@@ -166,7 +166,7 @@ def write_results(work: Path, rows: list[dict], seconds: float, skipped: list[st
     same = sum(r["same"] for r in rows)
     lines += ["", f"**{same}/{len(rows)} numbers reproduced exactly.**"
                   + (f" Not run this time: {', '.join(skipped)}." if skipped else "")
-                  + " Full outputs: `judge_out/<step>/` (the reports, the Persian pages, and the engine's own "
+                  + f" Full outputs: `{work}/<step>/` (the reports, the Persian pages, and the engine's own "
                   "decision/order/fill logs for each run)."]
     text = "\n".join(lines) + "\n"
     (work / "RESULTS.md").write_text(text, encoding="utf-8")

@@ -311,6 +311,8 @@ def write_page(days: dict) -> Path:
 
 
 def main(argv=None) -> int:
+    if hasattr(sys.stdout, "reconfigure"):              # Windows consoles default to cp1252
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--open", action="store_true", help="open the page when done")
     a = ap.parse_args(argv)
@@ -320,7 +322,7 @@ def main(argv=None) -> int:
     for k, d in days.items():
         f = d.frames[-1]
         print(f"{k}: {len(d.frames)} minutes, {sum(1 for x in d.feed() if x['kind'] == 'fill')} fills, "
-              f"final equity {f['equity']:,} TMN ({f['gain']:+.3%}), worst drawdown {f['dd']:.2%}, phase {f['phase']}")
+              f"final equity {f['equity']:,} TMN ({f['gain']:+.3%}), worst mark-to-market {f['dd']:.2%} (includes any bad print), phase {f['phase']}")
     print("checks:", "all passed" if not fails else "\n  " + "\n  ".join(fails))
     print("page:", page)
     if a.open:
