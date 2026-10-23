@@ -13,6 +13,21 @@ uv run python -m judge.demo      # ~8–10 min (--quick: ~2–3 min), no API key
 uv run python -m judge.film --open   # ~15 s: a step-through page of the real engine on real the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ minutes (Claude's real plans, a rogue plan, a bad print, a crash, the sell-off)
 uv run pytest -q                 # 270+ tests, under a minute
 ```
+### Setup, step by step (about 5 minutes)
+1. **Install [git](https://git-scm.com/downloads) and [uv](https://docs.astral.sh/uv/getting-started/installation/)** (uv brings its own Python 3.12):
+   - Windows (PowerShell): `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+   - macOS / Linux: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+   - open a new terminal afterwards so `uv` is on the PATH.
+2. **Get the code and install:** `git clone https://github.com/MetaParsa/kestrel.git`, `cd kestrel`, `uv sync`. This is the only step that needs the internet for the offline checks.
+3. **Check the evidence (no key, offline):** `uv run python -m judge.demo` prints each committed number next to the re-computed one (the result is in `judge_out/RESULTS.md`); `uv run python -m judge.film --open` opens the step-through demo; `uv run pytest -q` runs the tests.
+4. **Optional, run the whole agent live (simulated money):** `uv run python -m judge.try_live` runs the engine on live the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ prices with the free rule-based manager for 10 minutes and writes the decision log to `judge_out/live/delivery/DECISIONS-try.md`. It needs access to `api.wallex.ir`; no the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ key, and it cannot place real orders.
+5. **Optional, the same with real Claude:** install the SDK with `uv sync --extra manager`, set your [Anthropic API key](https://console.anthropic.com/settings/keys), then run `uv run python -m judge.try_live --claude`:
+   - Windows (PowerShell): `$env:ANTHROPIC_API_KEY = "sk-ant-..."`
+   - macOS / Linux: `export ANTHROPIC_API_KEY=sk-ant-...`
+   - cost: about $0.05–0.11 per plan, about one plan every 10 minutes, hard cap $3; our test run made one plan for $0.098. Claude's playbooks and full tool transcripts land in `run/ai_box/`.
+   - expect caution: the prompt is the one that traded and still contains the owner's guidance for the contest's last evening (buying open until 21:20 Friday 2026-10-23), so on another day Claude usually notices the date mismatch and stays risk-off.
+6. **If something fails:** `judge_out/` and `run/` are scratch folders, safe to delete. If the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ is unreachable from your network, step 3 still works fully offline.
+
 📄 **Full technical document (Persian): [STRATEGY.md](STRATEGY.md)** — architecture, AI and the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API use, buy/sell conditions, risk management, re-running and evaluation.
 🧾 **Decision logs:** [`delivery/DECISIONS-live.md`](delivery/DECISIONS-live.md) — every live decision with what the engine saw, who decided, the risk gate's verdict, the order, the fill and the reason in Persian (shadow: [`DECISIONS-main.md`](delivery/DECISIONS-main.md), rule twin: [`DECISIONS-baseline.md`](delivery/DECISIONS-baseline.md)).
 
