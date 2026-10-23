@@ -40,3 +40,9 @@ def test_judge_demo_keeps_the_film_in_its_default_folder(tmp_path, monkeypatch):
     demo.main(["--quick"])
     assert keep.exists() and (demo.REPO / "judge_out" / ".judge_demo").exists()
     keep.unlink()
+
+
+def test_try_live_refuses_claude_without_a_key(monkeypatch):
+    from judge import try_live
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    assert try_live.main(["--claude"]) == 2

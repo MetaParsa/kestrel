@@ -180,7 +180,8 @@ uv run python -m judge.demo              # بازسازی همه‌ی شواهد
 uv run pytest -q                          # بیش از ۲۵۰ تست (موتور، دروازه، اجرا، پل، مدیر، هشدار، نظارت انسانی)
 uv run python -m data.fetch --days 30     # کندل‌های عمومی صرافی⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣، بدون کلید
 uv run python -m reports.backtest         # بک‌تست پنجره‌های ۳ روزه با همان موتور
-uv run python -m engine.run --mode shadow --manager rules --run-dir run/shadow   # سایه، بدون پول
+uv run python -m judge.try_live          # کل عامل روی سیستم شما: موتور سایه + جعبه‌ی هوش مصنوعی (--claude با کلید خودتان)
+WALLEX_END_AT=2026-12-31T23:50:00+03:30 uv run python -m engine.run --mode shadow --manager rules --run-dir run/shadow   # فقط موتور؛ پایان آینده لازم است، سایه، بدون پول
 ```
 راه‌اندازی سرور: `deploy/setup_server.sh` (systemd: موتور اصلی، موتور مبنا، صفحه‌ی وضعیت، واچ‌داگ)؛ لپ‌تاپ: `deploy/laptop/install_task.ps1` (حلقه‌ی Claude). چک‌لیست شروع زنده: `deploy/GO_LIVE.md`.
 

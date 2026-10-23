@@ -73,7 +73,8 @@ uv run pytest -q                                   # tests
 uv run python -m judge.demo                        # evidence from committed data, offline (see JUDGES.md)
 uv run python -m data.fetch --days 30              # fresh public the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ candles into data/store (no key)
 uv run python -m reports.backtest --limit 2       # contest-shaped 3-day windows on the same engine (~8 min each; all 25: judge.demo --windows 25)
-uv run python -m engine.run --mode shadow --manager rules --run-dir run/shadow   # live data, simulated money
+uv run python -m judge.try_live                   # the whole agent on live the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ prices, simulated money (--claude: real Claude with your ANTHROPIC_API_KEY after `uv sync --extra manager`)
+WALLEX_END_AT=2026-12-31T23:50:00+03:30 uv run python -m engine.run --mode shadow --manager rules --run-dir run/shadow   # the engine alone (set a future end: the contest ended 2026-10-23)
 ```
 Server: `deploy/setup_server.sh` · laptop AI box: `deploy/laptop/install_task.ps1` · go-live checklist: `deploy/GO_LIVE.md`.
 

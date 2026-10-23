@@ -52,6 +52,15 @@ uv run pytest -q                     # بیش از ۲۷۰ تست، کمتر از
 
 ---
 
+### اجرای کامل عامل روی سیستم خودتان (اختیاری، با قیمت زنده‌ی صرافی⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ و پول شبیه‌سازی)
+
+```bash
+uv run python -m judge.try_live                  # ۱۰ دقیقه با مدیر قاعده‌محور رایگان؛ بدون هیچ کلیدی
+uv sync --extra manager                          # فقط برای Claude: SDK انتروپیک
+uv run python -m judge.try_live --claude         # با Claude واقعی؛ ANTHROPIC_API_KEY لازم است (حدود ۰٫۰۵ تا ۰٫۱۱ دلار هر برنامه، سقف ۳ دلار)
+```
+همان دو پردازه‌ای که در مسابقه کار کردند کنار هم اجرا می‌شوند: موتور در حالت سایه (دفتر سفارش عمومی صرافی⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ هر ۵ ثانیه، تیک ۱۰ ثانیه‌ای، پر شدن فقط وقتی معامله‌ی واقعی از قیمت ما عبور کند؛ این حالت اصلاً نمی‌تواند سفارش واقعی ثبت کند) و جعبه‌ی هوش مصنوعی که برنامه می‌نویسد. هر دقیقه وضعیت چاپ می‌شود و در پایان لاگ تصمیم فارسی در `judge_out/live/delivery/DECISIONS-try.md` ساخته می‌شود. در آزمون ما روی یک کلون تازه، در ۳ دقیقه برنامه آمد، یک خرید ۵٪ ثبت و پر شد و لاگ ساخته شد. چون مسابقه تمام شده، این اجرا پایان خودش را ۳ روز بعد می‌گذارد. نیاز به دسترسی به `api.wallex.ir` دارد (و با `--claude` به Anthropic).
+
 ## ۲. کجا را ببینیم (نقشه‌ی کد)
 
 ```mermaid
@@ -140,6 +149,8 @@ uv run python -m judge.demo          # ~8–10 min → judge_out/RESULTS.md (--q
 uv run pytest -q                     # 250+ tests, ~25 s
 ```
 It verifies the committed the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ 1-minute candles (`data/sample/`, SHA-256 manifest), then re-runs the four evidence reports — self-grading forecasts, the control-group replay (Claude's recorded playbooks vs the rule-based twin on the same engine and minutes), the crash drill, and a backtest window — each in its own process inside `judge_out/`, and prints the committed number next to the reproduced one. On a fresh Windows clone every number matched exactly ([`delivery/JUDGE-DEMO.md`](delivery/JUDGE-DEMO.md)).
+
+**Run the whole agent yourself (optional, live the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ prices, simulated money):** `uv run python -m judge.try_live` (free rule-based manager, 10 min, no key) or `uv sync --extra manager` then `uv run python -m judge.try_live --claude` with `ANTHROPIC_API_KEY` set (≈ $0.05–0.11 per plan, $3 cap). It starts the engine in shadow mode (cannot place real orders) and the AI box side by side, prints the status every minute and writes the Persian decision log to `judge_out/live/delivery/DECISIONS-try.md`. Needs access to `api.wallex.ir`.
 
 **Where to look:** the 10-second tick is `Engine.tick()` in [`engine/loop.py`](engine/loop.py); the risk gate Claude can't override is `check()` in [`engine/gate.py`](engine/gate.py) with every limit in [`config.py`](config.py); Claude's prompt is [`manager/prompts/manager.md`](manager/prompts/manager.md) with 8 read-only tools in [`manager/tools.py`](manager/tools.py); every live decision with its Persian reason is in [`delivery/DECISIONS-live.md`](delivery/DECISIONS-live.md), raw logs (each line with its `git_sha`) in `delivery/server-logs/`, and Claude's full tool transcripts in `delivery/ai-box/`.
 
