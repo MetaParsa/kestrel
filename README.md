@@ -28,10 +28,15 @@ flowchart LR
     TW["rule-based twin<br/>manager/mock.py · simulated money"]
     L[("decision logs<br/>→ delivery/")]
   end
-  T -- "bundle.json every 60 s (scp, no tunnel)" --> M
-  M -- "playbook.json hourly" --> I["bridge/inbox.py<br/>re-validated on the server"] --> T
-  T -- "proposal" --> G -- "allow / resize / block" --> X --> W[("the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API · wallex/")]
-  TW -- "its plan, shown to Claude" --> M
+  I["bridge/inbox.py<br/>re-validated on the server"]
+  W[("the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API · wallex/")]
+  T -->|"bundle.json every 60 s (scp, no tunnel)"| M
+  M -->|"playbook.json hourly"| I
+  I --> T
+  T -->|"proposal"| G
+  G -->|"allow / resize / block"| X
+  X --> W
+  TW -->|"its plan, shown to Claude"| M
   T --> L
   H["human oversight · oversight/<br/>brakes only · built, not deployed"] -.->|"pause / lower risk / sell-off"| T
 ```

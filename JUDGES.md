@@ -64,9 +64,14 @@ flowchart LR
     X["اجرا: engine/executor.py<br/>engine/live.py"]
     L[("لاگ تصمیم‌ها<br/>delivery/")]
   end
-  M -- "playbook.json (هر ساعت)" --> I["bridge/inbox.py<br/>اعتبارسنجی دوباره"] --> T
-  T -- "bundle.json (هر ۶۰ ثانیه)" --> M
-  T -- "پیشنهاد خرید/فروش" --> G -- "مجاز / کوچک‌تر / رد" --> X --> W[("the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API<br/>wallex/")]
+  I["bridge/inbox.py<br/>اعتبارسنجی دوباره"]
+  W[("the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API<br/>wallex/")]
+  M -->|"playbook.json (هر ساعت)"| I
+  I --> T
+  T -->|"bundle.json (هر ۶۰ ثانیه)"| M
+  T -->|"پیشنهاد خرید/فروش"| G
+  G -->|"مجاز / کوچک‌تر / رد"| X
+  X --> W
   T --> L
   H["نظارت انسانی (فقط ترمز)<br/>oversight/ — ساخته شده، نصب نشده"] -.->|"توقف / کم کردن ریسک / فروش"| T
 ```
