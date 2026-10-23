@@ -408,7 +408,9 @@ class Engine:
         ctx = self._ctx(now)
         tradable = [p for p in out if check(p, ctx).ok]
         if not tradable and core.floor_due(now, trades_today=self.pf.activity_today, mode=gmode, regime=pb.regime,
-                                           daily_stopped=self.pf.daily_pnl(self.bids) <= -config.LIMITS.daily_loss):
+                                           daily_stopped=self.pf.daily_pnl(
+                                               {m: max(b, self.prev_bids.get(m, 0.0)) for m, b in self.bids.items()})
+                                           <= -config.LIMITS.daily_loss):
             # the floor trades the furthest-below-target market that can actually trade right now
             for m in sorted(config.MARKETS, key=lambda k: current[k] - targets[k]):
                 fp = core.floor_proposal({m: targets[m]}, current, eq, increases_today=dict(self.pf.core_increases),
@@ -485,7 +487,8 @@ class Engine:
     # ---- alerts ------------------------------------------------------------------------------
     def _alerts(self, now: float, gmode: str) -> None:
         day = str(self.pf.day)
-        if self.pf.daily_pnl(self.bids) <= -config.LIMITS.daily_loss:
+        guarded = {m: max(b, self.prev_bids.get(m, 0.0)) for m, b in self.bids.items()}   # one glitch print isn't a loss
+        if self.pf.daily_pnl(guarded) <= -config.LIMITS.daily_loss:
             self._once(now, f"daily-{day}", "daily_loss_stop", "⚠️ زیان روزانه به ۱٪ رسید؛ تا نیمه‌شب خرید جدیدی انجام نمی‌شود.")
         if gmode == "micro":
             self._once(now, "micro", "micro_mode", "⚠️ افت ۲٪ — حالت حداقلی: حداکثر ۱۰٪ سرمایه و یک معامله در روز.")

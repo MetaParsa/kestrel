@@ -20,8 +20,8 @@ def check_exits(pf: Portfolio, bids: dict[str, float], now: float,
                 lim: config.Limits = config.LIMITS) -> list[Proposal]:
     out = []
     for (m, sleeve), p in sorted(pf.positions.items()):
-        if p.qty <= 0 or m not in bids:
-            continue
+        if p.qty <= 0 or m not in bids or p.value(bids[m]) < lim.exchange_min_notional_tmn:
+            continue                              # dust below Wallex's minimum can't be sold; don't keep trying
         px, entry = bids[m], p.avg_price
         did = f"x{int(now) % 10**8:08d}"          # short: becomes part of the exchange client_id
         if sleeve == "core":
@@ -48,4 +48,5 @@ def hard_flatten(pf: Portfolio, bids: dict[str, float], now: float) -> list[Prop
     if not pf.halted:
         pf.latch_halt(f"equity {pf.gain(bids):+.2%} vs start at {int(now)}")
     return [Proposal(m, s, "SELL", p.value(bids[m]), "flatten", "gate", f"hf{int(now) % 10**8:08d}", "market", p.qty)
-            for (m, s), p in sorted(pf.positions.items()) if p.qty > 0]
+            for (m, s), p in sorted(pf.positions.items())
+            if p.qty > 0 and p.value(bids[m]) >= config.LIMITS.exchange_min_notional_tmn]

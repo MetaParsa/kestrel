@@ -40,7 +40,7 @@ def flatten_proposals(pf: Portfolio, prices: dict[str, float], ph: FlattenPhase,
         return []
     out = []
     for (m, sleeve), p in sorted(pf.positions.items()):
-        if p.qty > 0:
+        if p.qty > 0 and p.value(prices[m]) >= config.LIMITS.exchange_min_notional_tmn:   # dust can't be sold
             out.append(Proposal(m, sleeve, "SELL", p.value(prices[m]), "flatten", "flatten",
                                 f"fl{int(now) % 10**8:08d}", URGENCY[ph], p.qty))   # exact held qty; unique id
                                 # per tick (the engine skips it while an equally urgent sell is working)
