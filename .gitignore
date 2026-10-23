@@ -44,3 +44,6 @@ reports/out/backtest/shard-*.jsonl
 # committed sample of the candle store (judge demo); every other parquet stays ignored
 !data/sample/*.parquet
 judge_out*/
+
+# local deploy archives
+*.tar
