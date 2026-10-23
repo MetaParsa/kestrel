@@ -33,7 +33,7 @@ flowchart LR
   T -- "proposal" --> G -- "allow / resize / block" --> X --> W[("the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API · wallex/")]
   TW -- "its plan, shown to Claude" --> M
   T --> L
-  H["human oversight · oversight/<br/>brakes only · built, not deployed"] -. "pause / lower risk / sell-off" .-> T
+  H["human oversight · oversight/<br/>brakes only · built, not deployed"] -.->|"pause / lower risk / sell-off"| T
 ```
 
 ## Three ideas, each with evidence from the real logs
