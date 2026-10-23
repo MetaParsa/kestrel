@@ -122,8 +122,29 @@ class Engine:
         self.last_phase = None
         self._adopt_due: str | None = None
         self._targets: dict[str, float] = {}
+        self.lock_file = rd / "profit_locked"            # latched profit lock survives restarts
+        self.profit_locked = self.lock_file.exists()
         self._event(now, "engine_start", end_at=cfg.end_at.isoformat(), halted=self.pf.halted,
                     alert=self._start_alert(now))
+
+    def _phase(self, now: float) -> str:
+        """The sell-off phase from the clock; a profit lock jumps straight to selling everything."""
+        ph = flatten.phase(now, self.cfg.end_at)
+        return "aggressive" if self.profit_locked and ph in ("normal", "no_new") else ph
+
+    def _check_profit_lock(self, now: float) -> None:
+        """Owner's rule: once we'd still be in profit after selling everything, sell and stop buying."""
+        if self.profit_locked or config.PROFIT_LOCK is None:
+            return
+        prices = {m: min(self.bids[m], self.prev_bids.get(m, self.bids[m])) for m in config.MARKETS}  # glitch guard
+        exit_cost = sum(p.value(prices[m]) * (config.FEES[m][1] + config.SIM_HALF_SPREAD[m])
+                        for (m, _), p in self.pf.positions.items() if p.qty > 0)
+        net = self.pf.gain(prices) - exit_cost / self.pf.start_equity
+        if net >= config.PROFIT_LOCK:
+            self.profit_locked = True
+            self.lock_file.write_text(f"{now} {net:.6f}", encoding="utf-8")
+            self._event(now, "profit_locked", net_gain=round(net, 6), threshold=config.PROFIT_LOCK,
+                        alert=f"🔒 حساب در سود است ({net:+.3%} پس از کارمزد فروش)؛ همه به تومان فروخته می‌شود و خرید تازه‌ای انجام نمی‌شود.")
 
     def _start_alert(self, now: float) -> str | None:
         marker = self.cfg.run_dir / "last_start_alert"
@@ -150,7 +171,8 @@ class Engine:
         self.pf.mark(self.bids)
         self._accept_playbooks(now)
         level = self._degrade(now)
-        ph = flatten.phase(now, self.cfg.end_at)
+        self._check_profit_lock(now)
+        ph = self._phase(now)
         if ph != self.last_phase:
             previous, self.last_phase = self.last_phase, ph
             self._event(now, "flatten_phase", phase=ph, alert=None if ph == "normal" else f"⏳ مرحله‌ی پایانی: {ph}")
@@ -331,7 +353,7 @@ class Engine:
             core_cap={m: config.REGIMES[pb.regime].bounds[m][1] for m in config.MARKETS} if pb else {},
             tactical_allowed={m: False for m in config.MARKETS},      # tactical sleeve not live (step T2)
             pending_buy=buys, pending_sell=sells, halted=pf.halted,
-            flatten_phase=flatten.phase(now, self.cfg.end_at),
+            flatten_phase=self._phase(now),
             data_age_s=self._data_age(now), spread_ratio=self._spread_ratio(now),
             tactical_entries_today=dict(pf.tactical_entries), core_increases_today=dict(pf.core_increases),
             entries_today=pf.entries_today, core_stopped_at=dict(pf.core_stopped_at))
@@ -365,7 +387,7 @@ class Engine:
         if p.kind == "rebalance_down":
             return "aggressive"
         if p.kind == "flatten" and p.decided_by == "flatten":
-            return flatten.URGENCY.get(flatten.phase(self.clock(), self.cfg.end_at), "market")
+            return flatten.URGENCY.get(self._phase(self.clock()), "market")
         if p.increases_risk:
             return "aggressive"
         return "market"
@@ -616,7 +638,7 @@ class Engine:
         priced = all(m in bids for m in config.MARKETS)
         status = {
             "ts": now, "mode": self.cfg.mode, "manager": self.cfg.manager, "git_sha": self.cfg.sha,
-            "level": level, "phase": ph, "gate_mode": gmode, "halted": pf.halted,
+            "level": level, "phase": ph, "gate_mode": gmode, "halted": pf.halted, "profit_locked": self.profit_locked,
             "equity": round(pf.equity(bids)) if priced else None,
             "gain": round(pf.gain(bids), 5) if priced else None,
             "daily_pnl": round(pf.daily_pnl(bids), 5) if priced else None,

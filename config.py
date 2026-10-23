@@ -159,3 +159,8 @@ def _flatten_cfg() -> FlattenCfg:
 
 
 FLATTEN = _flatten_cfg()
+
+# WALLEX_PROFIT_LOCK=0.0003: once equity minus the cost of selling everything is this far above the
+# start capital, sell everything and stop buying until the end (latched). Unset = off.
+_lock = os.environ.get("WALLEX_PROFIT_LOCK", "").strip()
+PROFIT_LOCK: float | None = float(_lock) if _lock else None

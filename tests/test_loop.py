@@ -505,3 +505,35 @@ def test_recovery_to_level_0_is_not_an_event_and_fresh_playbooks_suppress_events
     eng.tick()
     reqs = [e for e in eng.logs.tail("events", 200) if e["event"] == "manager_request"]
     assert [r["reason"] for r in reqs] == ["scheduled"]       # no "event: degrade level 0"
+
+
+def test_profit_lock_sells_everything_and_stops_buying(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "PROFIT_LOCK", 0.0003)
+    eng, clock, market, alerts = make_engine(tmp_path)
+    eng.tick()
+    give_playbook(eng, usd=0.0, btc=0.10)
+    clock.t += 10
+    eng.tick()
+    cross(eng, market, "BTCTMN")
+    clock.t += 10
+    eng.tick()
+    assert eng.pf.qty("BTCTMN") > 0 and not eng.profit_locked     # bought below the old bid: not yet +0.03% net
+    for step in range(1, 40):                                     # BTC climbs 2%: in profit after exit fees
+        market.set("BTCTMN", PX["BTCTMN"] * 1.02 * (1 + 0.002 * ((step % 5) - 2)))
+        clock.t += 60
+        eng.tick()
+    assert eng.profit_locked and any(e["event"] == "profit_locked" for e in eng.logs.tail("events", 500))
+    assert any("🔒" in t for t in alerts.texts)
+    assert eng.pf.qty("BTCTMN") * PX["BTCTMN"] < config.LIMITS.exchange_min_notional_tmn   # sold back to TMN
+    n = len([d for d in decisions(eng) if d["side"] == "BUY"])
+    give_playbook(eng, regime="trend_up", usd=0.0, btc=0.30)      # Claude wants more: the lock says no
+    clock.t += 60
+    eng.tick()
+    assert len([d for d in decisions(eng) if d["side"] == "BUY"]) == n
+    eng2, *_ = make_engine(tmp_path, clock=clock, market=market)  # restart keeps the lock
+    assert eng2.profit_locked
+
+
+def test_profit_lock_is_off_by_default(tmp_path):
+    eng, clock, market, alerts = make_engine(tmp_path)
+    assert config.PROFIT_LOCK is None and eng._phase(clock()) == "normal"
