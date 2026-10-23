@@ -2,24 +2,95 @@
  "name": "live",
  "mode_filter": "live",
  "from": "10-23 01:20",
- "to": "10-23 09:37",
+ "to": "10-23 12:29",
  "code_versions": [
+  "10bc993c98df",
   "301364bd981d"
  ],
  "playbooks": {
-  "total": 12,
+  "total": 17,
   "by_source": {
-   "claude": 12
+   "claude": 17
   },
   "regimes": {
-   "range": 12
+   "range": 17
   },
-  "claude_cost_usd": 0.833,
+  "claude_cost_usd": 1.19,
   "clamped": 0
  },
  "claude_forecasts_4h": {
-  "n": 0,
-  "note": "no forecast resolved yet (needs 4 h)"
+  "n": 18,
+  "direction_hit_rate": 0.611,
+  "baseline_hit_rate": 0.611,
+  "vol_hit_rate": 0.833,
+  "recent": [
+   {
+    "playbook_id": "pb-20261023-0610-8f4727",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "up",
+    "baseline": "flat",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-0610-8f4727",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "flat",
+    "dir_hit": true,
+    "base_hit": true,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-0652-fc5062",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": true,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-0652-fc5062",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "flat",
+    "dir_hit": true,
+    "base_hit": true,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-0733-1c7748",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-0733-1c7748",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "flat",
+    "dir_hit": true,
+    "base_hit": true,
+    "vol_said": "low",
+    "vol_actual": "low"
+   }
+  ]
  },
  "decisions": {
   "total": 1,
@@ -41,8 +112,8 @@
  },
  "fills": 1,
  "pnl_from_fills": {
-  "equity_tmn": 5000407,
-  "return_pct": 0.008,
+  "equity_tmn": 5001253,
+  "return_pct": 0.025,
   "volume_tmn": 200193,
   "fees_tmn": 601,
   "holdings": {
@@ -50,7 +121,7 @@
   }
  },
  "degrade_levels": {
-  "0": 1
+  "0": 2
  },
  "errors": {}
 }

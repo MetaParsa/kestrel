@@ -1,34 +1,34 @@
 {
  "summary": {
   "claude_playbooks": 32,
-  "forecasts_resolved": 46,
-  "direction_hit": 0.522,
-  "naive_hit": 0.413,
-  "always_flat_hit": 0.565,
+  "forecasts_resolved": 48,
+  "direction_hit": 0.521,
+  "naive_hit": 0.417,
+  "always_flat_hit": 0.562,
   "by_market": {
    "USDTTMN": {
-    "n": 23,
-    "claude": 0.652,
-    "naive": 0.522,
-    "always_flat": 0.652
+    "n": 24,
+    "claude": 0.667,
+    "naive": 0.542,
+    "always_flat": 0.667
    },
    "BTCTMN": {
-    "n": 23,
-    "claude": 0.391,
-    "naive": 0.304,
-    "always_flat": 0.478
+    "n": 24,
+    "claude": 0.375,
+    "naive": 0.292,
+    "always_flat": 0.458
    }
   },
-  "vol_hit": 0.609,
+  "vol_hit": 0.625,
   "said": {
-   "flat": 38,
+   "flat": 40,
    "up": 6,
    "down": 2
   },
   "actual": {
    "up": 17,
-   "flat": 26,
-   "down": 3
+   "flat": 27,
+   "down": 4
   },
   "playbooks_citing_own_scorecard": 25,
   "playbooks_with_vs_twin": 1
@@ -667,6 +667,34 @@
   {
    "playbook_id": "pb-20261023-0652-fc5062",
    "t": 1792725776.5260992,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0733-1c7748",
+   "t": 1792728238.9870937,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.369,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0733-1c7748",
+   "t": 1792728238.9870937,
    "market": "USDTTMN",
    "said": "flat",
    "actual": "flat",
