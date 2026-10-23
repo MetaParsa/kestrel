@@ -1,37 +1,37 @@
 {
  "summary": {
-  "claude_playbooks": 37,
-  "forecasts_resolved": 58,
-  "direction_hit": 0.466,
-  "naive_hit": 0.414,
-  "always_flat_hit": 0.483,
+  "claude_playbooks": 53,
+  "forecasts_resolved": 72,
+  "direction_hit": 0.458,
+  "naive_hit": 0.333,
+  "always_flat_hit": 0.417,
   "by_market": {
    "USDTTMN": {
-    "n": 29,
-    "claude": 0.586,
-    "naive": 0.483,
-    "always_flat": 0.586
+    "n": 36,
+    "claude": 0.528,
+    "naive": 0.389,
+    "always_flat": 0.472
    },
    "BTCTMN": {
-    "n": 29,
-    "claude": 0.345,
-    "naive": 0.345,
-    "always_flat": 0.379
+    "n": 36,
+    "claude": 0.389,
+    "naive": 0.278,
+    "always_flat": 0.361
    }
   },
-  "vol_hit": 0.586,
+  "vol_hit": 0.611,
   "said": {
-   "flat": 49,
-   "up": 7,
+   "flat": 57,
+   "up": 13,
    "down": 2
   },
   "actual": {
-   "up": 25,
-   "flat": 28,
-   "down": 5
+   "up": 31,
+   "flat": 30,
+   "down": 11
   },
-  "playbooks_citing_own_scorecard": 30,
-  "playbooks_with_vs_twin": 6
+  "playbooks_citing_own_scorecard": 46,
+  "playbooks_with_vs_twin": 22
  },
  "rows": [
   {
@@ -845,6 +845,202 @@
    "flat_hit": false,
    "vol_said": "low",
    "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1140-c544bd",
+   "t": 1792743030.538344,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "down",
+   "move_pct": 0.442,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1140-c544bd",
+   "t": 1792743030.538344,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.539,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1222-857816",
+   "t": 1792745527.7706213,
+   "market": "BTCTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "down",
+   "move_pct": 0.442,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1222-857816",
+   "t": 1792745527.7706213,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.539,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1223-4b1434",
+   "t": 1792745594.1017053,
+   "market": "BTCTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "down",
+   "move_pct": 0.442,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1223-4b1434",
+   "t": 1792745594.1017053,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.539,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1304-745794",
+   "t": 1792748062.83983,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.244,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1304-745794",
+   "t": 1792748062.83983,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.225,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1346-06dc7d",
+   "t": 1792750605.282239,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.087,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1346-06dc7d",
+   "t": 1792750605.282239,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.424,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1427-f556ea",
+   "t": 1792753077.2796001,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.087,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1427-f556ea",
+   "t": 1792753077.2796001,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.424,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1509-e5776b",
+   "t": 1792755569.2148445,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.422,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-1509-e5776b",
+   "t": 1792755569.2148445,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.71,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
   }
  ],
  "learning": [
@@ -1249,6 +1445,248 @@
    ],
    "vs_twin": [
     "vs twin: it says devaluation_drift at 15% because USDTTMN is up 1.03% over 24 h. I agree the toman is drifting weaker, but the buying window is closed and the twin has lost 10,026 TMN already, so I stay at range with a small size and tactical off."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1633-74d045",
+   "t": 1792760612.7054732,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Scorecard: I called vol 'low' several times and it came out 'normal', so this time I call normal. My recent 'flat' calls also missed on up moves, but USDTTMN has now turned down over the last 4 h (-0.22%)."
+   ],
+   "vs_twin": [
+    "vs twin: it says devaluation_drift at 15% from the 24 h return of about +0.85%. I disagree because the sell-off has started, USDTTMN fell over the last 1 h and 4 h, and the book leans heavily to sellers. Its target cannot be bought in this phase anyway. I lock in the small gain at 0%."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1735-96e80c",
+   "t": 1792764324.432891,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction 47% vs baseline 36%, vol 58%; my 'flat/low' BTC calls were right on vol but missed small up moves"
+   ],
+   "vs_twin": [
+    "vs twin: it says trend_up at 20% from the 24 h returns (USDT +0.34%, BTC +1.04%). I stay at range 8% x 0.75 = 6% because USDTTMN fell 0.39% over 4 h from 273.5k to 272.1k, BTCTMN has stayed in a 22.18-22.36B band for 12 h, and the BTC order book is heavily on the sell side"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1751-1959d3",
+   "t": 1792765266.8317914,
+   "regime": "event_shock",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Scorecard: direction hit 47% vs baseline 36%; my vol calls of 'low' missed when actual vol was normal, so I say normal"
+   ],
+   "vs_twin": [
+    "vs twin: it stays in range at 5% x 1.0 and has no BTC position, so its view rests on a mild 24 h return. I differ because the sharp 10-minute break makes this a hold-only moment: no adding and no tactical trades until the tape settles"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1801-b27bde",
+   "t": 1792765917.2164638,
+   "regime": "event_shock",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 47% vs 36% for the baseline. Volume during the shock was far above normal, so I forecast normal vol for BTCTMN rather than low."
+   ],
+   "vs_twin": [
+    "vs twin: it says range at 5%, worked out from 24h returns, which matches our ~6% in size. It does not see the 0.6 BTC dump or the -0.99 book imbalance, so I keep the event_shock label and add nothing until the book stops leaning to sells."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1812-4c5ee2",
+   "t": 1792766561.285245,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction 45.6% vs baseline 35.3%, and my last flat calls missed small downs, so I keep conviction low",
+    "vs twin: it says range 5% with down/low forecasts. I agree on range. I keep the existing 6% instead of trimming 1%, because a change that small would be skipped and would cost fees. I call BTC flat rather than down because the price is recovering after the shock"
+   ],
+   "vs_twin": [
+    "vs twin: it says range 5% with down/low forecasts. I agree on range. I keep the existing 6% instead of trimming 1%, because a change that small would be skipped and would cost fees. I call BTC flat rather than down because the price is recovering after the shock"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1824-31e828",
+   "t": 1792767262.1265047,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "down/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit 45.6% vs baseline 35.3%. My last 'flat' calls missed slow drifts down, so this time I call the USDTTMN slide 'down' instead of 'flat'."
+   ],
+   "vs_twin": [
+    "vs twin: it is also range, at 5% × 1.0, and its simulated BTC position is about zero. I agree on the regime. I keep our existing 6% instead of adding, because the USDTTMN drift down and the -0.94 ask-heavy book do not justify adding, while exiting would only lock in fees on a quiet evening."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1835-83dff4",
+   "t": 1792767955.3482554,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.456 vs baseline 0.353. My last flat call missed a down move, so this time I am calling the toman's strengthening as down."
+   ],
+   "vs_twin": [
+    "vs twin: we agree on range. Its target is 5% but it holds almost no BTC; I keep the existing 6% because selling now locks in a loss plus fees. Its vol forecast is low; I say normal because USDTTMN has dropped sharply in the last 10 minutes."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1847-dfd591",
+   "t": 1792768652.113846,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Scorecard: my 13:04 call of 'flat' was wrong (the market went down). The toman's strength has persisted all afternoon, so this time I forecast down instead of flat",
+    "vs twin: it says range 5% with a down/low forecast, but it actually holds no BTC. I agree on the regime and on direction, and I differ on volatility: the last hour's move is well above the 30-day hourly norm. I keep our existing ~6% position instead of selling, because realising the loss now almost guarantees a negative finish, while the stop already limits how much more we can lose"
+   ],
+   "vs_twin": [
+    "vs twin: it says range 5% with a down/low forecast, but it actually holds no BTC. I agree on the regime and on direction, and I differ on volatility: the last hour's move is well above the 30-day hourly norm. I keep our existing ~6% position instead of selling, because realising the loss now almost guarantees a negative finish, while the stop already limits how much more we can lose"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1855-ffe675",
+   "t": 1792769137.2199428,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 0.457 vs baseline 0.343. My recent USDTTMN 'up' calls were wrong, so I follow the tape and call it down."
+   ],
+   "vs_twin": [
+    "vs twin: we agree on range. The twin aims for 5% but actually holds almost no BTC. I keep the existing ~6% position instead of selling, because selling locks in a ~1.2% loss plus fees for less than a 3 h horizon, and the core stop caps the remaining risk at about 0.07% of equity. I am not adding because the toman is still strengthening."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1906-1839e7",
+   "t": 1792769789.075515,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "down/low",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 45.7%, above the baseline's 34.3%, but my recent USDTTMN 'up' calls missed. So I am more cautious this time"
+   ],
+   "vs_twin": [
+    "vs twin: it also says range at 5% and forecasts down/low. I agree on range. I keep 6% because the gap is under 2% and changing it would only cost fees. Unlike the twin, I see the USDTTMN drop as a normal-volatility move, not a low-volatility one"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1919-d75fdb",
+   "t": 1792770543.4676216,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 45.7% vs baseline 34.3%, but my last USDTTMN 'up' calls missed, so I now call flat instead of up"
+   ],
+   "vs_twin": [
+    "vs twin: we agree on range. It targets 5% and calls both markets down/low vol from the 24h return; I keep the existing 5.93% (any change would be under the 2% minimum anyway) and call flat/normal, because the toman's sharp strengthening has stopped in the last half hour, not turned into a new leg down"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1929-433e12",
+   "t": 1792771178.6298518,
+   "regime": "risk_off",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Scorecard: my direction hit rate is 45.8%, against a 33.3% baseline. My recent USDTTMN 'up' calls missed while the toman kept strengthening, so I am not betting on a reversal now."
+   ],
+   "vs_twin": [
+    "vs twin: it stays in range at 5% from the 24 h returns (USDTTMN −0.54%). I go risk_off at 0% because its 24 h figure misses the steady fall of the last 4 h (USDTTMN −1.39%, BTCTMN −1.22%). The fall is still running, with fresh lows in the last 5 minutes, and holding a loser into the flatten adds risk with no clear payoff."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1941-07c02c",
+   "t": 1792771872.578128,
+   "regime": "risk_off",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Scorecard: my recent 'up/flat' USDTTMN calls missed while it kept falling (direction hit rate 0.458), so I should not call a reversal too early."
+   ],
+   "vs_twin": [
+    "vs twin: it says range at 5% from the 24 h returns. I agree there is no uptrend but stay at 0% (risk_off) because the toman is still strengthening hour by hour and the order books lean heavily to sellers. A 5% position is also only just above the minimum order and would mostly pay fees."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1951-878e5c",
+   "t": 1792772507.9021888,
+   "regime": "risk_off",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "My USDTTMN 'up' forecasts this afternoon were wrong 3 times running (direction hit rate 0.458), so I won't call a rebound without evidence"
+   ],
+   "vs_twin": [
+    "vs twin: it says range 5% from its rule but still forecasts both markets down. I stay risk_off at 0% because the bounce off 268.5k is fading again, order-book selling pressure is strong and little time is left, so a 5% buy would most likely just pay fees"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-2002-3d3307",
+   "t": 1792773161.8411102,
+   "regime": "risk_off",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/high"
+   },
+   "self_grading": [
+    "Scorecard: my recent USDTTMN 'up' calls missed in a falling tape. Direction hit rate 0.458, against 0.333 for the baseline. I now follow the momentum instead of calling a bounce"
+   ],
+   "vs_twin": [
+    "vs twin: it says range at 5% × 1.0 because its rule only reads the 24 h return. I stay risk_off at 0% because the 4 h and 1 h tape is still falling, the order book leans to sellers and little time is left. A 5% entry now would mostly pay fees into a downtrend"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-2013-cfe6c2",
+   "t": 1792773819.6696754,
+   "regime": "risk_off",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "down/normal"
+   },
+   "self_grading": [
+    "Scorecard: my last USDTTMN 'up' and 'flat' calls missed because the price fell. I'm now going with the clear downtrend instead of calling for a bounce."
+   ],
+   "vs_twin": [
+    "vs twin: the rule says range at 5% because it looks only at the 24 h return. I stay risk_off at 0% because the 4 h trend, the heavy sell side in the order book and the short time left argue against buying. The twin has also lost 10.7k TMN realized so far."
    ]
   }
  ]

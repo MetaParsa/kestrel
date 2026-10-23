@@ -2,128 +2,140 @@
  "name": "live",
  "mode_filter": "live",
  "from": "10-23 01:20",
- "to": "10-23 15:59",
+ "to": "10-23 20:17",
  "code_versions": [
+  "0e2d29b407a1",
   "10bc993c98df",
-  "301364bd981d"
+  "301364bd981d",
+  "84a52145af27",
+  "e1231989215c"
  ],
  "playbooks": {
-  "total": 22,
+  "total": 38,
   "by_source": {
-   "claude": 22
+   "claude": 38
   },
   "regimes": {
-   "range": 22
+   "range": 31,
+   "event_shock": 2,
+   "risk_off": 5
   },
-  "claude_cost_usd": 1.552,
+  "claude_cost_usd": 2.715,
   "clamped": 0
  },
  "claude_forecasts_4h": {
-  "n": 28,
-  "direction_hit_rate": 0.464,
-  "baseline_hit_rate": 0.536,
-  "vol_hit_rate": 0.679,
+  "n": 42,
+  "direction_hit_rate": 0.452,
+  "baseline_hit_rate": 0.357,
+  "vol_hit_rate": 0.69,
   "recent": [
    {
-    "playbook_id": "pb-20261023-0937-f1942e",
+    "playbook_id": "pb-20261023-1346-06dc7d",
     "market": "BTCTMN",
-    "said": "up",
-    "actual": "up",
+    "said": "flat",
+    "actual": "flat",
     "baseline": "up",
     "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "normal"
-   },
-   {
-    "playbook_id": "pb-20261023-0937-f1942e",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
     "base_hit": false,
-    "vol_said": "normal",
-    "vol_actual": "normal"
+    "vol_said": "low",
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1018-a70b7b",
-    "market": "BTCTMN",
-    "said": "flat",
-    "actual": "up",
+    "playbook_id": "pb-20261023-1346-06dc7d",
+    "market": "USDTTMN",
+    "said": "up",
+    "actual": "down",
     "baseline": "up",
     "dir_hit": false,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "normal"
-   },
-   {
-    "playbook_id": "pb-20261023-1018-a70b7b",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
     "base_hit": false,
     "vol_said": "normal",
-    "vol_actual": "normal"
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1059-05e60e",
+    "playbook_id": "pb-20261023-1427-f556ea",
     "market": "BTCTMN",
     "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": true,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "normal"
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1059-05e60e",
+    "playbook_id": "pb-20261023-1427-f556ea",
     "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
+    "said": "up",
+    "actual": "down",
+    "baseline": "up",
     "dir_hit": false,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "normal"
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-1509-e5776b",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-1509-e5776b",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
    }
   ]
  },
  "decisions": {
-  "total": 2,
+  "total": 18,
   "by_kind": {
-   "rebalance_up": 1,
-   "flatten": 1
+   "rebalance_up": 2,
+   "flatten": 1,
+   "rebalance_down": 15
   },
   "by_decider": {
-   "manager": 1,
+   "manager": 17,
    "flatten": 1
   },
   "gate": {
-   "allow": 2
+   "allow": 4,
+   "block": 14
   },
-  "block_reasons": {}
+  "block_reasons": {
+   "G_BELOW_EXCHANGE_MIN": 14,
+   "G_DUST_CLOSE_ALL": 4,
+   "G_SELL_CAPPED_TO_HELD": 4
+  }
  },
  "orders": {
-  "order_placed": 8,
-  "order_escalated": 6,
-  "order_done": 2
+  "order_placed": 14,
+  "order_escalated": 10,
+  "order_done": 4
  },
- "fills": 2,
+ "fills": 4,
  "pnl_from_fills": {
-  "equity_tmn": 5000474,
-  "return_pct": 0.009,
-  "volume_tmn": 401300,
-  "fees_tmn": 1103,
+  "equity_tmn": 4994529,
+  "return_pct": -0.109,
+  "volume_tmn": 996500,
+  "fees_tmn": 2741,
   "holdings": {
-   "BTCTMN": 2.849999999999473e-09
+   "BTCTMN": 2.4399999999995904e-09
   }
  },
  "degrade_levels": {
-  "0": 2
+  "0": 5
  },
- "errors": {}
+ "errors": {},
+ "human_oversight": {}
 }

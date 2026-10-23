@@ -2,147 +2,155 @@
  "name": "main-all",
  "mode_filter": null,
  "from": "10-22 10:45",
- "to": "10-23 15:59",
+ "to": "10-23 20:17",
  "code_versions": [
+  "0e2d29b407a1",
   "10bc993c98df",
   "301364bd981d",
   "386a6fbdb772",
   "462eaca709f8",
   "790ec5bc61ea",
+  "84a52145af27",
   "9d6a6ef8c37d",
   "c171a0e26c2f",
   "c839f44a54e6",
   "d67c3a42f00f",
+  "e1231989215c",
   "eec06ad28472"
  ],
  "playbooks": {
-  "total": 38,
+  "total": 54,
   "by_source": {
    "mock": 1,
-   "claude": 37
+   "claude": 53
   },
   "regimes": {
    "devaluation_drift": 9,
-   "event_shock": 2,
-   "range": 27
+   "event_shock": 4,
+   "range": 36,
+   "risk_off": 5
   },
-  "claude_cost_usd": 2.595,
+  "claude_cost_usd": 3.758,
   "clamped": 0
  },
  "claude_forecasts_4h": {
-  "n": 58,
-  "direction_hit_rate": 0.466,
-  "baseline_hit_rate": 0.414,
-  "vol_hit_rate": 0.586,
+  "n": 72,
+  "direction_hit_rate": 0.458,
+  "baseline_hit_rate": 0.333,
+  "vol_hit_rate": 0.611,
   "recent": [
    {
-    "playbook_id": "pb-20261023-0937-f1942e",
+    "playbook_id": "pb-20261023-1346-06dc7d",
     "market": "BTCTMN",
-    "said": "up",
-    "actual": "up",
+    "said": "flat",
+    "actual": "flat",
     "baseline": "up",
     "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "normal"
-   },
-   {
-    "playbook_id": "pb-20261023-0937-f1942e",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
     "base_hit": false,
-    "vol_said": "normal",
-    "vol_actual": "normal"
+    "vol_said": "low",
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1018-a70b7b",
-    "market": "BTCTMN",
-    "said": "flat",
-    "actual": "up",
+    "playbook_id": "pb-20261023-1346-06dc7d",
+    "market": "USDTTMN",
+    "said": "up",
+    "actual": "down",
     "baseline": "up",
     "dir_hit": false,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "normal"
-   },
-   {
-    "playbook_id": "pb-20261023-1018-a70b7b",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
     "base_hit": false,
     "vol_said": "normal",
-    "vol_actual": "normal"
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1059-05e60e",
+    "playbook_id": "pb-20261023-1427-f556ea",
     "market": "BTCTMN",
     "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": false,
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": true,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "normal"
+    "vol_actual": "low"
    },
    {
-    "playbook_id": "pb-20261023-1059-05e60e",
+    "playbook_id": "pb-20261023-1427-f556ea",
     "market": "USDTTMN",
-    "said": "flat",
-    "actual": "up",
-    "baseline": "flat",
+    "said": "up",
+    "actual": "down",
+    "baseline": "up",
     "dir_hit": false,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "normal"
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-1509-e5776b",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
+   },
+   {
+    "playbook_id": "pb-20261023-1509-e5776b",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "low"
    }
   ]
  },
  "decisions": {
-  "total": 9,
+  "total": 25,
   "by_kind": {
-   "rebalance_up": 7,
-   "rebalance_down": 1,
+   "rebalance_up": 8,
+   "rebalance_down": 16,
    "flatten": 1
   },
   "by_decider": {
-   "manager": 8,
+   "manager": 24,
    "flatten": 1
   },
   "gate": {
-   "block": 4,
-   "allow": 5
+   "block": 18,
+   "allow": 7
   },
   "block_reasons": {
    "G_STALE_DATA": 3,
-   "G_MARKET_NOT_ALLOWED": 1
+   "G_MARKET_NOT_ALLOWED": 1,
+   "G_BELOW_EXCHANGE_MIN": 14,
+   "G_DUST_CLOSE_ALL": 4,
+   "G_SELL_CAPPED_TO_HELD": 4
   }
  },
  "orders": {
-  "order_placed": 16,
-  "order_escalated": 11,
-  "order_done": 5
+  "order_placed": 22,
+  "order_escalated": 15,
+  "order_done": 7
  },
- "fills": 3,
+ "fills": 5,
  "pnl_from_fills": {
-  "equity_tmn": 5001501,
-  "return_pct": 0.03,
-  "volume_tmn": 650610,
-  "fees_tmn": 1851,
+  "equity_tmn": 4992082,
+  "return_pct": -0.158,
+  "volume_tmn": 1245810,
+  "fees_tmn": 3489,
   "holdings": {
    "USDTTMN": 0.91724,
-   "BTCTMN": 2.849999999999473e-09
+   "BTCTMN": 2.4399999999995904e-09
   }
  },
  "degrade_levels": {
   "3": 1,
-  "0": 17,
+  "0": 20,
   "2": 7
  },
- "errors": {}
+ "errors": {},
+ "human_oversight": {}
 }

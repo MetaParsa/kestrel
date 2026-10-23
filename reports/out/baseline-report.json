@@ -2,29 +2,32 @@
  "name": "baseline",
  "mode_filter": null,
  "from": "10-22 10:45",
- "to": "10-23 15:55",
+ "to": "10-23 20:17",
  "code_versions": [
+  "0e2d29b407a1",
   "10bc993c98df",
   "301364bd981d",
   "386a6fbdb772",
   "462eaca709f8",
   "790ec5bc61ea",
+  "84a52145af27",
   "9d6a6ef8c37d",
   "c171a0e26c2f",
   "c839f44a54e6",
   "d67c3a42f00f",
+  "e1231989215c",
   "eec06ad28472"
  ],
  "playbooks": {
-  "total": 46,
+  "total": 60,
   "by_source": {
-   "mock": 46
+   "mock": 60
   },
   "regimes": {
-   "devaluation_drift": 24,
+   "devaluation_drift": 26,
    "event_shock": 2,
-   "range": 19,
-   "trend_up": 1
+   "range": 30,
+   "trend_up": 2
   },
   "claude_cost_usd": 0,
   "clamped": 0
@@ -34,23 +37,23 @@
   "note": "no forecast resolved yet (needs 4 h)"
  },
  "decisions": {
-  "total": 72,
+  "total": 90,
   "by_kind": {
    "rebalance_up": 9,
-   "rebalance_down": 61,
-   "flatten": 2
+   "rebalance_down": 74,
+   "flatten": 7
   },
   "by_decider": {
-   "manager": 70,
-   "flatten": 2
+   "manager": 83,
+   "flatten": 7
   },
   "gate": {
-   "block": 63,
+   "block": 81,
    "allow": 9
   },
   "block_reasons": {
    "G_STALE_DATA": 3,
-   "G_MARKET_NOT_ALLOWED": 60
+   "G_MARKET_NOT_ALLOWED": 78
   }
  },
  "orders": {
@@ -60,8 +63,8 @@
  },
  "fills": 7,
  "pnl_from_fills": {
-  "equity_tmn": 4991222,
-  "return_pct": -0.176,
+  "equity_tmn": 4984271,
+  "return_pct": -0.315,
   "volume_tmn": 2989997,
   "fees_tmn": 8597,
   "holdings": {
@@ -71,7 +74,8 @@
  },
  "degrade_levels": {
   "3": 3,
-  "0": 13
+  "0": 16
  },
- "errors": {}
+ "errors": {},
+ "human_oversight": {}
 }

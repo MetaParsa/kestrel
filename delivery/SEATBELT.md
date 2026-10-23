@@ -19,6 +19,9 @@ Claude فقط «چه‌قدر و با چه رژیمی» را پیشنهاد می
 
 | قانون | دفعات |
 |---|---|
+| `G_BELOW_EXCHANGE_MIN` | ۱۴ |
+| `G_DUST_CLOSE_ALL` | ۴ |
+| `G_SELL_CAPPED_TO_HELD` | ۴ |
 | `G_STALE_DATA` | ۳ |
 | `G_MARKET_NOT_ALLOWED` | ۱ |
 

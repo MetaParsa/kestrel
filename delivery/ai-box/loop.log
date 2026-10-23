@@ -67,3 +67,33 @@
 2026-10-23T14:27:58 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1427-f556ea", "source": "claude", "regime": "range", "cost_usd": 0.0667, "clamps": []}
 2026-10-23T15:09:30 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1509-e5776b", "source": "claude", "regime": "range", "cost_usd": 0.0617, "clamps": []}
 2026-10-23T15:51:27 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1551-4d8db9", "source": "claude", "regime": "range", "cost_usd": 0.0637, "clamps": []}
+2026-10-23T16:33:45 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1633-74d045", "source": "claude", "regime": "range", "cost_usd": 0.0673, "clamps": []}
+2026-10-23T17:18:53 ai_box loop exited with code -1
+2026-10-23T17:18:56 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T17:35:46 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1735-96e80c", "source": "claude", "regime": "range", "cost_usd": 0.0873, "clamps": []}
+2026-10-23T17:39:00 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-23T17:40:52 {"event": "pull_failed", "error": "scp: TimeoutExpired"}
+2026-10-23T17:48:24 ai_box loop exited with code -1
+2026-10-23T17:48:27 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T17:51:08 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1751-1959d3", "source": "claude", "regime": "event_shock", "cost_usd": 0.1114, "clamps": []}
+2026-10-23T18:01:58 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1801-b27bde", "source": "claude", "regime": "event_shock", "cost_usd": 0.0655, "clamps": []}
+2026-10-23T18:10:37 ai_box loop exited with code 1
+2026-10-23T18:12:17 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T18:12:42 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1812-4c5ee2", "source": "claude", "regime": "range", "cost_usd": 0.056, "clamps": []}
+2026-10-23T18:24:22 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1824-31e828", "source": "claude", "regime": "range", "cost_usd": 0.0689, "clamps": []}
+2026-10-23T18:36:07 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1835-83dff4", "source": "claude", "regime": "range", "cost_usd": 0.0784, "clamps": []}
+2026-10-23T18:38:06 ai_box loop exited with code 1
+2026-10-23T18:38:50 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T18:47:32 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1847-dfd591", "source": "claude", "regime": "range", "cost_usd": 0.0815, "clamps": []}
+2026-10-23T18:55:11 ai_box loop exited with code -1
+2026-10-23T18:55:15 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T18:55:38 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1855-ffe675", "source": "claude", "regime": "range", "cost_usd": 0.1013, "clamps": []}
+2026-10-23T19:06:35 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1906-1839e7", "source": "claude", "regime": "range", "cost_usd": 0.07, "clamps": []}
+2026-10-23T19:12:17 starting ai_box loop (paid, cap 15 USD)
+2026-10-23T19:19:04 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1919-d75fdb", "source": "claude", "regime": "range", "cost_usd": 0.0696, "clamps": []}
+2026-10-23T19:29:39 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1929-433e12", "source": "claude", "regime": "risk_off", "cost_usd": 0.0717, "clamps": []}
+2026-10-23T19:41:13 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1941-07c02c", "source": "claude", "regime": "risk_off", "cost_usd": 0.0599, "clamps": []}
+2026-10-23T19:52:09 {"event": "push_failed", "playbook_id": "pb-20261023-1951-878e5c", "error": "ssh exit 255: banner exchange: Connection to UNKNOWN port -1: Connection timed out"}
+2026-10-23T19:53:10 {"event": "playbook_pushed_on_retry", "file": "playbook-pb-20261023-1951-878e5c.json"}
+2026-10-23T20:02:42 {"event": "playbook_pushed", "playbook_id": "pb-20261023-2002-3d3307", "source": "claude", "regime": "risk_off", "cost_usd": 0.0648, "clamps": []}
+2026-10-23T20:13:40 {"event": "playbook_pushed", "playbook_id": "pb-20261023-2013-cfe6c2", "source": "claude", "regime": "risk_off", "cost_usd": 0.0552, "clamps": []}
