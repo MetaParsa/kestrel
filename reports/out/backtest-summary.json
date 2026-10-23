@@ -20,13 +20,12 @@
    "return_pct": -0.187,
    "max_drawdown_pct": 0.273,
    "fills": 13,
-   "decisions": 45,
+   "decisions": 13,
    "fees_tmn": 16089,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "trend_up"
    ],
@@ -326,7 +325,7 @@
      4990673
     ]
    ],
-   "seconds": 509.9
+   "seconds": 1400.4
   },
   {
    "start": "2026-09-26T08:30+03:30",
@@ -334,13 +333,12 @@
    "return_pct": -0.026,
    "max_drawdown_pct": 0.254,
    "fills": 11,
-   "decisions": 43,
+   "decisions": 11,
    "fees_tmn": 14928,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "trend_up"
    ],
@@ -640,7 +638,7 @@
      4998682
     ]
    ],
-   "seconds": 497.2
+   "seconds": 1374.7
   },
   {
    "start": "2026-09-27T08:30+03:30",
@@ -648,13 +646,12 @@
    "return_pct": 0.442,
    "max_drawdown_pct": 0.341,
    "fills": 12,
-   "decisions": 44,
+   "decisions": 12,
    "fees_tmn": 15629,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "trend_up"
    ],
@@ -954,7 +951,7 @@
      5022081
     ]
    ],
-   "seconds": 515.2
+   "seconds": 1398.0
   },
   {
    "start": "2026-09-28T08:30+03:30",
@@ -962,14 +959,13 @@
    "return_pct": 0.278,
    "max_drawdown_pct": 0.427,
    "fills": 14,
-   "decisions": 46,
+   "decisions": 14,
    "fees_tmn": 15434,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "range",
-    "risk_off"
+    "range"
    ],
    "hold_btc_pct": 5.874,
    "hold_usdt_pct": 5.12,
@@ -1267,7 +1263,7 @@
      5013909
     ]
    ],
-   "seconds": 530.2
+   "seconds": 1420.7
   },
   {
    "start": "2026-09-29T08:30+03:30",
@@ -1275,7 +1271,7 @@
    "return_pct": 0.056,
    "max_drawdown_pct": 0.513,
    "fills": 13,
-   "decisions": 50,
+   "decisions": 16,
    "fees_tmn": 14360,
    "ended_in_tmn": true,
    "left": {},
@@ -1580,7 +1576,7 @@
      5002812
     ]
    ],
-   "seconds": 527.7
+   "seconds": 1417.3
   },
   {
    "start": "2026-09-30T08:30+03:30",
@@ -1588,7 +1584,7 @@
    "return_pct": -0.09,
    "max_drawdown_pct": 0.415,
    "fills": 12,
-   "decisions": 53,
+   "decisions": 15,
    "fees_tmn": 13537,
    "ended_in_tmn": true,
    "left": {},
@@ -1895,7 +1891,7 @@
      4995503
     ]
    ],
-   "seconds": 517.1
+   "seconds": 1411.4
   },
   {
    "start": "2026-10-01T08:30+03:30",
@@ -1903,7 +1899,7 @@
    "return_pct": 0.33,
    "max_drawdown_pct": 0.299,
    "fills": 11,
-   "decisions": 43,
+   "decisions": 11,
    "fees_tmn": 13977,
    "ended_in_tmn": true,
    "left": {},
@@ -2208,7 +2204,7 @@
      5016501
     ]
    ],
-   "seconds": 496.7
+   "seconds": 1398.6
   },
   {
    "start": "2026-10-02T08:30+03:30",
@@ -2216,14 +2212,13 @@
    "return_pct": 0.169,
    "max_drawdown_pct": 0.313,
    "fills": 13,
-   "decisions": 45,
+   "decisions": 13,
    "fees_tmn": 17933,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "range",
-    "trend_up"
+    "range"
    ],
    "hold_btc_pct": 3.652,
    "hold_usdt_pct": 4.532,
@@ -2521,7 +2516,7 @@
      5008469
     ]
    ],
-   "seconds": 489.6
+   "seconds": 1395.6
   },
   {
    "start": "2026-10-03T08:30+03:30",
@@ -2529,7 +2524,7 @@
    "return_pct": 0.366,
    "max_drawdown_pct": 0.282,
    "fills": 12,
-   "decisions": 43,
+   "decisions": 12,
    "fees_tmn": 13969,
    "ended_in_tmn": true,
    "left": {},
@@ -2834,7 +2829,7 @@
      5018289
     ]
    ],
-   "seconds": 506.2
+   "seconds": 1403.0
   },
   {
    "start": "2026-10-04T08:30+03:30",
@@ -2842,7 +2837,7 @@
    "return_pct": -0.203,
    "max_drawdown_pct": 0.554,
    "fills": 9,
-   "decisions": 48,
+   "decisions": 9,
    "fees_tmn": 11073,
    "ended_in_tmn": true,
    "left": {},
@@ -3148,7 +3143,7 @@
      4989858
     ]
    ],
-   "seconds": 500.8
+   "seconds": 1399.2
   },
   {
    "start": "2026-10-05T08:30+03:30",
@@ -3156,7 +3151,7 @@
    "return_pct": -0.273,
    "max_drawdown_pct": 0.466,
    "fills": 6,
-   "decisions": 312,
+   "decisions": 118,
    "fees_tmn": 6724,
    "ended_in_tmn": true,
    "left": {},
@@ -3462,7 +3457,7 @@
      4986370
     ]
    ],
-   "seconds": 498.9
+   "seconds": 1393.5
   },
   {
    "start": "2026-10-06T08:30+03:30",
@@ -3470,7 +3465,7 @@
    "return_pct": -0.341,
    "max_drawdown_pct": 0.37,
    "fills": 8,
-   "decisions": 325,
+   "decisions": 143,
    "fees_tmn": 6711,
    "ended_in_tmn": true,
    "left": {},
@@ -3776,7 +3771,7 @@
      4982975
     ]
    ],
-   "seconds": 498.4
+   "seconds": 1405.5
   },
   {
    "start": "2026-10-07T08:30+03:30",
@@ -3784,16 +3779,14 @@
    "return_pct": -0.473,
    "max_drawdown_pct": 0.526,
    "fills": 12,
-   "decisions": 352,
+   "decisions": 185,
    "fees_tmn": 11069,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
-    "risk_off",
-    "trend_up"
+    "risk_off"
    ],
    "hold_btc_pct": -2.642,
    "hold_usdt_pct": -0.745,
@@ -4091,7 +4084,7 @@
      4976365
     ]
    ],
-   "seconds": 569.2
+   "seconds": 1409.2
   },
   {
    "start": "2026-10-08T08:30+03:30",
@@ -4099,7 +4092,7 @@
    "return_pct": -0.248,
    "max_drawdown_pct": 0.327,
    "fills": 8,
-   "decisions": 84,
+   "decisions": 42,
    "fees_tmn": 8106,
    "ended_in_tmn": true,
    "left": {},
@@ -4403,7 +4396,7 @@
      4987620
     ]
    ],
-   "seconds": 563.0
+   "seconds": 1405.8
   },
   {
    "start": "2026-10-09T08:30+03:30",
@@ -4411,7 +4404,7 @@
    "return_pct": -0.047,
    "max_drawdown_pct": 0.144,
    "fills": 4,
-   "decisions": 36,
+   "decisions": 4,
    "fees_tmn": 4259,
    "ended_in_tmn": true,
    "left": {},
@@ -4715,7 +4708,7 @@
      4997643
     ]
    ],
-   "seconds": 554.2
+   "seconds": 1382.7
   },
   {
    "start": "2026-10-10T08:30+03:30",
@@ -4723,12 +4716,11 @@
    "return_pct": -0.23,
    "max_drawdown_pct": 0.262,
    "fills": 5,
-   "decisions": 185,
+   "decisions": 42,
    "fees_tmn": 5613,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
-    "event_shock",
     "range",
     "risk_off",
     "trend_up"
@@ -5029,7 +5021,7 @@
      4988514
     ]
    ],
-   "seconds": 563.3
+   "seconds": 1406.7
   },
   {
    "start": "2026-10-11T08:30+03:30",
@@ -5037,12 +5029,11 @@
    "return_pct": -0.34,
    "max_drawdown_pct": 0.379,
    "fills": 11,
-   "decisions": 270,
+   "decisions": 130,
    "fees_tmn": 9710,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
-    "event_shock",
     "range",
     "risk_off",
     "trend_up"
@@ -5343,7 +5334,7 @@
      4982995
     ]
    ],
-   "seconds": 585.0
+   "seconds": 1408.2
   },
   {
    "start": "2026-10-12T08:30+03:30",
@@ -5351,13 +5342,12 @@
    "return_pct": -0.433,
    "max_drawdown_pct": 0.433,
    "fills": 13,
-   "decisions": 284,
+   "decisions": 137,
    "fees_tmn": 13548,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "risk_off",
     "trend_up"
@@ -5658,7 +5648,7 @@
      4978348
     ]
    ],
-   "seconds": 587.7
+   "seconds": 1417.7
   },
   {
    "start": "2026-10-13T08:30+03:30",
@@ -5666,7 +5656,7 @@
    "return_pct": -0.31,
    "max_drawdown_pct": 0.437,
    "fills": 14,
-   "decisions": 104,
+   "decisions": 72,
    "fees_tmn": 16195,
    "ended_in_tmn": true,
    "left": {},
@@ -5972,7 +5962,7 @@
      4984509
     ]
    ],
-   "seconds": 720.1
+   "seconds": 1409.3
   },
   {
    "start": "2026-10-14T08:30+03:30",
@@ -5980,7 +5970,7 @@
    "return_pct": -0.405,
    "max_drawdown_pct": 0.596,
    "fills": 11,
-   "decisions": 49,
+   "decisions": 13,
    "fees_tmn": 13440,
    "ended_in_tmn": true,
    "left": {},
@@ -6285,7 +6275,7 @@
      4979773
     ]
    ],
-   "seconds": 716.5
+   "seconds": 1404.9
   },
   {
    "start": "2026-10-15T08:30+03:30",
@@ -6293,7 +6283,7 @@
    "return_pct": -0.431,
    "max_drawdown_pct": 0.485,
    "fills": 12,
-   "decisions": 77,
+   "decisions": 43,
    "fees_tmn": 12193,
    "ended_in_tmn": true,
    "left": {},
@@ -6598,7 +6588,7 @@
      4978470
     ]
    ],
-   "seconds": 709.4
+   "seconds": 1399.6
   },
   {
    "start": "2026-10-16T08:30+03:30",
@@ -6606,15 +6596,14 @@
    "return_pct": -0.494,
    "max_drawdown_pct": 0.494,
    "fills": 8,
-   "decisions": 93,
+   "decisions": 38,
    "fees_tmn": 7812,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
     "event_shock",
-    "range",
-    "risk_off"
+    "range"
    ],
    "hold_btc_pct": -1.864,
    "hold_usdt_pct": -2.515,
@@ -6912,7 +6901,7 @@
      4975313
     ]
    ],
-   "seconds": 704.2
+   "seconds": 1399.6
   },
   {
    "start": "2026-10-17T08:30+03:30",
@@ -6920,7 +6909,7 @@
    "return_pct": -0.361,
    "max_drawdown_pct": 0.369,
    "fills": 8,
-   "decisions": 99,
+   "decisions": 56,
    "fees_tmn": 7574,
    "ended_in_tmn": true,
    "left": {},
@@ -7226,7 +7215,7 @@
      4981968
     ]
    ],
-   "seconds": 697.2
+   "seconds": 1385.5
   },
   {
    "start": "2026-10-18T08:30+03:30",
@@ -7234,13 +7223,12 @@
    "return_pct": -0.378,
    "max_drawdown_pct": 0.447,
    "fills": 10,
-   "decisions": 108,
+   "decisions": 58,
    "fees_tmn": 10697,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "risk_off",
     "trend_up"
@@ -7541,7 +7529,7 @@
      4981091
     ]
    ],
-   "seconds": 705.1
+   "seconds": 1411.2
   },
   {
    "start": "2026-10-19T08:30+03:30",
@@ -7549,13 +7537,12 @@
    "return_pct": 0.25,
    "max_drawdown_pct": 0.339,
    "fills": 12,
-   "decisions": 43,
+   "decisions": 12,
    "fees_tmn": 14389,
    "ended_in_tmn": true,
    "left": {},
    "regimes": [
     "devaluation_drift",
-    "event_shock",
     "range",
     "trend_up"
    ],
@@ -7855,7 +7842,7 @@
      5012484
     ]
    ],
-   "seconds": 478.6
+   "seconds": 1406.2
   }
  ]
 }
