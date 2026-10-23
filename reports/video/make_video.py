@@ -46,7 +46,7 @@ def money(x: float) -> str:
 
 def pct(x: float, nd: int = 2) -> str:
     s = f"{x:+.{nd}f}" if x else f"{x:.{nd}f}"
-    return fa(s.replace("-", "−")) + "٪"
+    return "\u2066" + fa(s.replace("-", "−")) + "٪\u2069"      # LTR isolate: the sign stays in front in RTL text
 
 
 def tehran(ts: float) -> str:
@@ -249,7 +249,7 @@ def scenes(d: dict) -> list[tuple[str, str]]:
     if bt:
         rows = "".join(f"<tr><td class='ltr'>{html.escape(r['start'][5:16].replace('T', ' '))}</td><td>{pct(r['return_pct'], 2)}</td>"
                        f"<td>{pct(-r['max_drawdown_pct'], 2)}</td><td>{fa(r['fills'])}</td><td>{pct(r['hold_btc_pct'], 1)}</td></tr>"
-                       for r in bt["results"][:8])
+                       for r in bt["results"][::3][:9])
         body = (f"<div class='grid g4'><div class='card'><div class='k'>پنجره‌ی ۳ روزه</div><div class='v'>{fa(bt['windows'])}</div></div>"
                 f"<div class='card'><div class='k'>میانه‌ی بازده</div><div class='v'>{pct(bt['median_return_pct'], 2)}</div></div>"
                 f"<div class='card'><div class='k'>بدترین افت</div><div class='v'>{pct(-bt['worst_drawdown_pct'], 2)}</div></div>"
