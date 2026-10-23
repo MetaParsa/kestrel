@@ -87,7 +87,8 @@ def load() -> dict:
     d["base_status"] = json.loads((DATA / "baseline/status.json").read_text(encoding="utf-8"))
     d["canary"] = json.loads((DATA / "canary.json").read_text(encoding="utf-8")) if (DATA / "canary.json").exists() else {}
     logs = DATA / "main/logs"
-    d["live_dec"] = [r for r in read_jsonl(logs / "decisions.jsonl") if r.get("mode") == "live"]
+    d["live_dec"] = [r for r in read_jsonl(logs / "decisions.jsonl") if r.get("mode") == "live"
+                     and "G_BELOW_EXCHANGE_MIN" not in r["gate"]["rules"]]   # dust left after a sale: not news
     d["live_fills"] = [r for r in read_jsonl(logs / "fills.jsonl") if r.get("mode") == "live"]
     d["live_events"] = [r for r in read_jsonl(logs / "events.jsonl") if r.get("mode") == "live"]
     d["all_dec"] = read_jsonl(logs / "decisions.jsonl")
