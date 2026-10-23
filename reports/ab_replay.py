@@ -66,7 +66,11 @@ def run(rp: Replay, start: float, end: float, manager: str, playbooks: list[Play
     fills = eng.logs.tail("fills", 100_000)
     final = eng.pf.equity(eng.bids)
     switches = sum(1 for a, b in zip(regimes, regimes[1:]) if a != b)
-    return {"return_pct": round((final / cfg.start_cash - 1) * 100, 3), "max_drawdown_pct": round(max_dd * 100, 3),
+    exposure = {m: eng.pf.exposure(m, eng.bids) for m in config.MARKETS}
+    exit_cost = sum(x * config.FEES[m][1] for m, x in exposure.items())      # selling back to TMN at taker
+    return {"return_pct": round((final / cfg.start_cash - 1) * 100, 3),
+            "after_selling_to_tmn_pct": round(((final / cfg.start_cash - 1) - exit_cost) * 100, 3),
+            "max_drawdown_pct": round(max_dd * 100, 3),
             "fills": len(fills), "fees_tmn": round(sum(f["fee"] * (f["price"] if f.get("fee_asset") not in ("TMN", None)
                                                                      else 1) for f in fills)),
             "playbooks": len(regimes), "regime_switches": switches,

@@ -1,0 +1,94 @@
+{
+ "start": "2026-10-15T10:00+03:30",
+ "shock_at": "2026-10-15T12:00+03:30",
+ "crash": {
+  "kind": "crash",
+  "exposure_before_shock_pct": 20.0,
+  "with_seatbelt_return_pct": -0.769,
+  "worst_point_pct": -0.769,
+  "held_through_return_pct": -1.968,
+  "btc_move_pct": -9.84,
+  "sells": [
+   {
+    "t": "12:05",
+    "kind": "stop",
+    "decided_by": "gate",
+    "urgency": "market",
+    "reason_fa": "حد ضرر در بیت‌کوین/تومان (سهم فعلی 0.0%، هدف 20.0%، حجم 966,472 تومان) · تصمیم‌گیرنده: gate · حالت «trend_up» · کنترل ریسک: با تغییر حجم (G_SELL_CAPPED_TO_HELD)"
+   }
+  ],
+  "fills": [
+   {
+    "t": "10:06",
+    "side": "BUY",
+    "qty": 2.322e-05,
+    "price": 21590358435
+   },
+   {
+    "t": "10:10",
+    "side": "BUY",
+    "qty": 2.317e-05,
+    "price": 21609622400
+   },
+   {
+    "t": "12:05",
+    "side": "SELL",
+    "qty": 4.626e-05,
+    "price": 20891073851
+   }
+  ],
+  "events": [
+   {
+    "t": "10:00",
+    "event": "degrade_level",
+    "mode": "backtest",
+    "level": 0
+   },
+   {
+    "t": "10:00",
+    "event": "flatten_phase",
+    "mode": "backtest",
+    "phase": "normal"
+   }
+  ],
+  "ended_btc_qty": 2.4149999999995356e-09
+ },
+ "glitch": {
+  "kind": "glitch",
+  "exposure_before_shock_pct": 20.0,
+  "with_seatbelt_return_pct": -0.028,
+  "worst_point_pct": -6.042,
+  "held_through_return_pct": 0.035,
+  "btc_move_pct": 0.18,
+  "sells": [],
+  "fills": [
+   {
+    "t": "10:06",
+    "side": "BUY",
+    "qty": 2.322e-05,
+    "price": 21590358435
+   },
+   {
+    "t": "10:10",
+    "side": "BUY",
+    "qty": 2.317e-05,
+    "price": 21609622400
+   }
+  ],
+  "events": [
+   {
+    "t": "10:00",
+    "event": "degrade_level",
+    "mode": "backtest",
+    "level": 0
+   },
+   {
+    "t": "10:00",
+    "event": "flatten_phase",
+    "mode": "backtest",
+    "phase": "normal"
+   }
+  ],
+  "ended_btc_qty": 4.6262415e-05
+ }
+}

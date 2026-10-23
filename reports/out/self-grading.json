@@ -1,0 +1,1011 @@
+{
+ "summary": {
+  "claude_playbooks": 32,
+  "forecasts_resolved": 46,
+  "direction_hit": 0.522,
+  "naive_hit": 0.413,
+  "always_flat_hit": 0.565,
+  "by_market": {
+   "USDTTMN": {
+    "n": 23,
+    "claude": 0.652,
+    "naive": 0.522,
+    "always_flat": 0.652
+   },
+   "BTCTMN": {
+    "n": 23,
+    "claude": 0.391,
+    "naive": 0.304,
+    "always_flat": 0.478
+   }
+  },
+  "vol_hit": 0.609,
+  "said": {
+   "flat": 38,
+   "up": 6,
+   "down": 2
+  },
+  "actual": {
+   "up": 17,
+   "flat": 26,
+   "down": 3
+  },
+  "playbooks_citing_own_scorecard": 25,
+  "playbooks_with_vs_twin": 1
+ },
+ "rows": [
+  {
+   "playbook_id": "pb-20261022-1210-73dea6",
+   "t": 1792658421.3789823,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "down",
+   "move_pct": 0.81,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "high"
+  },
+  {
+   "playbook_id": "pb-20261022-1210-73dea6",
+   "t": 1792658421.3789823,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 1.239,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "high",
+   "vol_actual": "high"
+  },
+  {
+   "playbook_id": "pb-20261022-1222-ddbbdf",
+   "t": 1792659136.550677,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "down",
+   "move_pct": 0.81,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "high"
+  },
+  {
+   "playbook_id": "pb-20261022-1222-ddbbdf",
+   "t": 1792659136.550677,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 1.239,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "high"
+  },
+  {
+   "playbook_id": "pb-20261022-1249-ecde51",
+   "t": 1792660774.6129549,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.022,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1249-ecde51",
+   "t": 1792660774.6129549,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.206,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1416-ff3d5f",
+   "t": 1792665972.0400808,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.192,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1416-ff3d5f",
+   "t": 1792665972.0400808,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": 0.19,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1457-5d9576",
+   "t": 1792668460.2697585,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": 0.096,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1457-5d9576",
+   "t": 1792668460.2697585,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.471,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1538-bc2295",
+   "t": 1792670937.6944845,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.285,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1538-bc2295",
+   "t": 1792670937.6944845,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.637,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1738-06fc9c",
+   "t": 1792678112.4470494,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.139,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1738-06fc9c",
+   "t": 1792678112.4470494,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.601,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1819-ad0564",
+   "t": 1792680592.8041735,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.139,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1819-ad0564",
+   "t": 1792680592.8041735,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.601,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261022-1900-dcd744",
+   "t": 1792683037.276262,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "flat",
+   "move_pct": -0.741,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-1900-dcd744",
+   "t": 1792683037.276262,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.085,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2002-76393b",
+   "t": 1792686766.2593884,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.356,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2002-76393b",
+   "t": 1792686766.2593884,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.154,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2043-58f537",
+   "t": 1792689233.6475177,
+   "market": "BTCTMN",
+   "said": "down",
+   "actual": "flat",
+   "naive": "down",
+   "move_pct": -0.085,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2043-58f537",
+   "t": 1792689233.6475177,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.173,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2125-9a5b41",
+   "t": 1792691712.7757666,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "down",
+   "move_pct": -0.085,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2125-9a5b41",
+   "t": 1792691712.7757666,
+   "market": "USDTTMN",
+   "said": "up",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": -0.173,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2207-c8461c",
+   "t": 1792694240.1270497,
+   "market": "BTCTMN",
+   "said": "down",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": -0.086,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261022-2207-c8461c",
+   "t": 1792694240.1270497,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.495,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0002-51e4f7",
+   "t": 1792701160.8535058,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "down",
+   "move_pct": 0.076,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0002-51e4f7",
+   "t": 1792701160.8535058,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0119-bd435e",
+   "t": 1792705751.4151976,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.229,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0119-bd435e",
+   "t": 1792705751.4151976,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0200-9311fb",
+   "t": 1792708224.603795,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": -0.151,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0200-9311fb",
+   "t": 1792708224.603795,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "down",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0241-e152d0",
+   "t": 1792710686.5161426,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.356,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0241-e152d0",
+   "t": 1792710686.5161426,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0322-f30a16",
+   "t": 1792713175.059676,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.356,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0322-f30a16",
+   "t": 1792713175.059676,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0404-3aac28",
+   "t": 1792715692.8629076,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.659,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0404-3aac28",
+   "t": 1792715692.8629076,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0446-b2614e",
+   "t": 1792718213.944766,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.336,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0446-b2614e",
+   "t": 1792718213.944766,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0528-2a2e26",
+   "t": 1792720731.3581138,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.336,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0528-2a2e26",
+   "t": 1792720731.3581138,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0610-8f4727",
+   "t": 1792723250.719215,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.429,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0610-8f4727",
+   "t": 1792723250.719215,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0652-fc5062",
+   "t": 1792725776.5260992,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "up",
+   "move_pct": 0.194,
+   "hit": true,
+   "naive_hit": false,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0652-fc5062",
+   "t": 1792725776.5260992,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  }
+ ],
+ "learning": [
+  {
+   "playbook_id": "pb-20261022-1738-06fc9c",
+   "t": 1792678112.4470494,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "up/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit 1/6, mostly missed up moves by calling flat, so leaning toward the recent drift this time"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261022-1819-ad0564",
+   "t": 1792680592.8041735,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "up/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: I under-called USDT 'up' twice today (direction hit 0.25), so I'm calling the persistent up-grind this time"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261022-2002-76393b",
+   "t": 1792686766.2593884,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "up/low"
+   },
+   "self_grading": [
+    "Scorecard: twice I called USDTTMN flat and it went up, while my vol calls ran 'normal' and came in 'low'. I'm adjusting to up/low"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261022-2043-58f537",
+   "t": 1792689233.6475177,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Recent scorecard: I said flat and USDTTMN rose, so I may be underestimating the drift. Its realized vol has been low in every recent window"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261022-2125-9a5b41",
+   "t": 1792691712.7757666,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "up/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hits 0.357 vs baseline 0.286; my recent 'flat' calls on USDTTMN missed while the price rose, so I am following the persistent trend"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261022-2207-c8461c",
+   "t": 1792694240.1270497,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "down/normal",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.357 vs baseline 0.286; the 'flat' calls have been reasonable"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0002-51e4f7",
+   "t": 1792701160.8535058,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "The forecast scorecard shows a 0.45 direction hit rate vs a 0.30 baseline. The last USDT 'up' call missed (actual flat), so this time the call is flat"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0119-bd435e",
+   "t": 1792705751.4151976,
+   "regime": "devaluation_drift",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "The last two USDTTMN forecasts said 'up' and both came out flat, so I am calling flat this time"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0200-9311fb",
+   "t": 1792708224.603795,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 41.7%. Recent misses came from calling USDTTMN up when it stayed flat, so this time USDTTMN is called flat"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0241-e152d0",
+   "t": 1792710686.5161426,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Scorecard: past vol calls of 'low' on USDTTMN turned out 'normal', so I am now saying 'normal'"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0322-f30a16",
+   "t": 1792713175.059676,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 39% vs 25% baseline; recent 'down' calls on BTCTMN missed (actual flat), so forecast flat"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0404-3aac28",
+   "t": 1792715692.8629076,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "The forecast scorecard shows direction hits of 39% against a 25% baseline, and recent actuals were mostly flat, so I lean toward calling flat"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0446-b2614e",
+   "t": 1792718213.944766,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/normal",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "The scorecard shows past directional calls were often wrong (39%) and the actual result was mostly flat and normal vol, so this forecast stays conservative"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0528-2a2e26",
+   "t": 1792720731.3581138,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: 43% direction hit rate vs 27% for the baseline. Recent flat calls were right and my low-vol calls were usually too cautious or right"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0610-8f4727",
+   "t": 1792723250.719215,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 0.433 vs baseline 0.267; vol hit rate 0.467; the last flat calls were right"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0652-fc5062",
+   "t": 1792725776.5260992,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.438 vs baseline 0.281; recent quiet-hour calls of flat/low were mostly correct"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0733-1c7748",
+   "t": 1792728238.9870937,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.47 vs 0.29 for the baseline, so flat/low calls have been working on quiet hours"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0815-05a60f",
+   "t": 1792730705.3087451,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 47% against a 31% baseline. Our flat calls on BTCTMN missed two small up moves, but there is no strong signal to call a direction now"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0856-ce77fe",
+   "t": 1792733169.085745,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.474 vs 0.316 for the baseline; recent BTCTMN calls of 'flat' missed small up moves, but the volatility calls of 'low' were right"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-0937-f1942e",
+   "t": 1792735630.5445032,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "up/low",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Scorecard: our last three 'flat' calls for BTCTMN were wrong and the actual move was 'up' each time. Overall direction hit rate is 0.475 vs a 0.325 baseline"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-1018-a70b7b",
+   "t": 1792738093.6363454,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/normal"
+   },
+   "self_grading": [
+    "Scorecard: my last three BTCTMN 'flat' calls came out 'up', but the last 4 h return is only +0.14%; my USDTTMN vol calls of 'low' came out 'normal', so I changed that call to normal"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-1059-05e60e",
+   "t": 1792740552.1212227,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction hit rate 0.477 vs baseline 0.386. My recent BTCTMN 'flat' calls missed small up moves, but the current 4h return is close to zero"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-1140-c544bd",
+   "t": 1792743030.538344,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 0.478 vs a 0.391 baseline. My recent BTC 'flat' calls missed small up moves, so confidence in direction stays low"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-1222-857816",
+   "t": 1792745527.7706213,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "up/normal",
+    "USDTTMN": "up/normal"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 0.50 vs baseline 0.396; recent BTCTMN 'flat' calls missed up moves"
+   ],
+   "vs_twin": []
+  },
+  {
+   "playbook_id": "pb-20261023-1223-4b1434",
+   "t": 1792745594.1017053,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "up/normal",
+    "USDTTMN": "up/normal"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 0.50 vs baseline 0.396. Recent BTCTMN 'flat' calls missed upward moves, so this time I am calling up."
+   ],
+   "vs_twin": [
+    "vs twin: it reads the 24 h returns and goes to devaluation_drift at 15%. I agree the toman is weakening, but this rise came in one hour on a Friday after flat, stale-looking prices. With 3.5 h left I keep the small 4% position instead of nearly quadrupling it."
+   ]
+  }
+ ]
+}
