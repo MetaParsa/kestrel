@@ -29,34 +29,12 @@
   "clamped": 0
  },
  "claude_forecasts_4h": {
-  "n": 20,
-  "direction_hit_rate": 0.45,
-  "baseline_hit_rate": 0.3,
-  "vol_hit_rate": 0.45,
+  "n": 22,
+  "direction_hit_rate": 0.455,
+  "baseline_hit_rate": 0.273,
+  "vol_hit_rate": 0.455,
   "recent": [
    {
-    "playbook_id": "pb-20261022-1819-ad0564",
-    "market": "BTCTMN",
-    "said": "flat",
-    "actual": "flat",
-    "baseline": "flat",
-    "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "normal",
-    "vol_actual": "normal"
-   },
-   {
-    "playbook_id": "pb-20261022-1819-ad0564",
-    "market": "USDTTMN",
-    "said": "up",
-    "actual": "up",
-    "baseline": "flat",
-    "dir_hit": true,
-    "base_hit": false,
-    "vol_said": "normal",
-    "vol_actual": "low"
-   },
-   {
     "playbook_id": "pb-20261022-1900-dcd744",
     "market": "BTCTMN",
     "said": "flat",
@@ -96,6 +74,28 @@
     "actual": "flat",
     "baseline": "up",
     "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2043-58f537",
+    "market": "BTCTMN",
+    "said": "down",
+    "actual": "flat",
+    "baseline": "down",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2043-58f537",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": true,
     "base_hit": false,
     "vol_said": "low",
     "vol_actual": "normal"

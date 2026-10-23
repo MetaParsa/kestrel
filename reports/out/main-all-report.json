@@ -1,0 +1,145 @@
+{
+ "name": "main-all",
+ "mode_filter": null,
+ "from": "10-22 10:45",
+ "to": "10-23 03:27",
+ "code_versions": [
+  "301364bd981d",
+  "386a6fbdb772",
+  "462eaca709f8",
+  "790ec5bc61ea",
+  "9d6a6ef8c37d",
+  "c171a0e26c2f",
+  "c839f44a54e6",
+  "d67c3a42f00f",
+  "eec06ad28472"
+ ],
+ "playbooks": {
+  "total": 19,
+  "by_source": {
+   "mock": 1,
+   "claude": 18
+  },
+  "regimes": {
+   "devaluation_drift": 9,
+   "event_shock": 2,
+   "range": 8
+  },
+  "claude_cost_usd": 1.265,
+  "clamped": 0
+ },
+ "claude_forecasts_4h": {
+  "n": 22,
+  "direction_hit_rate": 0.455,
+  "baseline_hit_rate": 0.273,
+  "vol_hit_rate": 0.455,
+  "recent": [
+   {
+    "playbook_id": "pb-20261022-1900-dcd744",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "flat",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-1900-dcd744",
+    "market": "USDTTMN",
+    "said": "up",
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2002-76393b",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "down",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2002-76393b",
+    "market": "USDTTMN",
+    "said": "up",
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2043-58f537",
+    "market": "BTCTMN",
+    "said": "down",
+    "actual": "flat",
+    "baseline": "down",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261022-2043-58f537",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "flat",
+    "baseline": "up",
+    "dir_hit": true,
+    "base_hit": false,
+    "vol_said": "low",
+    "vol_actual": "normal"
+   }
+  ]
+ },
+ "decisions": {
+  "total": 8,
+  "by_kind": {
+   "rebalance_up": 7,
+   "rebalance_down": 1
+  },
+  "by_decider": {
+   "manager": 8
+  },
+  "gate": {
+   "block": 4,
+   "allow": 4
+  },
+  "block_reasons": {
+   "G_STALE_DATA": 3,
+   "G_MARKET_NOT_ALLOWED": 1
+  }
+ },
+ "orders": {
+  "order_placed": 12,
+  "order_escalated": 8,
+  "order_done": 4
+ },
+ "fills": 2,
+ "pnl_from_fills": {
+  "equity_tmn": 4999036,
+  "return_pct": -0.019,
+  "volume_tmn": 449503,
+  "fees_tmn": 1349,
+  "holdings": {
+   "USDTTMN": 0.91724,
+   "BTCTMN": 9.02285e-06
+  }
+ },
+ "degrade_levels": {
+  "3": 1,
+  "0": 16,
+  "2": 7
+ },
+ "errors": {}
+}

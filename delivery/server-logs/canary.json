@@ -1,0 +1,87 @@
+{
+ "market": "BTCTMN",
+ "bid": 22125222780.0,
+ "price": 21240213868.0,
+ "qty": 2.48e-06,
+ "client_id": "d-canary92705573",
+ "tmn_before": {
+  "free": "5000000",
+  "locked": "0"
+ },
+ "after_place": {
+  "client_id": "d-canary92705573",
+  "market": "BTCTMN",
+  "side": "BUY",
+  "type": "LIMIT",
+  "price": 21240213868.0,
+  "qty": 2.48e-06,
+  "filled_qty": 0.0,
+  "filled_value": 0.0,
+  "fee_total": 0.0,
+  "status": "NEW"
+ },
+ "tmn_while_resting": {
+  "free": "4947325",
+  "locked": "52675"
+ },
+ "read_back_raw": {
+  "symbol": "BTCTMN",
+  "type": "LIMIT",
+  "side": "BUY",
+  "clientOrderId": "d-canary92705573",
+  "price": "21240213868.0000000000000000",
+  "origQty": "0.0000024800000000",
+  "origSum": "52675.7303926400000000",
+  "executedSum": "0.0000000000000000",
+  "executedQty": "0.0000000000000000",
+  "executedPrice": "21240213868.0000000000000000",
+  "sum": "52675.7303926400000000",
+  "fee": "0.0000000000000000",
+  "executedPercent": 0,
+  "status": "NEW",
+  "active": true,
+  "fills": [],
+  "transactTime": 1792705574,
+  "created_at": "2026-10-22T21:46:14.000000Z",
+  "updated_at": "2026-10-22T21:46:14.000000Z"
+ },
+ "after_cancel": {
+  "client_id": "d-canary92705573",
+  "market": "BTCTMN",
+  "side": "BUY",
+  "type": "LIMIT",
+  "price": 21240213868.0,
+  "qty": 2.48e-06,
+  "filled_qty": 0.0,
+  "filled_value": 0.0,
+  "fee_total": 0.0,
+  "status": "CANCELED"
+ },
+ "final_raw": {
+  "symbol": "BTCTMN",
+  "type": "LIMIT",
+  "side": "BUY",
+  "clientOrderId": "d-canary92705573",
+  "price": "21240213868.0000000000000000",
+  "origQty": "0.0000024800000000",
+  "origSum": "52675.7303926400000000",
+  "executedSum": "0.0000000000000000",
+  "executedQty": "0.0000000000000000",
+  "executedPrice": "21240213868.0000000000000000",
+  "sum": "52675.7303926400000000",
+  "fee": "0.0000000000000000",
+  "executedPercent": 0,
+  "status": "CANCELED",
+  "active": false,
+  "fills": [],
+  "transactTime": 1792705574,
+  "created_at": "2026-10-22T21:46:14.000000Z",
+  "updated_at": "2026-10-22T21:47:44.000000Z"
+ },
+ "open_orders_after": [],
+ "tmn_after": {
+  "free": "5000000",
+  "locked": "0"
+ },
+ "notes": []
+}

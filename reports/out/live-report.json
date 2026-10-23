@@ -1,0 +1,56 @@
+{
+ "name": "live",
+ "mode_filter": "live",
+ "from": "10-23 01:20",
+ "to": "10-23 03:27",
+ "code_versions": [
+  "301364bd981d"
+ ],
+ "playbooks": {
+  "total": 3,
+  "by_source": {
+   "claude": 3
+  },
+  "regimes": {
+   "range": 3
+  },
+  "claude_cost_usd": 0.222,
+  "clamped": 0
+ },
+ "claude_forecasts_4h": {
+  "n": 0,
+  "note": "no forecast resolved yet (needs 4 h)"
+ },
+ "decisions": {
+  "total": 1,
+  "by_kind": {
+   "rebalance_up": 1
+  },
+  "by_decider": {
+   "manager": 1
+  },
+  "gate": {
+   "allow": 1
+  },
+  "block_reasons": {}
+ },
+ "orders": {
+  "order_placed": 4,
+  "order_escalated": 3,
+  "order_done": 1
+ },
+ "fills": 1,
+ "pnl_from_fills": {
+  "equity_tmn": 4999203,
+  "return_pct": -0.016,
+  "volume_tmn": 200193,
+  "fees_tmn": 601,
+  "holdings": {
+   "BTCTMN": 9.02285e-06
+  }
+ },
+ "degrade_levels": {
+  "0": 1
+ },
+ "errors": {}
+}
