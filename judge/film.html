@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ربات والکس — نمایش</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1a202c;--muted:#64748b;--line:#e5e7eb;--green:#15803d;--red:#dc2626;
+--amber:#d97706;--blue:#2563eb;--violet:#7c3aed;--chip:#fef2f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,Tahoma,sans-serif;font-size:15px}
+.wrap{max-width:1280px;margin:0 auto;padding:14px 16px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:19px;margin:0;font-weight:800}
+header .sub{color:var(--muted);font-size:13px}
+.ctrl{margin-inline-start:auto;display:flex;gap:6px;align-items:center}
+button{font:inherit;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px;cursor:pointer}
+button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.act{margin:10px 0;background:var(--card);border-radius:12px;padding:14px 18px;box-shadow:0 1px 3px #0001;border-inline-start:6px solid var(--blue)}
+.act .n{color:var(--muted);font-size:13px}
+.act h2{margin:0 0 4px;font-size:21px}
+.act p{margin:0;line-height:1.8;font-size:15.5px}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px #0001}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat{background:var(--card);border-radius:10px;padding:10px 12px;box-shadow:0 1px 2px #0001}
+.stat b{display:block;color:var(--muted);font-weight:600;font-size:12.5px}
+.stat span{font-size:19px;font-weight:800;direction:ltr;unicode-bidi:isolate}
+.light{display:flex;align-items:center;gap:8px}
+.dot{width:22px;height:22px;border-radius:50%;display:inline-block}
+svg text{font-family:Vazirmatn,Tahoma,sans-serif}
+.plan h3,.feed h3{margin:0 0 8px;font-size:15px}
+.plan .who{font-weight:800}
+.plan .why{line-height:1.9;margin:6px 0}
+.chip{display:inline-block;background:var(--chip);color:var(--red);border-radius:6px;padding:2px 8px;margin:2px;font-size:12.5px;direction:ltr}
+.twin{color:var(--violet);font-size:13px;direction:ltr;text-align:left;margin-top:6px}
+.small{color:var(--muted);font-size:12.5px}
+.feed ul{list-style:none;margin:0;padding:0;max-height:calc(100vh - 290px);min-height:260px;overflow:auto}
+.feed li{padding:7px 8px;border-bottom:1px solid var(--line);line-height:1.7;font-size:13.5px;display:flex;gap:8px}
+.feed li .tm{color:var(--muted);flex:none;width:44px;direction:ltr;text-align:right}
+.feed li.fill{background:#f0fdf4}.feed li.fill.SELL{background:#fff7ed}
+.feed li.block{background:#fef2f2}.feed li.bale{background:#eff6ff}.feed li.human{background:#f5f3ff;font-weight:600}
+.feed li.plan{background:#eef2ff;font-weight:600}.feed li.shock{background:#fef2f2;font-weight:600}
+.feed li.new{animation:pop .8s ease-out}
+@keyframes pop{from{background:#fde68a}}
+.hint{color:var(--muted);font-size:12.5px;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>ربات معامله‌گر والکس</h1>
+    <span class="sub" id="sub"></span>
+    <div class="ctrl">
+      <button id="prev" title="مرحله‌ی قبل (←)">◀ قبلی</button>
+      <button id="next" class="primary" title="مرحله‌ی بعد (Space یا →)">بعدی ▶</button>
+      <button id="speed" title="سرعت پخش"></button>
+    </div>
+  </header>
+  <div class="act" id="act"><div class="n" id="actn"></div><h2 id="actt"></h2><p id="acts"></p></div>
+  <div class="stats">
+    <div class="stat"><b>چراغ وضعیت</b><span class="light"><i class="dot" id="dot"></i><em id="lighttxt" style="font-style:normal;font-size:15px"></em></span></div>
+    <div class="stat"><b>ارزش حساب (تومان)</b><span id="equity"></span></div>
+    <div class="stat"><b>بازده از ۵٬۰۰۰٬۰۰۰</b><span id="gain"></span></div>
+    <div class="stat"><b>سهم بیت‌کوین</b><span id="share"></span></div>
+    <div class="stat"><b>مرحله</b><span id="phase" style="font-size:16px"></span></div>
+    <div class="stat"><b>ساعت (شبیه‌سازی روی داده‌ی واقعی)</b><span id="clock"></span></div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="card"><svg id="chart" viewBox="0 0 700 240" width="100%" role="img" aria-label="قیمت بیت‌کوین"></svg></div>
+      <div class="card plan" style="margin-top:12px" id="plan"></div>
+    </div>
+    <div class="card feed"><h3>چه اتفاقی افتاد (از لاگ موتور)</h3><ul id="feed"></ul></div>
+  </div>
+  <div class="hint">Space یا → = مرحله‌ی بعد · ← = قبلی · همه‌چیز از اجرای واقعی موتور روی دقیقه‌های واقعی والکس است؛ تصمیم‌های Claude از لاگ زنده‌ی امروز. <span id="built"></span></div>
+</div>
+<script>
+const DATA = /*DATA*/null;
+const LIGHT = {green:["#15803d","سبز — عادی"], yellow:["#d97706","زرد — با احتیاط"], red:["#dc2626","قرمز — خرید ممنوع"]};
+const PHASE = {normal:"عادی", no_new:"بدون خرید تازه", aggressive:"فروش فعال", market:"فروش سریع", verify:"تطبیق با والکس", ended:"پایان — همه تومان"};
+const ICON = {plan:"🧠", human:"🙋", fill:"✅", block:"⛔", bale:"📱", shock:"⚡", engine:"⚙️", decision:"🛡️", note:"•"};
+const fa = n => n.toLocaleString("fa-IR");
+const steps = [];
+DATA.days.forEach((d, di) => d.acts.forEach((a, ai) => steps.push({di, ai, m: a.m,
+  end: ai + 1 < d.acts.length ? d.acts[ai + 1].m - 1 : d.frames.length - 1})));
+let step = 0, minute = 0, timer = null, speeds = [10, 20, 40], sp = 1, shownFeed = 0;
+const $ = id => document.getElementById(id);
+
+function hhmm(t){ return new Date(t*1000).toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Tehran"}); }
+
+function chart(d, m){
+  const W=700,H=240,L=12,R=60,T=16,B=26, fr=d.frames, n=fr.length-1;
+  const vals = fr.map(f=>f.btc).sort((a,b)=>a-b), med = vals[Math.floor(vals.length/2)];
+  const ok = fr.map(f=>f.btc).filter(v=>v>med*0.85);
+  let lo=Math.min(...ok), hi=Math.max(...ok); const pad=(hi-lo)*0.12||1; lo-=pad; hi+=pad;
+  const x=i=>W-R-(i/n)*(W-L-R), y=v=>T+(hi-Math.max(lo,v))/(hi-lo)*(H-T-B);   // RTL: time runs right→left? no: keep LTR time
+  const X=i=>L+(i/n)*(W-L-R);
+  let s=`<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/>`;
+  const fl = fr.findIndex(f=>f.phase!=="normal" && f.m>0);
+  if (fl>0) s+=`<rect x="${X(fl)}" y="${T}" width="${X(n)-X(fl)}" height="${H-T-B}" fill="#fff7ed"/><text x="${X(fl)+4}" y="${T+14}" font-size="12" fill="#b45309" text-anchor="start">پنجره‌ی فروش پایانی</text>`;
+  for (let k=0;k<=3;k++){ const v=lo+(hi-lo)*k/3; s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#eef0f3"/><text x="${W-R+6}" y="${y(v)+4}" font-size="11" fill="#94a3b8" text-anchor="start" direction="ltr">${(v/1e9).toFixed(2)}B</text>`; }
+  const pts = fr.slice(0,m+1).map((f,i)=>`${X(i).toFixed(1)},${y(f.btc).toFixed(1)}`).join(" ");
+  s+=`<polyline points="${pts}" fill="none" stroke="#2563eb" stroke-width="2"/>`;
+  fr.slice(0,m+1).forEach((f,i)=>{ if(f.btc<=med*0.85) s+=`<line x1="${X(i)}" x2="${X(i)}" y1="${y(lo)}" y2="${H-B}" stroke="#dc2626" stroke-width="3"/><text x="${X(i)}" y="${H-B-6}" font-size="12" fill="#dc2626" text-anchor="middle">قیمت خراب −۳۰٪</text>`; });
+  d.feed.filter(x=>x.kind==="fill" && x.m<=m).forEach(x=>{ const i=Math.round(x.m), f=fr[Math.min(i,n)], up=x.side==="BUY";
+    s+=`<text x="${X(i)}" y="${y(f.btc)+(up?20:-8)}" font-size="16" fill="${up?'#15803d':'#c2410c'}" text-anchor="middle">${up?'▲':'▼'}</text>`; });
+  s+=`<line x1="${X(m)}" x2="${X(m)}" y1="${T}" y2="${H-B}" stroke="#1a202c" stroke-dasharray="3 3"/>`;
+  s+=`<text x="${L}" y="${H-6}" font-size="11.5" fill="#64748b" text-anchor="start">قیمت بیت‌کوین به تومان (میلیارد) · ▲ خرید ▼ فروش</text>`;
+  $("chart").innerHTML=s;
+}
+
+function render(){
+  const st = steps[step], d = DATA.days[st.di], f = d.frames[Math.min(minute, d.frames.length-1)], a = d.acts[st.ai];
+  $("sub").textContent = `${st.di===0?"روز اول: یک روز عادی":"روز دوم: روز سقوط"} · داده‌ی ${d.date}`;
+  $("actn").textContent = `مرحله ${fa(step+1)} از ${fa(steps.length)}`;
+  $("actt").textContent = a.title; $("acts").textContent = a.say;
+  const [c,t] = LIGHT[f.light]; $("dot").style.background=c; $("lighttxt").textContent=t;
+  $("equity").textContent = fa(f.equity);
+  $("gain").textContent = (f.gain>=0?"+":"−")+Math.abs(f.gain*100).toFixed(2)+"%";
+  $("gain").style.color = f.gain>=0?"var(--green)":"var(--red)";
+  $("share").textContent = (f.btc_share*100).toFixed(1)+"%";
+  $("phase").textContent = PHASE[f.phase]||f.phase;
+  $("clock").textContent = hhmm(f.t);
+  chart(d, minute);
+  const items = d.feed.filter(x=>x.m<=minute);
+  const plan = [...items].reverse().find(x=>x.kind==="plan");
+  $("plan").innerHTML = plan ? `<h3>برنامه‌ی فعلی</h3><div class="who">🧠 ${plan.text}</div>
+    <div class="why">${plan.rationale}</div>
+    ${plan.clamps.length?`<div class="small">سرور محدود کرد:</div>${plan.clamps.map(c=>`<span class="chip">${c}</span>`).join("")}`:`<div class="small">سرور: بدون تغییر، در محدوده‌ی مجاز</div>`}
+    ${plan.vs_twin?`<div class="twin">${plan.vs_twin}</div>`:""}
+    <div class="small">پیش‌بینی ۴ ساعته: ${Object.entries(plan.forecast).map(([k,v])=>k+" "+v).join(" · ")}${plan.cost?` · هزینه‌ی این تصمیم ${plan.cost.toFixed(3)} دلار`:""}</div>`
+    : `<h3>برنامه‌ی فعلی</h3><div class="small">هنوز برنامه‌ای نیست — موتور بدون برنامه هیچ خریدی نمی‌کند.</div>`;
+  const ul = $("feed"); const fresh = items.length - shownFeed;
+  ul.innerHTML = items.slice().reverse().slice(0,40).map((x,i)=>`<li class="${x.kind} ${x.side||""} ${i<fresh&&fresh<20?"new":""}"><span class="tm">${hhmm(x.t)}</span><span>${ICON[x.kind]||"•"} ${x.text}</span></li>`).join("");
+  shownFeed = items.length;
+}
+
+function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+function play(){
+  stop(); const st = steps[step];
+  timer = setInterval(()=>{ if(minute>=st.end){ stop(); return; } minute++; render(); }, 1000/speeds[sp]);
+}
+function next(){
+  const st = steps[step];
+  if (timer){ stop(); minute = st.end; render(); return; }
+  if (minute < st.end){ play(); return; }
+  if (step+1 >= steps.length) return;
+  const was = steps[step].di; step++; minute = steps[step].m; if (steps[step].di!==was) shownFeed=0; render(); play();
+}
+function prev(){ stop(); if(step>0) step--; minute = steps[step].m; shownFeed=0; render(); }
+$("next").onclick=next; $("prev").onclick=prev;
+$("speed").onclick=()=>{ sp=(sp+1)%speeds.length; $("speed").textContent=`سرعت ×${fa(speeds[sp])}`; };
+$("speed").textContent=`سرعت ×${fa(speeds[sp])}`;
+document.addEventListener("keydown",e=>{ if(e.key===" "||e.key==="ArrowRight"){ e.preventDefault(); next(); } if(e.key==="ArrowLeft"){ e.preventDefault(); prev(); } });
+$("built").textContent = `· ساخته‌شده ${DATA.built} · کد ${DATA.sha}`;
+minute = steps[0].m; render();
+</script>
+</body>
+</html>
