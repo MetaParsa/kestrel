@@ -15,6 +15,7 @@ import html
 import json
 import shutil
 import subprocess
+import time
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -84,6 +85,9 @@ def load() -> dict:
     d["base"] = json.loads((rep / "baseline-report.json").read_text(encoding="utf-8"))
     bt = rep / "backtest-summary.json"
     d["bt"] = json.loads(bt.read_text(encoding="utf-8")) if bt.exists() else None
+    for key, name in (("sg", "self-grading.json"), ("ab", "ab-replay-BTCTMN.json"), ("drill", "crash-drill.json")):
+        f = rep / name
+        d[key] = json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
     spend = read_jsonl(ROOT / "run/ai_box/spend.jsonl")
     d["claude_cost"] = sum(s.get("cost_usd", 0) for s in spend)
     d["claude_calls"] = len(spend)
@@ -133,9 +137,9 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <h1 style='font-size:92px;margin-top:30px'>موتور معاملاتی هوشمند والکس</h1>
 <div class='sub' style='font-size:40px;margin-top:20px'>Claude مسیر را تعیین می‌کند، کد ترمز می‌گیرد.</div>
 <div class='small' style='margin-top:40px'>تیم یک‌نفره: پارسا، با Claude Code به‌عنوان ایجنت کدنویس · github.com/MetaParsa/wallex-agent</div></div>""",
-                "سلام. این موتور معاملاتی هوشمند ما برای چالش والکس است. ایده‌ی اصلی ساده است: هوش مصنوعی "
-                "مسیر را تعیین می‌کند و کد قطعی ترمز را نگه می‌دارد. در این چند دقیقه نشان می‌دهیم سیستم چطور "
-                "تصمیم می‌گیرد، چطور ریسک را کنترل می‌کند، و روی حساب واقعی والکس چه کرده است."))
+                "سلام. این موتور معاملاتی هوشمند ما برای چالش والکس است. سؤال ما این بود: از کجا بفهمیم هوش مصنوعی "
+                "واقعاً چیزی اضافه می‌کند، و مطمئن باشیم نمی‌تواند پول را به باد بدهد؟ جواب سه ایده است: هوش مصنوعی‌ای که به خودش "
+                "نمره می‌دهد، یک گروه کنترل بدون هوش مصنوعی، و یک کمربند ایمنی که مدل نمی‌تواند دورش بزند. همه را روی حساب واقعی والکس نشان می‌دهیم."))
 
     # 2 — architecture
     out.append(("""<h2>معماری: دو مغز، یک ترمز</h2>
@@ -175,29 +179,77 @@ def scenes(d: dict) -> list[tuple[str, str]]:
                 "مثل بازده و نوسان. همچنین یک پیش‌بینی چهار ساعته می‌دهد که بعداً با واقعیت مقایسه می‌شود "
                 "و کارنامه‌اش در چرخه‌ی بعد به خود او برمی‌گردد. هر تصمیم حدود پنج تا نه سنت هزینه دارد."))
 
-    # 4 — risk gate
+    # 4 — idea 1: the AI that grades itself
+    sg = d.get("sg") or {}
+    s1 = sg.get("summary", {})
+    r = lambda x: fa(round((x or 0) * 100))
+    quotes = [("01:19", "دو بار آخر گفتم تتر بالا می‌رود و هر دو بار خنثی ماند؛ پس این بار خنثی می‌گویم."),
+              ("10:18", "سه بار آخر برای بیت‌کوین گفتم خنثی و هر سه بار بالا رفت… پیش‌بینی نوسان تتر را هم به «عادی» تغییر دادم."),
+              ("12:23", "پیش‌بینی‌های خنثیِ اخیر بیت‌کوین حرکت‌های صعودی را از دست دادند؛ پس این بار بالا می‌گویم.")]
+    qhtml = "".join(f"<div class='quote' style='font-size:27px;margin-bottom:14px'>«{q}» <span class='small'>({fa(t)})</span></div>"
+                    for t, q in quotes)
+    out.append((f"""<h2>ایده‌ی ۱: هوش مصنوعی‌ای که به خودش نمره می‌دهد</h2>
+<div class='grid g4'>
+<div class='card'><div class='k'>پیش‌بینی ۴ ساعته‌ی ارزیابی‌شده</div><div class='v'>{fa(s1.get('forecasts_resolved', 0))}</div></div>
+<div class='card'><div class='k'>جهت درست — Claude</div><div class='v acc'>{r(s1.get('direction_hit'))}٪</div></div>
+<div class='card'><div class='k'>مبنای «مثل ۴ ساعت قبل»</div><div class='v'>{r(s1.get('naive_hit'))}٪</div></div>
+<div class='card'><div class='k'>برنامه‌هایی که به کارنامه واکنش نشان دادند</div><div class='v ok'>{fa(s1.get('playbooks_citing_own_scorecard', 0))}</div></div></div>
+<div class='card'><div class='k' style='margin-bottom:14px'>از لاگ خود Claude (ترجمه):</div>{qhtml}</div>
+<div class='small'>چهار ساعت بعد از هر پیش‌بینی، کد بدون نگاه به آینده نمره می‌دهد و کارنامه به چرخه‌ی بعد Claude برمی‌گردد. صادقانه: «همیشه خنثی» {r(s1.get('always_flat_hit'))}٪ می‌گیرد چون بیشتر ساعت‌ها بازار آرام بود.</div>""",
+                f"ایده‌ی اول: هوش مصنوعی‌ای که به خودش نمره می‌دهد. Claude در هر برنامه جهت چهار ساعت بعد را پیش‌بینی می‌کند. "
+                f"چهار ساعت بعد، کد پیش‌بینی را با بازار واقعی و با یک مبنای ساده مقایسه می‌کند و کارنامه را به خود Claude برمی‌گرداند. "
+                f"Claude از آن یاد می‌گیرد: در {fa(s1.get('playbooks_citing_own_scorecard', 0))} برنامه صریحاً به کارنامه‌ی خودش واکنش نشان داده؛ "
+                f"مثلاً نوشته دو بار گفتم تتر بالا می‌رود و نرفت، پس این بار خنثی می‌گویم. تا اینجا جهت را {r(s1.get('direction_hit'))} درصد "
+                f"درست گفته، در برابر {r(s1.get('naive_hit'))} درصد برای مبنای ساده. و صادقانه می‌گوییم که چون بازار بیشتر آرام بود، "
+                f"حدس همیشه خنثی هم عدد خوبی می‌گیرد."))
+
+    # 5 — idea 2: the control group
+    ab = d.get("ab") or {}
+    if ab:
+        c, t = ab["claude"], ab["rules_twin"]
+        vs = next((x for p_ in reversed(d["pbs"]) for x in p_.get("text_inputs_used", []) if x.lower().startswith("vs twin")), "")
+
+        def row(name, x, cls=""):
+            return (f"<tr><td class='{cls}'>{name}</td><td>{pct(x['return_pct'], 3)}</td>"
+                    f"<td><b>{pct(x['after_selling_to_tmn_pct'], 3)}</b></td><td>{fa(x['max_drawdown_pct'])}٪</td>"
+                    f"<td>{fa(x['fills'])}</td><td>{money(x['fees_tmn'])}</td></tr>")
+        out.append((f"""<h2>ایده‌ی ۲: گروه کنترل — همان موتور، بدون Claude</h2>
+<div class='card'><div class='k'>بازپخش منصفانه: همان ۲۴ ساعت واقعی والکس، همان شبیه‌ساز و همان کمربند؛ فقط مدیر فرق می‌کند (فقط BTCTMN)</div>
+<table style='margin-top:10px'><tr><th>مدیر</th><th>بازده</th><th>بعد از فروش به تومان</th><th>بیشترین افت</th><th>معاملات</th><th>کارمزد (تومان)</th></tr>
+{row('Claude', c, 'acc')}{row('دوقلوی قاعده‌محور', t)}<tr><td>ماندن در تومان</td><td>۰٪</td><td><b>۰٪</b></td><td>۰٪</td><td>۰</td><td>۰</td></tr></table></div>
+<div class='grid g2'><div class='card'><div class='k'>نتیجه</div><div style='font-size:30px;line-height:1.7;margin-top:8px'>نتیجه‌ی نهایی تقریباً مساوی، با <b class='ok'>حدود یک‌هفتم افت حساب</b> و <b class='ok'>یک‌هشتم کارمزد</b>.</div></div>
+<div class='card'><div class='k'>Claude دوقلو را می‌بیند و باید توضیح دهد (از لاگ):</div><div style='font-size:20px;line-height:1.6;margin-top:8px;direction:ltr;text-align:left'>{html.escape(vs[:330])}</div></div></div>""",
+                    "ایده‌ی دوم: گروه کنترل. کنار موتور اصلی، یک دوقلو با همان موتور و همان کمربند ایمنی کار می‌کند، فقط به‌جای Claude یک "
+                    "قاعده‌ی ثابت تصمیم می‌گیرد. همان بیست و چهار ساعت واقعی والکس را دو بار از همان شبیه‌ساز گذراندیم: یک بار با برنامه‌های "
+                    "ثبت‌شده‌ی Claude و یک بار با قاعده. بعد از فروش همه‌چیز به تومان، که مسابقه همین را می‌سنجد، نتیجه تقریباً مساوی است؛ ولی "
+                    "افت حساب Claude حدود یک‌هفتم و کارمزدش یک‌هشتم دوقلوست. از ظهر جمعه هم Claude برنامه‌ی دوقلو را می‌بیند و باید بنویسد "
+                    "کجا با آن مخالف است و چرا؛ مثلاً اینکه یک جهش یک‌ساعته در جمعه‌ی کم‌حجم دلیل خوبی برای چهار برابر کردن موقعیت نیست."))
+
+    # 6 — idea 3: the seatbelt
+    dr = d.get("drill") or {}
     blocks = {}
-    for r in d["all_dec"]:
-        if r["gate"]["verdict"] == "block":
-            for rule in r["gate"]["rules"]:
+    for r_ in d["all_dec"]:
+        if r_["gate"]["verdict"] == "block":
+            for rule in r_["gate"]["rules"]:
                 blocks[rule] = blocks.get(rule, 0) + 1
-    brow = "".join(f"<tr><td class='ltr'>{html.escape(k)}</td><td>{fa(v)}</td></tr>" for k, v in blocks.items())
-    out.append((f"""<h2>دروازه‌ی ریسک: قوانینی که هوش مصنوعی نمی‌تواند تغییر دهد</h2>
-<div class='grid g2'><div class='card'><table>
-<tr><th>قانون</th><th>مقدار</th></tr>
-<tr><td>سقف سهم هر بازار / کل</td><td>۴۰٪ / ۶۰٪ — هرگز با کل پول</td></tr>
-<tr><td>هر افزایش</td><td>حداکثر ۱۰٪ سرمایه، دو بار در روز</td></tr>
-<tr><td>حد ضرر هر موقعیت</td><td>−۲٫۵٪ از میانگین خرید</td></tr>
-<tr><td>زیان روزانه</td><td>−۱٪ → توقف خرید تا نیمه‌شب</td></tr>
-<tr><td>افت کل −۲٪ / −۳٪</td><td>کوچک‌سازی به ۱۰٪ / فروش همه و قفل</td></tr>
-<tr><td>داده‌ی کهنه، اسپرد زیاد</td><td>خرید ممنوع</td></tr></table></div>
-<div class='card'><div class='k'>دفعاتی که دروازه پیشنهادی را رد کرد (لاگ واقعی)</div><table>{brow or '<tr><td>—</td></tr>'}</table>
-<div class='small' style='margin-top:18px'>G_STALE_DATA: بازار تتر ۱۱ ساعت معامله نداشت؛ موتور خرید روی قیمت کهنه را رد کرد.<br>G_MARKET_NOT_ALLOWED: حساب پراپ فقط بیت‌کوین/تومان را می‌پذیرد.</div></div></div>""",
-                "بخش مهم دوم، دروازه‌ی ریسک است. هر پیشنهاد خرید یا فروش از این کد عبور می‌کند و نتیجه با نام "
-                "قانون ثبت می‌شود. هرگز با کل پول وارد نمی‌شویم: سقف هر بازار چهل درصد و هر افزایش حداکثر ده درصد سرمایه است. "
-                "حد ضرر هر موقعیت منفی دو و نیم درصد، و زیان روزانه‌ی یک درصد خرید را تا نیمه‌شب متوقف می‌کند. "
-                "اگر کل حساب سه درصد افت کند، همه‌چیز فروخته می‌شود. در لاگ واقعی می‌بینید دروازه چند بار خرید را رد کرده؛ "
-                "مثلاً وقتی بازار تتر یازده ساعت معامله نداشت."))
+    crash = dr.get("crash", {})
+    bl = " · ".join(f"<span class='ltr'>{html.escape(k)}</span> {fa(v)}" for k, v in blocks.items()) or "—"
+    out.append((f"""<h2>ایده‌ی ۳: کمربند ایمنی — کدی که هوش مصنوعی نمی‌تواند دورش بزند</h2>
+<div class='grid g2'>
+<div class='card'><div class='k'>آزمون سقوط روی دقیقه‌های واقعی والکس (۲۰٪ سهم بیت‌کوین)</div>
+<table style='margin-top:10px'><tr><th>شوک</th><th>با کمربند</th><th>بدون کمربند</th></tr>
+<tr><td>سقوط ۱۰٪ در ۱۵ دقیقه</td><td class='ok'><b>{pct(crash.get('with_seatbelt_return_pct', 0), 2)}</b></td><td class='bad'>{pct(crash.get('held_through_return_pct', 0), 2)}</td></tr>
+<tr><td>یک قیمت خراب (−۳۰٪، یک دقیقه)</td><td class='ok'><b>بدون فروش</b></td><td>—</td></tr></table>
+<div class='small' style='margin-top:12px'>این آزمون دو ایراد واقعی پیدا کرد؛ همان روز درست و در نسخه‌ی زنده‌ی <span class='ltr'>live-v2</span> منتشر شد.</div></div>
+<div class='card'><table><tr><th>قانون</th><th>مقدار</th></tr>
+<tr><td>سقف هر بازار / کل</td><td>۴۰٪ / ۶۰٪</td></tr><tr><td>حد ضرر هر موقعیت</td><td>−۲٫۵٪</td></tr>
+<tr><td>زیان روزانه</td><td>−۱٪ → توقف خرید</td></tr><tr><td>افت کل −۳٪</td><td>فروش همه و قفل</td></tr>
+<tr><td>رد واقعی در زنده/سایه</td><td>{bl}</td></tr></table></div></div>""",
+                f"ایده‌ی سوم: کمربند ایمنی. Claude فقط پیشنهاد می‌دهد؛ هر سفارش از دروازه‌ی ریسک قطعی می‌گذرد: سقف حجم، حد ضرر، توقف روزانه "
+                f"و فروش اضطراری. برای اینکه فقط ادعا نباشد، روی دقیقه‌های واقعی والکس یک سقوط ده درصدی بیت‌کوین تزریق کردیم: با کمربند، "
+                f"حساب حدود {fa(abs(round(crash.get('with_seatbelt_return_pct', 0), 2)))} درصد افت کرد و بدون آن حدود "
+                f"{fa(abs(round(crash.get('held_through_return_pct', 0), 2)))} درصد. یک قیمت خراب منفی سی درصدی هم هیچ فروش وحشت‌زده‌ای ایجاد نکرد. "
+                f"این آزمون دو ایراد واقعی هم پیدا کرد که همان روز درست شد و در نسخه‌ی زنده منتشر شد."))
 
     # 5 — live account
     rows = ""
@@ -225,25 +277,6 @@ def scenes(d: dict) -> list[tuple[str, str]]:
                 f"فقط برای تحلیل نگه داشتیم. تا این لحظه ارزش حساب {money(eq)} تومان است و {fa(len(live_fills))} "
                 f"معامله پر شده. هر سطر این جدول در لاگ تصمیم‌ها، دلیل فارسی کامل خودش را دارد."))
 
-    # 6 — does the AI add anything?
-    fc_s = sh.get("claude_forecasts_4h", {})
-    b_pnl = base.get("pnl_from_fills", {})
-    out.append((f"""<h2>آیا هوش مصنوعی واقعاً چیزی اضافه می‌کند؟</h2>
-<div class='grid g2'>
-<div class='card'><div class='k'>پیش‌بینی جهت ۴ ساعته‌ی Claude ({fa(fc_s.get('n', 0))} پیش‌بینی ارزیابی‌شده)</div>
-<div class='v acc'>{fa(round((fc_s.get('direction_hit_rate') or 0) * 100))}٪ درست</div>
-<div class='k' style='margin-top:12px'>مبنای ساده («مثل ۴ ساعت قبل»): {fa(round((fc_s.get('baseline_hit_rate') or 0) * 100))}٪</div></div>
-<div class='card'><div class='k'>موتور مبنا (قاعده‌محور، موازی و بدون پول)</div>
-<div class='v'>{fa(base['playbooks']['total'])} برنامه · {fa(base['fills'])} معامله‌ی شبیه‌سازی</div>
-<div class='k' style='margin-top:12px'>نتیجه: {pct(b_pnl.get('return_pct', 0), 3)} — همان موتور، فقط بدون Claude</div></div></div>
-<div class='card'><div class='k'>Claude تا این لحظه</div><div class='v'>{fa(d['claude_calls'])} تصمیم · {fa(f"{d['claude_cost']:.2f}")} دلار</div>
-<div class='small'>سقف هزینه ۱۵ دلار؛ اگر برسد مدیر قاعده‌محور جایگزین می‌شود. رژیم‌هایی که انتخاب کرد: {html.escape(' · '.join(f'{k} {fa(v)}' for k, v in sh['playbooks']['regimes'].items()))}</div></div>""",
-                f"برای اینکه بدانیم هوش مصنوعی واقعاً چیزی اضافه می‌کند، دو مقایسه داریم. اول، پیش‌بینی‌های چهار ساعته‌ی "
-                f"Claude با یک مبنای ساده مقایسه می‌شود: تا حالا Claude در "
-                f"{fa(round((fc_s.get('direction_hit_rate') or 0) * 100))} درصد موارد جهت را درست گفته و مبنای ساده در "
-                f"{fa(round((fc_s.get('baseline_hit_rate') or 0) * 100))} درصد. نمونه هنوز کوچک است و این را صادقانه می‌گوییم. "
-                f"دوم، یک موتور مبنای کاملاً قاعده‌محور به‌صورت موازی و بدون پول اجرا می‌شود؛ همان کد، فقط بدون Claude."))
-
     # 7 — backtest
     bt = d["bt"]
     if bt:
@@ -263,20 +296,6 @@ def scenes(d: dict) -> list[tuple[str, str]]:
         body, say = "<div class='card'>بک‌تست در حال اجراست.</div>", "بک‌تست با همان موتور روی داده‌ی واقعی والکس اجرا می‌شود."
     out.append(("<h2>بک‌تست: همان موتور، روی ۳۰ روز داده‌ی واقعی والکس</h2>" + body, say))
 
-    # 8 — what we rejected
-    out.append(("""<h2>چیزی که آزمودیم و کنار گذاشتیم: Kronos</h2>
-<div class='grid g4'>
-<div class='card'><div class='k'>جهت درست ۴ ساعته (تتر / بیت‌کوین)</div><div class='v bad'>۴۴٪ / ۴۹٪</div></div>
-<div class='card'><div class='k'>«همیشه بالا»</div><div class='v'>۵۴٪ / ۵۵٪</div></div>
-<div class='card'><div class='k'>معامله بر اساس آن</div><div class='v bad'>−۲۶٪ / −۲۳٪</div></div>
-<div class='card'><div class='k'>نگه‌داری ساده</div><div class='v ok'>+۱۶٪ / +۱۳٪</div></div></div>
-<div class='card small' style='font-size:27px'>Kronos یک مدل پایه‌ی شمع‌های مالی (AAAI 2026) است. با آزمون walk-forward روی داده‌ی خود والکس
-سنجیدیم: در برابر کاهش ارزش تومان سوگیری نزولی داشت و از مبنای ساده بدتر بود. پس وارد مسیر معامله نشد. گزارش کامل: research/KRONOS.md</div>""",
-                "ما هر مدلی را قبل از استفاده می‌سنجیم. مدل Kronos را که برای پیش‌بینی نمودار شمعی ساخته شده، روی داده‌ی "
-                "خود والکس آزمودیم. جهت را کمتر از حالت ساده‌ی همیشه صعودی درست گفت، و معامله بر اساس آن بیش از بیست درصد "
-                "زیان کاغذی داشت؛ چون در برابر کاهش ارزش تومان سوگیری نزولی دارد. پس کنارش گذاشتیم. هوش مصنوعی فقط جایی "
-                "استفاده شده که ارزشش را نشان داده است."))
-
     # 9 — the end
     out.append(("""<h2>پایان مسابقه و ایمنی</h2>
 <div class='grid g4'>
@@ -288,16 +307,27 @@ def scenes(d: dict) -> list[tuple[str, str]]:
 <div class='card small'>دو قفل برای پول واقعی؛ پس از هر ری‌استارت، سفارش‌های باز و موجودی با والکس تطبیق داده می‌شود.</div>
 <div class='card small'>کد، لاگ تصمیم‌ها، بک‌تست و تست سایه: <span class='ltr'>github.com/MetaParsa/wallex-agent</span></div></div>""",
                 "و در پایان مسابقه، سیستم خودش همه‌چیز را به تومان برمی‌گرداند: هشت ساعت مانده به پایان خرید متوقف می‌شود "
-                "و فروش با سفارش‌های لیمیت شروع می‌شود، بعد تهاجمی‌تر، و در نیم ساعت آخر موجودی با والکس تطبیق داده می‌شود. "
+                "و فروش با سفارش‌های لیمیت شروع می‌شود، بعد تهاجمی‌تر، و در نیم ساعت آخر موجودی با والکس تطبیق داده می‌شود. مدل‌هایی مثل Kronos را هم آزمودیم و چون از مبنای ساده بدتر بودند کنار گذاشتیم. "
                 "در تمام این مدت هشدارهای بله و یک واچ‌داگ مستقل مراقب‌اند. کد، لاگ تصمیم‌ها، بک‌تست و تست سایه در گیت‌هاب است. ممنون."))
     return out
 
 
 # ---- render -------------------------------------------------------------------------------------
+def run_retry(cmd: list[str], tries: int = 3, **kw) -> subprocess.CompletedProcess:
+    """Windows sometimes holds a just-written file (antivirus); retry a failed step a couple of times."""
+    for i in range(tries):
+        try:
+            return subprocess.run(cmd, check=True, **kw)
+        except subprocess.CalledProcessError:
+            if i == tries - 1:
+                raise
+            time.sleep(2)
+
+
 def render(items: list[tuple[str, str]]) -> Path:
     work = OUT / "work"
     shutil.rmtree(work, ignore_errors=True)
-    work.mkdir(parents=True)
+    work.mkdir(parents=True, exist_ok=True)
     parts = []
     for i, (body, say) in enumerate(items, 1):
         h, png, mp3, mp4 = (work / f"s{i:02d}.{x}" for x in ("html", "png", "mp3", "mp4"))
@@ -309,9 +339,9 @@ def render(items: list[tuple[str, str]]) -> Path:
                        capture_output=True, timeout=180, check=True)
         dur = float(subprocess.run([FFPROBE, "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(mp3)],
                                    capture_output=True, text=True, check=True).stdout.strip()) + 0.8
-        subprocess.run([FFMPEG, "-y", "-loop", "1", "-i", str(png), "-i", str(mp3), "-t", f"{dur:.2f}",
+        run_retry([FFMPEG, "-y", "-loop", "1", "-i", str(png), "-i", str(mp3), "-t", f"{dur:.2f}",
                         "-c:v", "libx264", "-tune", "stillimage", "-pix_fmt", "yuv420p", "-r", "25",
-                        "-c:a", "aac", "-b:a", "128k", "-af", "apad", str(mp4)], capture_output=True, check=True)
+                        "-c:a", "aac", "-b:a", "128k", "-af", "apad", str(mp4)], capture_output=True)
         parts.append(mp4)
         print(f"scene {i}: {dur:.1f}s", flush=True)
     script = ["# متن گوینده‌ی ویدئوی دمو (هر صحنه یک بند)", "",
