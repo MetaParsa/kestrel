@@ -1,4 +1,4 @@
-"""Turns gate-approved proposals into orders and fills (spec v2 §2.10, §8.2).
+"""Turns gate-approved proposals into orders and fills.
 
 - passive: limit at our side of the book; re-price up to `max_reprices` times every
   `reprice_after_s`; then cross the spread only if the decision is still valid.

@@ -1,4 +1,4 @@
-"""The engine: one `tick()` every 10 s wires everything together (spec v2 §5, §7.5, §8, §9).
+"""The engine: one `tick()` every 10 s wires everything together.
 
 tick:
   market snapshots → feed the broker → day roll / marks

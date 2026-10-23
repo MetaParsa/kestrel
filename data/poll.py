@@ -1,6 +1,6 @@
 """Live market snapshots by REST polling (depth + recent trades every ~10 s).
 
-No socket.io in the core (spec v2 §10 cut): polling is simpler and its failure
+No socket.io in the core: polling is simpler and its failure
 mode — a stale snapshot — is exactly what the gate already guards against.
 """
 from __future__ import annotations

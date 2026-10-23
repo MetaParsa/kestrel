@@ -360,7 +360,7 @@ def render(items: list[tuple[str, str]]) -> Path:
         print(f"scene {i}: {dur:.1f}s", flush=True)
     script = ["# متن گوینده‌ی ویدئوی دمو (هر صحنه یک بند)", "",
               "ویدئوی آماده: `run/video/wallex-demo.mp4` (صدای ماشینی فارسی). اگر وقت دارید، تصاویر `run/video/work/s*.png` "
-              "را به ترتیب نشان دهید و همین متن را با صدای خودتان بخوانید؛ صدای انسان امتیاز بیشتری می‌گیرد.", ""]
+              "را به ترتیب نشان دهید و همین متن را با صدای خودتان بخوانید؛ صدای انسان طبیعی‌تر است.", ""]
     script += [f"## صحنه‌ی {fa(i)}\n\n{say}\n" for i, (_, say) in enumerate(items, 1)]
     (ROOT / "delivery").mkdir(exist_ok=True)
     (ROOT / "delivery" / "VIDEO-SCRIPT-fa.md").write_text("\n".join(script), encoding="utf-8")

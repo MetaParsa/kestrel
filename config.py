@@ -1,4 +1,4 @@
-"""Every number that changes trading behaviour lives here (spec v2 §2, §8).
+"""Every number that changes trading behaviour lives here.
 
 The playbook can only tighten these limits, never loosen them.
 """
@@ -31,7 +31,7 @@ FEES = {"USDTTMN": (0.0025, 0.0030), "BTCTMN": (0.0025, 0.0030)}
 SIM_HALF_SPREAD = {"USDTTMN": 0.00026, "BTCTMN": 0.00048}
 
 
-# ---- regimes (spec v2 §2.2) ------------------------------------------------
+# ---- regimes ------------------------------------------------
 @dataclass(frozen=True)
 class RegimeRule:
     default: dict[str, float]
@@ -59,7 +59,7 @@ REGIMES = {name: RegimeRule({m: (v if m in TRADABLE else 0.0) for m, v in r.defa
            for name, r in REGIMES.items()}
 
 
-# ---- risk limits (spec v2 §8.1) -------------------------------------------
+# ---- risk limits -------------------------------------------
 @dataclass(frozen=True)
 class Limits:
     max_market: float = 0.40          # exposure per market, core + tactical
@@ -94,7 +94,7 @@ class Limits:
 LIMITS = Limits()
 
 
-# ---- execution (spec v2 §2.10, §8.2) ---------------------------------------
+# ---- execution ---------------------------------------
 @dataclass(frozen=True)
 class ExecutionCfg:
     reprice_after_s: float = 90.0
@@ -109,7 +109,7 @@ class ExecutionCfg:
 EXECUTION = ExecutionCfg()
 
 
-# ---- engine loop (spec v2 §7.1, §7.5) ----------------------------------------
+# ---- engine loop ----------------------------------------
 @dataclass(frozen=True)
 class LoopCfg:
     tick_s: float = 10.0
@@ -133,7 +133,7 @@ LOOP = LoopCfg()
 REF_SPREAD_BPS = {"USDTTMN": 5.1, "BTCTMN": 9.5}
 
 
-# ---- flatten (spec v2 §8.3), hours before END_AT ---------------------------
+# ---- flatten, hours before END_AT ---------------------------
 @dataclass(frozen=True)
 class FlattenCfg:
     no_new_h: float = 8.0            # no tactical entries, no adds; core → 0 via passive limits

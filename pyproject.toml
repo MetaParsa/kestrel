@@ -1,7 +1,7 @@
 [project]
 name = "wallex-agent"
 version = "0.1.0"
-description = "AI trading agent for the StarCoach x Wallex challenge: Claude sets the course, a deterministic risk gate holds the brakes."
+description = "AI trading agent: Claude sets the course, a deterministic risk gate holds the brakes."
 readme = "README.md"
 # Server runs Ubuntu 26.04's Python 3.14; laptop AI box runs 3.12 (torch wheels).
 requires-python = ">=3.12"

@@ -140,6 +140,11 @@ def main(argv=None):
     ap.add_argument("--merge", action="store_true", help="only merge shard results into summary.json")
     a = ap.parse_args(argv)
     k, n = (int(x) for x in a.shard.split("/"))
+    if not all(fetch.path_for(m).exists() for m in config.MARKETS):
+        # a fresh clone has no data/store (git-ignored); use the committed candles instead of failing
+        from judge.demo import use_sample_data
+        use_sample_data()
+        print("data/store is empty: using the committed sample in data/sample/ (fetch fresh data: python -m data.fetch --days 30)")
     rp = Replay(list(config.MARKETS))
     lo, hi = rp.span()
     start = (lo + a.warmup_h * 3600) // 3600 * 3600

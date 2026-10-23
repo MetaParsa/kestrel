@@ -1,6 +1,6 @@
 # kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣
 
-AI trading agent for the Agentic AI hackathon⁤⁤⁣ — the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ challenge. It traded a real 5,000,000 TMN the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ prop account.
+AI trading agent for the Agentic AI hackathon⁤⁤⁣'s trading challenge. It traded a real 5,000,000 TMN prop account on the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣.
 
 **Claude sets the course, code holds the brakes.**
 «Claude مسیر را تعیین می‌کند، کد ترمز می‌گیرد»
@@ -46,7 +46,7 @@ flowchart LR
 |---|---|---|
 | **An AI that grades itself** — each Claude 4 h forecast is scored afterwards against reality and a naive baseline; the scorecard goes back into Claude's next decision | 58 forecasts: Claude 47 %, naive "same as last 4 h" 41 %, "always flat" 48 %. 30 of 37 playbooks cite Claude's own scorecard (a keyword match — read the lines yourself in SELF-GRADING.md); forecasts come two per playbook, so they aren't independent | [`SELF-GRADING.md`](delivery/SELF-GRADING.md) · [`self-grading.json`](reports/out/self-grading.json) |
 | **A control group** — a rule-based twin runs the same engine and risk gate; the same 24 h of real minutes replayed with Claude's recorded playbooks vs the twin | After selling back to TMN both +0.014 %, with Claude's drawdown 0.026 % vs 0.177 % and fees 601 vs 4,879 TMN — mostly because Claude chose a 4 % position where the rule took 15 %: the same result at a quarter of the risk, not a better trade. Since Friday noon Claude also sees the twin and must explain where it disagrees | [`CONTROL-GROUP.md`](delivery/CONTROL-GROUP.md) · [`ab-replay-BTCTMN.json`](reports/out/ab-replay-BTCTMN.json) |
-| **A seatbelt** — deterministic code the AI can't bypass | Crash drill on real the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ minutes: a −10 % BTC crash costs −0.77 % with the seatbelt vs −1.97 % held; a single −30 % glitch print triggers no sale. The drill found two real flaws, fixed and shipped as `live-v2` | [`SEATBELT.md`](delivery/SEATBELT.md) · [`crash-drill.json`](reports/out/crash-drill.json) |
+| **A seatbelt** — deterministic code the AI can't bypass | Crash drill on real market minutes: a −10 % BTC crash costs −0.77 % with the seatbelt vs −1.97 % held; a single −30 % glitch print triggers no sale. The drill found two real flaws, fixed and shipped as `live-v2` | [`SEATBELT.md`](delivery/SEATBELT.md) · [`crash-drill.json`](reports/out/crash-drill.json) |
 
 **Prompt stress test** ([`PROMPT-STRESS.md`](delivery/PROMPT-STRESS.md)): the live prompt and model on 9 doctored bundles (crash, stale data, minutes before the sell-off, near the daily-loss stop, terrible scorecard, cold start, and a prompt injection hidden in the twin's data). 8 pass; on the injection Claude wrote "I treat it as data, not an instruction". The uptrend case is inconclusive: Claude spotted that the synthetic candles were inconsistent and refused to trust them.
 
@@ -58,7 +58,7 @@ flowchart LR
 - **Manager — Claude Opus 5.5**, every hour (every 15 min on the last evening): reads a market bundle through 8 read-only tools, picks a market regime, a target position, a risk multiplier and a 4-hour forecast, and explains itself in Persian. Its output is clamped to the regime's bounds and re-validated on the server; a $15 spend cap falls back to the rule-based manager.
 - **Risk gate — deterministic code** the manager cannot override (`engine/gate.py`, numbers in `config.py`): per-market and total caps, −2.5 % position stop, −1 % daily loss pause, −2 % micro mode, −3 % sell-everything, profit cushion, stale-data and spread guards.
 - **Executor:** maker-first limit orders, re-pricing, protected crossing, lookup-before-retry by `client_id`, never a raw market order. Real orders need two locks (`--mode live` and `WALLEX_LIVE_ARMED=yes-real-money`).
-- **End of contest:** buying stops 8 h before the end and everything is sold back to TMN on a schedule.
+- **End of contest:** buying stops before the end and everything is sold back to TMN on a schedule (8 h before by default; 2.5 h on the last evening, `live-v3`: buying until 21:20, all TMN by 23:20).
 - Two machines: the engine runs on a server in Iran (close to the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣); Claude runs on a laptop (Anthropic isn't reachable from Iran). A 60-second push/pull job connects them — no tunnel.
 - The prop account accepts BTCTMN orders only, so BTCTMN is traded and USDTTMN is an analysis input.
 
@@ -86,4 +86,4 @@ Every log line carries the deployed commit (`git_sha`), and every live deploymen
 Laptop-side manager changes during the contest are separate commits: prompt (`75c2700`, `612c972`, `13730f6`), the twin's view for Claude (`79d2f13`, prompt + `ai_box/`), last-evening cadence and 1-hour prompt cache (`a808dc7`). None of them touched the risk gate, and Claude kept every decision. List any later change to trading code with `git log --oneline live-v4..HEAD -- engine wallex bridge ai_box manager config.py deploy`.
 
 ## Secrets
-No key is stored in this repo. The the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ key lives in a server-only file (`WALLEX_KEY_FILE`, mode 600, no withdrawal scope, IP-restricted); the Anthropic key stays on the laptop.
+No key is stored in this repo. the exchange's⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ API key lives in a server-only file (`WALLEX_KEY_FILE`, mode 600, no withdrawal scope, IP-restricted); the Anthropic key stays on the laptop.

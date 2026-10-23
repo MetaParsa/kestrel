@@ -1,4 +1,4 @@
-"""End-of-contest schedule: everything back to TMN before END_AT (spec v2 §8.3).
+"""End-of-contest schedule: everything back to TMN before END_AT.
 
 T−8 h  no new tactical entries, no adds; every position sold with passive limits
 T−3 h  aggressive limits

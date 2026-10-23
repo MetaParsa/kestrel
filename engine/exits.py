@@ -1,4 +1,4 @@
-"""Exit rules that fire on price and time (spec v2 §2.2, §2.3, §8.1).
+"""Exit rules that fire on price and time.
 
 - Core: −2.5% from average cost per market → sell the market's core at market;
   a 12 h cooldown starts when the order is accepted (Portfolio.note_accept).

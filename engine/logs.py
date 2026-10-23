@@ -1,4 +1,4 @@
-"""Append-only JSONL logs — the decision log is a contest deliverable (spec v2 §5).
+"""Append-only JSONL logs — the decision log is a contest deliverable.
 
 Every line carries the git SHA and the mode, so a judge can tell exactly which code
 produced it. Files: decisions, orders, fills, playbooks, events (one per kind).

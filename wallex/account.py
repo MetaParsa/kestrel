@@ -11,7 +11,7 @@ from decimal import Decimal
 from wallex.client import Balance, Order, WallexClient
 
 HOME = "TMN"
-OUR_ORDER_PREFIX = "d-"   # every engine order's client_id starts with this (spec v2 §2.10)
+OUR_ORDER_PREFIX = "d-"   # every engine order's client_id starts with this
 
 
 @dataclass(frozen=True)

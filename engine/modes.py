@@ -1,4 +1,4 @@
-"""Brokers: one engine, three ways to get fills (spec v2 §9).
+"""Brokers: one engine, three ways to get fills.
 
 - ShadowBroker: live quotes from the poller, fills simulated by SimExchange.
 - BacktestBroker: historical 1-minute bars, fills simulated by SimExchange.

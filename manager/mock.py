@@ -1,7 +1,7 @@
 """Deterministic rule-based manager: same bundle → same playbook, no API calls.
 
 Used for `--mock-llm` runs (judges re-running without keys), for the shadow
-baseline (spec v2 §9: rule-based regime + regime defaults), and in tests.
+baseline, and in tests.
 
 Rule: look at USDTTMN and BTCTMN 24 h / 4 h returns and 24 h volatility from the bundle.
 """

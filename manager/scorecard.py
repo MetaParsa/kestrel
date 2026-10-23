@@ -1,4 +1,4 @@
-"""Scores each playbook's 4 h forecast against what happened (spec v2 §7.3).
+"""Scores each playbook's 4 h forecast against what happened.
 
 direction: sign of the 4 h close-to-close return with a ±0.2% flat band.
 vol: realized |1 h returns| std over the 4 h vs the trailing 30 d 1 h std

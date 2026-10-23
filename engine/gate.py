@@ -1,4 +1,4 @@
-"""The risk gate (spec v2 §8.1). Pure functions: same inputs → same verdict.
+"""The risk gate. Pure functions: same inputs → same verdict.
 
 Nothing upstream (Claude, Clef, LightGBM, the core sleeve) can trade around it.
 Risk-reducing orders (sells) are always allowed, only adjusted for dust and for
