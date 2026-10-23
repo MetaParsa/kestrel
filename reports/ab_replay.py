@@ -95,11 +95,15 @@ def main(argv=None):
     ap.add_argument("--end", type=float, default=0.0, help="unix end time (default: last stored minute)")
     a = ap.parse_args(argv)
     pbs = load_claude_playbooks(a.logs)
+    if not pbs:
+        raise SystemExit(f"no Claude playbooks in {a.logs / 'playbooks.jsonl'}")
     rp = Replay(list(config.MARKETS))
     lo, hi = rp.span()
     start = (pbs[0].created_at // 60) * 60
     end = min(a.end or hi, hi)
     pbs = [p for p in pbs if p.created_at <= end]       # only the playbooks that existed inside the window
+    if end <= start:
+        raise SystemExit("--end is before the first Claude playbook: nothing to replay")
     tag = "+".join(config.TRADABLE)
     res = {"tradable": list(config.TRADABLE),
            "from": datetime.fromtimestamp(start, tz=config.TEHRAN).isoformat(timespec="minutes"),

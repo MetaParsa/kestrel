@@ -84,10 +84,12 @@ def run_step(name: str, work: Path, arg: str = "") -> None:
 
 def spawn(name: str, work: Path, arg: str = "") -> subprocess.Popen:
     env = {k: v for k, v in os.environ.items() if not k.startswith(("WALLEX_", "BALE_", "ANTHROPIC_"))}
-    env.update(PYTHONPATH=str(REPO), PYTHONIOENCODING="utf-8", PYTHONUTF8="1")
+    env.update(PYTHONPATH=str(REPO), PYTHONIOENCODING="utf-8", PYTHONUTF8="1", PYTHONHASHSEED="0")
     log = open(work / f"{name}{'-' + arg.replace('/', 'of') if name == 'backtest' else ''}.log", "w", encoding="utf-8")
     cmd = [sys.executable, "-m", "judge.demo", "--step", name, "--work", str(work)] + (["--arg", arg] if arg else [])
-    return subprocess.Popen(cmd, cwd=REPO, env=env, stdout=log, stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(cmd, cwd=REPO, env=env, stdout=log, stderr=subprocess.STDOUT)
+    proc.started = time.time()
+    return proc
 
 
 # ---- comparing -----------------------------------------------------------------------------------
@@ -96,7 +98,7 @@ def load(p: Path) -> dict | None:
 
 
 def row(label: str, committed, reproduced, tol: float = 1e-9) -> dict:
-    same = committed == reproduced or (isinstance(committed, (int, float)) and isinstance(reproduced, (int, float))
+    same = reproduced is not None and committed == reproduced or (isinstance(committed, (int, float)) and isinstance(reproduced, (int, float))
                                        and abs(committed - reproduced) <= tol)
     return {"check": label, "committed": committed, "reproduced": reproduced, "same": same}
 
@@ -140,7 +142,7 @@ def compare(work: Path, steps: list[str], windows: int) -> list[dict]:
         for g in sorted(got, key=lambda x: x["start"]):
             ref = by_start.get(g["start"], {})
             for k, label in (("return_pct", "return (%)"), ("max_drawdown_pct", "max drawdown (%)"),
-                             ("fills", "fills"), ("ended_in_tmn", "ended fully in TMN")):
+                             ("fills", "fills"), ("decisions", "decisions logged"), ("ended_in_tmn", "ended fully in TMN")):
                 out.append(row(f"Backtest window {g['start'][:10]}: {label}", ref.get(k), g.get(k)))
         if len(got) < windows:
             out.append(row("Backtest: windows finished", windows, len(got)))
@@ -153,7 +155,7 @@ def ab_end() -> str:
     return str(datetime.fromisoformat(c["to"]).timestamp())
 
 
-def write_results(work: Path, rows: list[dict], seconds: float) -> str:
+def write_results(work: Path, rows: list[dict], seconds: float, skipped: list[str] = ()) -> str:
     fmt = lambda v: "—" if v is None else str(v)
     lines = ["# Judge demo — committed vs reproduced", "",
              f"Run {datetime.now().astimezone().isoformat(timespec='minutes')} · {seconds / 60:.1f} min · "
@@ -162,8 +164,10 @@ def write_results(work: Path, rows: list[dict], seconds: float) -> str:
     lines += [f"| {r['check']} | {fmt(r['committed'])} | {fmt(r['reproduced'])} | {'✅' if r['same'] else '❌'} |"
               for r in rows]
     same = sum(r["same"] for r in rows)
-    lines += ["", f"**{same}/{len(rows)} numbers reproduced exactly.** Full outputs: `judge_out/<step>/` "
-                  "(the reports, the Persian pages, and the engine's own decision/order/fill logs for each run)."]
+    lines += ["", f"**{same}/{len(rows)} numbers reproduced exactly.**"
+                  + (f" Not run this time: {', '.join(skipped)}." if skipped else "")
+                  + " Full outputs: `judge_out/<step>/` (the reports, the Persian pages, and the engine's own "
+                  "decision/order/fill logs for each run)."]
     text = "\n".join(lines) + "\n"
     (work / "RESULTS.md").write_text(text, encoding="utf-8")
     return text
@@ -189,12 +193,36 @@ def main(argv=None) -> int:
         print("data/sample is not as committed:\n  " + "\n  ".join(problems))
         return 2
     print(f"data/sample OK (SHA-256 manifest) · writing to {a.work}")
+    marker = a.work / ".judge_demo"
+    if a.work.exists() and any(a.work.iterdir()) and not marker.exists():
+        print(f"refusing to empty {a.work}: it is not a folder this demo created (pick another --work)")
+        return 2
     shutil.rmtree(a.work, ignore_errors=True)
     a.work.mkdir(parents=True)
+    marker.write_text("scratch folder of judge/demo.py; safe to delete", encoding="utf-8")
     jobs = [("self_grading", ""), ("crash_drill", ""), ("ab_replay", ab_end())]
     windows = 0 if a.quick else max(0, min(a.windows, 25))
     jobs = [("backtest", f"{k}/{windows}") for k in range(windows)] + jobs     # slowest first
     t0, running, done = time.time(), [], []
+    try:
+        _run_all(a, jobs, running, done, t0)
+    except KeyboardInterrupt:
+        for _, _, proc in running:                   # don't leave orphaned engines running
+            proc.kill()
+        raise
+    steps = sorted({n for n, _, _ in done})
+    rows = compare(a.work, steps, windows)
+    skipped = [] if windows else ["backtest (--quick)"]
+    print()
+    print(write_results(a.work, rows, time.time() - t0, skipped))
+    failed = [n for n, _, p in done if p.returncode != 0]
+    return 1 if failed or not all(r["same"] for r in rows) else 0     # non-zero on any difference
+
+
+STEP_TIMEOUT_S = 45 * 60
+
+
+def _run_all(a, jobs: list, running: list, done: list, t0: float) -> None:
     while jobs or running:
         while jobs and len(running) < max(1, a.jobs):
             name, arg = jobs.pop(0)
@@ -202,6 +230,9 @@ def main(argv=None) -> int:
             running.append((name, arg, spawn(name, a.work, arg)))
             print(f"  started {name} {arg if name == 'backtest' else ''}".rstrip(), flush=True)
         for item in list(running):
+            if item[2].poll() is None and time.time() - item[2].started > STEP_TIMEOUT_S:
+                item[2].kill()                       # a hung step fails visibly instead of blocking forever
+                item[2].wait()
             if item[2].poll() is not None:
                 running.remove(item)
                 done.append(item)
@@ -209,12 +240,6 @@ def main(argv=None) -> int:
                 print(f"  {status}: {item[0]} {item[1] if item[0] == 'backtest' else ''}  "
                       f"[{(time.time() - t0) / 60:.1f} min]", flush=True)
         time.sleep(1.0)
-    steps = sorted({n for n, _, _ in done})
-    rows = compare(a.work, steps, windows)
-    print()
-    print(write_results(a.work, rows, time.time() - t0))
-    failed = [n for n, _, p in done if p.returncode != 0]
-    return 1 if failed else 0
 
 
 if __name__ == "__main__":

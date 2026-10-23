@@ -15,8 +15,11 @@ The bot (`oversight/bot.py`) is the only writer of the state file; the engine
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
+import time
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
@@ -69,13 +72,13 @@ def parse(text: str) -> Command | None:
     text = (text or "").strip()
     if not text.startswith("/"):
         return None
-    head, _, rest = text.partition(" ")
+    parts = text.split(None, 1)                        # any whitespace, including a newline
+    head, rest = parts[0], (parts[1].strip() if len(parts) > 1 else "")
     name = head[1:].split("@", 1)[0].lower()          # '/pause@MyBot' in groups
-    rest = rest.strip()
     if name not in COMMANDS:
         raise CommandError(f"دستور ناشناخته: /{name} — /help را بفرستید.")
     if name == "risk":
-        arg, _, reason = rest.partition(" ")
+        arg, _, reason = " ".join(rest.split()).partition(" ")
         try:
             value = float(arg.translate(FA_DIGITS))
         except ValueError:
@@ -84,8 +87,8 @@ def parse(text: str) -> Command | None:
             raise CommandError("ضریب ریسک باید بین ۰ و ۱ باشد؛ انسان فقط می‌تواند ریسک را کم کند.")
         return Command("risk", value, reason.strip())
     if name == "confirm":
-        code = rest.split(" ", 1)[0].translate(FA_DIGITS)
-        if not re.fullmatch(r"\d{4}", code):
+        code = (rest.split(None, 1) or [""])[0].translate(FA_DIGITS)
+        if not re.fullmatch(r"[0-9]{4}", code):
             raise CommandError("کد تأیید چهار رقمی است: /confirm 1234")
         return Command("confirm", code=code)
     return Command(name, reason=rest)
@@ -120,16 +123,66 @@ def load(path: Path) -> OversightState:
     st = OversightState(paused=bool(d["paused"]), risk_cap=float(d["risk_cap"]),
                         flatten_at=None if d.get("flatten_at") is None else float(d["flatten_at"]),
                         seq=int(d["seq"]), updated_at=float(d.get("updated_at", 0.0)), last=dict(d.get("last") or {}))
-    if not 0.0 <= st.risk_cap <= 1.0:
+    if not 0.0 <= st.risk_cap <= 1.0:                  # also false for NaN
         raise ValueError(f"risk_cap {st.risk_cap} outside 0..1")
+    if st.flatten_at is not None and not (math.isfinite(st.flatten_at) and 0 <= st.flatten_at < 1e10):
+        raise ValueError(f"flatten_at {st.flatten_at} is not a plausible unix time")
     return st
 
 
+def load_or_backup(path: Path) -> OversightState:
+    """The state file, or the copy saved before the last change if the file itself is unreadable."""
+    try:
+        return load(path)
+    except (OSError, ValueError, KeyError, TypeError):
+        return load(path.with_suffix(".bak"))      # raises too if both are broken
+
+
 def save(path: Path, st: OversightState) -> None:
+    """Atomic and durable: write + fsync a temp file, keep the previous state as .bak, then replace."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(asdict(st), ensure_ascii=False, indent=1), encoding="utf-8")
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(json.dumps(asdict(st), ensure_ascii=False, indent=1))
+        f.flush()
+        os.fsync(f.fileno())
+    if path.exists():
+        try:
+            load(path)                                  # only a readable state becomes the backup
+            os.replace(path, path.with_suffix(".bak"))
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
     os.replace(tmp, path)
+
+
+@contextmanager
+def locked(path: Path, wait_s: float = 5.0, stale_s: float = 30.0):
+    """One writer at a time (the bot and a terminal command): a lock file created exclusively."""
+    lock = path.with_suffix(".lock")
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    deadline = time.time() + wait_s
+    while True:
+        try:
+            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            break
+        except FileExistsError:
+            try:
+                if time.time() - lock.stat().st_mtime > stale_s:
+                    lock.unlink()                       # left behind by a killed process
+                    continue
+            except OSError:
+                pass
+            if time.time() > deadline:
+                raise TimeoutError("oversight state is locked by another writer")
+            time.sleep(0.05)
+    try:
+        yield
+    finally:
+        os.close(fd)
+        try:
+            lock.unlink()
+        except OSError:
+            pass
 
 
 def log(run_dir: Path, record: dict, sha: str = "oversight") -> None:

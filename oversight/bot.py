@@ -80,17 +80,22 @@ class Controller:
             self._log(event="review", note=cmd.reason[:2000], who=who)
             return "✅ یادداشت بازبینی ثبت شد."
         if cmd.name == "confirm":
-            item = self.pending.pop(cmd.code, None)
+            item = self.pending.get(cmd.code)
             if item is None or now > item[2]:
+                self.pending.pop(cmd.code, None)
                 self._log(event="rejected", command="confirm", who=who, error="unknown or expired code")
                 return "کد تأیید نامعتبر یا منقضی است."
             if item[1].get("id") != who.get("id"):
-                self.pending[cmd.code] = item                 # still valid for the person who asked
                 return "فقط همان کسی که دستور را داده می‌تواند تأیید کند."
-            return self._apply(item[0], who, now)
+            reply = self._apply(item[0], who, now)
+            if reply.startswith("✅"):
+                self.pending.pop(cmd.code, None)              # a failed save keeps the code for a retry
+            return reply
         if cmd.name in ov.NEEDS_CONFIRM and not confirmed:
-            code = f"{secrets.randbelow(10_000):04d}"
             self.pending = {k: v for k, v in self.pending.items() if v[2] >= now}
+            code = f"{secrets.randbelow(10_000):04d}"
+            while code in self.pending:                       # two pending commands never share a code
+                code = f"{secrets.randbelow(10_000):04d}"
             self.pending[code] = (cmd, who, now + CONFIRM_S)
             self._log(event="needs_confirm", command=cmd.name, reason=cmd.reason, who=who)
             what = "همه‌ی دارایی‌ها از مسیر عادی فروش پایانی به تومان فروخته شود" if cmd.name == "flatten" else \
@@ -99,19 +104,30 @@ class Controller:
         return self._apply(cmd, who, now)
 
     def _apply(self, cmd: ov.Command, who: dict, now: float) -> str:
+        note = ""
         try:
-            before = ov.load(self.path)
-        except (OSError, ValueError, KeyError, TypeError):
-            before = ov.OversightState()                  # unreadable file: rebuild from no limits + this command
-        after = ov.apply(before, cmd, now=now, who=who)
-        ov.save(self.path, after)
+            with ov.locked(self.path):
+                try:
+                    before = ov.load_or_backup(self.path) if self.path.exists() else ov.OversightState()
+                except (OSError, ValueError, KeyError, TypeError):
+                    if cmd.name not in ov.LOWERS_RISK:
+                        self._log(event="rejected", command=cmd.name, who=who, error="state file unreadable")
+                        return "فایل وضعیت نظارت خراب است؛ /resume اجرا نشد. اول /pause بفرستید."
+                    # brakes still work: start from the careful side (paused), never from "no limits"
+                    before, note = ov.OversightState(paused=True), "\n⚠️ فایل وضعیت قبلی خراب بود؛ خرید هم متوقف شد."
+                after = ov.apply(before, cmd, now=now, who=who)
+                ov.save(self.path, after)
+        except (OSError, TimeoutError) as e:
+            self._log(event="failed", command=cmd.name, who=who, error=type(e).__name__)
+            return f"❌ /{cmd.name} ثبت نشد ({type(e).__name__})؛ دوباره بفرستید."
         self._log(event="applied", command=cmd.name, value=cmd.value, reason=cmd.reason or "(بدون دلیل)", who=who,
                   seq=after.seq, before=before.summary_fa(), after=after.summary_fa())
-        return f"✅ ثبت شد (#{after.seq}). وضعیت نظارت: {after.summary_fa()}\nموتور در تیک بعدی (≤ ۱۰ ثانیه) اعمال می‌کند."
+        return (f"✅ ثبت شد (#{after.seq}). وضعیت نظارت: {after.summary_fa()}\nموتور در تیک بعدی (≤ ۱۰ ثانیه) اعمال می‌کند."
+                + note)
 
     def status_fa(self) -> str:
         try:
-            st = ov.load(self.path)
+            st = ov.load_or_backup(self.path) if self.path.exists() else ov.OversightState()
         except (OSError, ValueError, KeyError, TypeError):
             st = None
         lines = [f"👤 نظارت: {st.summary_fa() if st else 'فایل وضعیت نظارت خوانا نیست'}"]
@@ -158,6 +174,7 @@ class Bot:
         self.offset_path = ctl.run_dir / "oversight" / "bale_offset"
         self.review_path = ctl.run_dir / "oversight" / "review_sent"
         self.review_path.parent.mkdir(parents=True, exist_ok=True)
+        self._unauth_logged: dict[str, float] = {}
 
     def _call(self, method: str, **params) -> dict:
         r = self._http.post(API.format(token=self._token, method=method), json=params)
@@ -192,12 +209,19 @@ class Bot:
             chat, frm = msg.get("chat") or {}, msg.get("from") or {}
             who = {"id": str(frm.get("id", "")), "name": " ".join(x for x in (frm.get("first_name"), frm.get("last_name")) if x),
                    "username": frm.get("username"), "via": "bale"}
-            if str(chat.get("id")) != self.chat_id or (self.admins and who["id"] not in self.admins):
-                self.ctl._log(event="unauthorized", chat_id=str(chat.get("id")), who={"id": who["id"]})
+            if (str(chat.get("id")) != self.chat_id or not who["id"]
+                    or (self.admins and who["id"] not in self.admins)):
+                key = str(chat.get("id"))[:32]
+                if self.ctl.clock() - self._unauth_logged.get(key, -1e18) >= 60:    # bounded log growth
+                    self._unauth_logged[key] = self.ctl.clock()
+                    self.ctl._log(event="unauthorized", chat_id=key, who={"id": who["id"][:32]})
                 continue
-            reply = self.ctl.handle(msg.get("text") or "", who, sent_at=msg.get("date"))
+            reply = self.ctl.handle(msg.get("text") or "", who, sent_at=float(msg.get("date") or 0))  # no date = stale
             if reply:
-                self.send(reply)
+                try:
+                    self.send(reply)
+                except Exception as e:                    # the command itself is already applied and logged
+                    self.ctl._log(event="reply_failed", error=type(e).__name__)
         return len(ups)
 
     def review_due(self, now: float) -> bool:
@@ -217,14 +241,19 @@ class Bot:
     def run(self) -> None:
         fails = 0
         while True:
+            started = time.time()
             try:
                 self.poll_once()
-                self.maybe_review(self.ctl.clock())
                 fails = 0
             except Exception as e:                        # network, Bale hiccups: never die
                 fails += 1
                 self.ctl._log(event="bot_error", error=type(e).__name__)
                 time.sleep(min(60.0, 5.0 * fails))
+            try:
+                self.maybe_review(self.ctl.clock())       # a failing digest never slows the commands down
+            except Exception as e:
+                self.ctl._log(event="review_failed", error=type(e).__name__)
+            time.sleep(max(0.0, 1.0 - (time.time() - started)))   # Bale ignoring `timeout` can't make us spin
 
 
 def main(argv=None) -> int:

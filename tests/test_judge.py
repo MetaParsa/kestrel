@@ -10,3 +10,4 @@ def test_rows_flag_differences():
     assert demo.row("x", 0.014, 0.014)["same"]
     assert not demo.row("x", 0.014, 0.015)["same"]
     assert not demo.row("x", None, 0.0)["same"]
+    assert not demo.row("x", None, None)["same"]                 # a step that produced nothing never passes

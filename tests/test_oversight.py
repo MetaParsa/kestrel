@@ -290,3 +290,156 @@ def test_decision_log_shows_human_commands(tmp_path, monkeypatch):
     assert "## نظارت انسانی" in md and "بازار شلوغ است" in md and "روز آرام" in md and "Parsa" in md
     rep = json.loads((tmp_path / "reports" / "out" / "t-report.json").read_text(encoding="utf-8"))
     assert rep["human_oversight"] == {"applied": 1, "review": 1}
+
+
+# ---- audit 2 fixes -------------------------------------------------------------------------------
+def holding(tmp_path):
+    eng, clock, market, ctl = make(tmp_path)
+    eng.tick()
+    give_playbook(eng)
+    clock.t += 10
+    eng.tick()
+    for m in PX:
+        cross(eng, market, m)
+    clock.t += 10
+    eng.tick()
+    assert eng.pf.qty("BTCTMN") > 0
+    return eng, clock, market, ctl
+
+
+def test_pause_keeps_cancelling_buys_even_if_a_cancel_fails(tmp_path, monkeypatch):
+    eng, clock, market, ctl = make(tmp_path)
+    eng.tick()
+    give_playbook(eng)
+    clock.t += 10
+    eng.tick()
+    real, calls = eng.ex.cancel_buys, []
+
+    def flaky(now, reason):
+        calls.append(now)
+        if len(calls) == 1:
+            raise TimeoutError("wallex slow")
+        return real(now, reason)
+    monkeypatch.setattr(eng.ex, "cancel_buys", flaky)
+    ctl.handle("/pause", ME)
+    clock.t += 10
+    eng.tick()                                                          # first cancel fails, tick survives
+    assert any(w.side == "BUY" for w in eng.ex.working.values())
+    clock.t += 10
+    eng.tick()                                                          # retried on the next tick
+    assert len(calls) >= 2 and not any(w.side == "BUY" for w in eng.ex.working.values())
+    assert any(e["event"] == "oversight_cancel_failed" for e in eng.logs.tail("events", 200))
+
+
+def test_restart_after_the_flatten_hour_keeps_selling_instead_of_stopping(tmp_path):
+    eng, clock, market, ctl = holding(tmp_path)
+    st = ov.apply(ov.OversightState(), ov.Command("flatten"), now=clock.t - 3 * 3600, who=ME)
+    ov.save(ov.state_path(eng.cfg.run_dir), st)                         # the hour ran out while we were down
+    eng2 = OverseenEngine(eng.cfg.__class__(run_dir=eng.cfg.run_dir, mode="shadow", manager="remote", sha="test",
+                                            end_at=eng.real_end_at), broker=eng.broker, market=market,
+                          bars=GRIDS.get, clock=clock, alerter=SentAlerts())
+    clock.t += 10
+    eng2.tick()
+    assert eng2.last_phase == "market"
+    for step in range(30):
+        clock.t += 60
+        for m in PX:
+            market.set(m, PX[m] * (1 + 0.002 * ((step % 5) - 2)))
+        eng2.tick()
+    assert eng2.pf.qty("BTCTMN") * PX["BTCTMN"] < config.LIMITS.exchange_min_notional_tmn
+
+
+def test_contest_end_still_gets_its_final_check_after_a_human_flatten(tmp_path, monkeypatch):
+    from engine.loop import Engine
+    finals = []
+    monkeypatch.setattr(Engine, "_reconcile", lambda self, now, final=False: finals.append(final))
+    eng, clock, market, ctl = make(tmp_path, end_in_h=3)
+    eng.tick()
+    ctl.handle("/flatten", ME, confirmed=True)
+    clock.t += 10
+    eng.tick()
+    while clock.t < eng.real_end_at.timestamp() + 120:
+        clock.t += 300
+        eng.tick()
+    assert finals.count(True) == 1                                      # the human window's end is not 'final'
+
+
+def test_hostile_state_values_never_crash_the_engine(tmp_path):
+    eng, clock, market, ctl = make(tmp_path)
+    ctl.handle("/pause", ME)
+    eng.tick()
+    for bad in ('{"paused": false, "risk_cap": 1, "seq": 5, "flatten_at": NaN}',
+                '{"paused": false, "risk_cap": 1, "seq": 6, "flatten_at": 1e18}',
+                '{"paused": false, "risk_cap": NaN, "seq": 7}'):
+        ov.state_path(eng.cfg.run_dir).write_text(bad, encoding="utf-8")
+        clock.t += 10
+        eng.tick()
+        assert eng.oversight.paused and eng.cfg.end_at == eng.real_end_at
+
+
+def test_sells_caused_by_a_human_cap_say_so(tmp_path):
+    eng, clock, market, ctl = holding(tmp_path)
+    ctl.handle("/risk 0", ME)
+    clock.t += 10
+    eng.tick()
+    sells = [d for d in decisions(eng) if d["side"] == "SELL"]
+    assert sells and all("risk capped at 0 by human #1" in d["decided_by"] for d in sells)
+
+
+def test_broken_state_file_brakes_from_the_careful_side(tmp_path):
+    ctl = ovbot.Controller(tmp_path, clock=lambda: NOW)
+    ctl.handle("/flatten", ME, confirmed=True)
+    ctl.handle("/risk 0.5", ME)                                          # flatten state is now in the .bak copy
+    p = ov.state_path(tmp_path)
+    p.write_text("", encoding="utf-8")                                   # torn write
+    ctl.handle("/pause", ME)
+    st = ov.load(p)
+    assert st.paused and st.flatten_at == NOW                            # restored from the backup, not dropped
+    p.write_text("", encoding="utf-8")
+    p.with_suffix(".bak").write_text("{", encoding="utf-8")
+    assert "خراب" in ctl.handle("/resume", ME, confirmed=True)          # never relax on a broken file
+    assert "✅" in ctl.handle("/risk 0.2", ME) and ov.load(p).paused     # brakes still work, from paused
+
+
+def test_a_failed_save_keeps_the_confirmation_code(tmp_path, monkeypatch):
+    ctl = ovbot.Controller(tmp_path, clock=lambda: NOW)
+    code = re.search(r"/confirm (\d{4})", ctl.handle("/flatten", ME)).group(1)
+    real, n = ov.save, []
+
+    def failing(path, st):
+        n.append(1)
+        if len(n) == 1:
+            raise PermissionError("locked by antivirus")
+        real(path, st)
+    monkeypatch.setattr(ov, "save", failing)
+    assert "❌" in ctl.handle(f"/confirm {code}", ME)
+    assert "✅" in ctl.handle(f"/confirm {code}", ME)
+
+
+def test_parse_accepts_newlines_and_rejects_foreign_digits_in_codes():
+    assert ov.parse("/risk 0.5\nwide spread") == ov.Command("risk", 0.5, "wide spread")
+    assert ov.parse("/pause\nnews") == ov.Command("pause", None, "news")
+    with pytest.raises(ov.CommandError):
+        ov.parse("/confirm ١٢٣٤")                                          # Arabic-Indic digits
+
+
+def test_bot_ignores_senders_without_an_id_and_messages_without_a_date(tmp_path):
+    fake = FakeBale([])
+    ctl = ovbot.Controller(tmp_path, clock=lambda: 1000.0)
+    b = ovbot.Bot(ctl, "tok", "777", transport=httpx.MockTransport(fake))
+    b.poll_once()
+    anon = msg(1, "/pause")
+    anon["message"]["from"] = {}
+    undated = msg(2, "/pause")
+    del undated["message"]["date"]
+    fake.updates += [anon, undated]
+    b.poll_once()
+    assert not ov.state_path(tmp_path).exists()
+    assert "قدیمی" in fake.sent[-1]
+
+
+def test_judge_demo_refuses_to_empty_a_folder_it_did_not_create(tmp_path):
+    from judge import demo
+    (tmp_path / "precious.txt").write_text("x", encoding="utf-8")
+    assert demo.main(["--quick", "--work", str(tmp_path)]) == 2
+    assert (tmp_path / "precious.txt").exists()

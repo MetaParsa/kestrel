@@ -26,7 +26,13 @@ MARKET_FA = {"USDTTMN": "تتر/تومان", "BTCTMN": "بیت‌کوین/توم
 def read(path: Path) -> list[dict]:
     if not path.exists():
         return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    out = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        try:
+            out.append(json.loads(line))
+        except ValueError:
+            continue                                  # a torn last line (crash mid-write) is skipped
+    return out
 
 
 def tehran(ts: float) -> str:
@@ -66,7 +72,8 @@ def main(argv=None):
     orders = [r for r in read(a.logs / "orders.jsonl") if keep(r)]
     pbs = [r for r in read(a.logs / "playbooks.jsonl") if keep(r)]
     events = [r for r in read(a.logs / "events.jsonl") if keep(r)]
-    human = read(a.logs / "oversight.jsonl")          # oversight/bot.py: who / when / why of every human command
+    human = [h for h in read(a.logs / "oversight.jsonl")      # oversight/bot.py: who / when / why of every command
+             if a.to is None or h.get("ts", 0) <= a.to]
 
     grids = {m: bars_mod.to_minute_grid(fetch.load(m)) for m in config.MARKETS}
     last_px = {m: float(g["c"].iloc[-1]) for m, g in grids.items()}
@@ -125,7 +132,7 @@ def main(argv=None):
                   "| زمان (تهران) | چه کسی | رویداد | دستور | دلیل / یادداشت | وضعیت بعد |", "|---|---|---|---|---|---|"]
         for h in shown:
             who = h.get("who") or {}
-            why = (h.get("reason") or h.get("note") or h.get("error") or "—").replace("|", "/")
+            why = " ".join(str(h.get("reason") or h.get("note") or h.get("error") or "—").split()).replace("|", "/")
             lines.append(f"| {tehran(h['ts'])} | {who.get('name') or who.get('id') or '—'} ({who.get('via', '—')}) | "
                          f"{h['event']} | {h.get('command') or '—'}{'' if h.get('value') is None else ' ' + str(h['value'])} | "
                          f"{why} | {h.get('after') or '—'} |")
