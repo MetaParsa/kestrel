@@ -1,0 +1,24 @@
+{
+ "source": "Wallex public UDF candles (/v1/udf/history, resolution 1), downloaded with `python -m data.fetch`",
+ "frozen_at": "2026-10-23 16:00 Tehran (copy of data/store used by the committed reports)",
+ "files": {
+  "USDTTMN_1m.parquet": {
+   "sha256": "703915a8af8962e047b45dd7c5b1f10e6b20ff490146b96f905702d0b6f7e7b2",
+   "bars": 43335,
+   "first_utc": "2026-09-22T05:51+00:00",
+   "last_utc": "2026-10-23T12:29+00:00"
+  },
+  "BTCTMN_1m.parquet": {
+   "sha256": "d615dc07be4d1dd724d2bd2ab9385a8a201654d43748f634ced8d0c94c2c5dbc",
+   "bars": 44944,
+   "first_utc": "2026-09-22T05:51+00:00",
+   "last_utc": "2026-10-23T12:30+00:00"
+  },
+  "BTCUSDT_1m.parquet": {
+   "sha256": "ec47a04400b4f03c3378052b51b0aa8ef483f1851ddc422a306f637c5f7679b5",
+   "bars": 44916,
+   "first_utc": "2026-09-22T05:51+00:00",
+   "last_utc": "2026-10-23T12:29+00:00"
+  }
+ }
+}

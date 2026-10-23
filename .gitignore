@@ -40,3 +40,7 @@ research/kronos_out/*.log
 reports/out/backtest/runs/
 reports/out/backtest/log-*.txt
 reports/out/backtest/shard-*.jsonl
+
+# committed sample of the candle store (judge demo); every other parquet stays ignored
+!data/sample/*.parquet
+judge_out*/
