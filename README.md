@@ -1,4 +1,4 @@
-# wallex-agent
+# kestrel⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣
 
 AI trading agent for the Agentic AI hackathon⁤⁤⁣ — the exchange⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁤⁣ challenge.
 
