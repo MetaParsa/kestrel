@@ -199,3 +199,26 @@
 {"git_sha": "10bc993c98df", "mode": "live", "ts": 1792745967.9338818, "event": "live_startup", "cancelled": [], "foreign": [], "adopted": {}, "fresh_start": false, "notes": []}
 {"git_sha": "10bc993c98df", "mode": "live", "ts": 1792745967.9350688, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
 {"git_sha": "10bc993c98df", "mode": "live", "ts": 1792745967.9350688, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792747767.9632416, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 200525}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792748007.966564, "event": "manager_request", "request_id": "req-1792748007", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792748077.967493, "event": "playbook_accepted", "playbook_id": "pb-20261023-1304-745794", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -15.1}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792748077.967493, "event": "playbook_active", "playbook_id": "pb-20261023-1304-745794", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.08}, "risk_multiplier": 0.5}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792749567.987132, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 201021}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792750528.0013006, "event": "manager_request", "request_id": "req-1792750528", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792750618.0027854, "event": "playbook_accepted", "playbook_id": "pb-20261023-1346-06dc7d", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -12.7}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792750618.0027854, "event": "playbook_active", "playbook_id": "pb-20261023-1346-06dc7d", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.08}, "risk_multiplier": 0.5}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792751368.014684, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 201061}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792753048.0386112, "event": "manager_request", "request_id": "req-1792753048", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792753088.039239, "event": "playbook_accepted", "playbook_id": "pb-20261023-1427-f556ea", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -10.8}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792753088.039239, "event": "playbook_active", "playbook_id": "pb-20261023-1427-f556ea", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.08}, "risk_multiplier": 0.5}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792753168.0404453, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 201173}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792754968.0674844, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 200829}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792755508.0756495, "event": "manager_request", "request_id": "req-1792755508", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792755578.0767274, "event": "playbook_accepted", "playbook_id": "pb-20261023-1509-e5776b", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -8.9}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792755578.0767274, "event": "playbook_active", "playbook_id": "pb-20261023-1509-e5776b", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.08}, "risk_multiplier": 0.5}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792756768.0936472, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 201051}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792758008.1123385, "event": "flatten_phase", "phase": "no_new"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792758028.1126769, "event": "manager_request", "request_id": "req-1792758028", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792758098.1135168, "event": "playbook_accepted", "playbook_id": "pb-20261023-1551-4d8db9", "source": "claude", "regime": "range", "clamps": [], "clock_skew_s": -12.1}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792758098.1135168, "event": "playbook_active", "playbook_id": "pb-20261023-1551-4d8db9", "source": "claude", "regime": "range", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.08}, "risk_multiplier": 0.5}
+{"git_sha": "10bc993c98df", "mode": "live", "ts": 1792758568.12076, "event": "reconcile", "ok": true, "final": false, "diffs": {}, "foreign": [], "orphans": [], "other_assets": {}, "non_tmn_tmn": 63}

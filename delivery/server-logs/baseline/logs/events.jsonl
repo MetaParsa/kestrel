@@ -128,3 +128,14 @@
 {"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792745967.252216, "event": "engine_start", "end_at": "2026-10-23T23:50:00+03:30", "halted": false}
 {"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792745967.2632806, "event": "degrade_level", "level": 0, "previous": null, "errors_10min": 0, "stale": false, "has_playbook": true}
 {"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792745967.2632806, "event": "flatten_phase", "phase": "normal"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792747047.303398, "event": "manager_request", "request_id": "req-1792747047", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792747047.303398, "event": "playbook_active", "playbook_id": "pb-20261023-1247-bdb525", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792749447.3859768, "event": "manager_request", "request_id": "req-1792749447", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792749447.3859768, "event": "playbook_active", "playbook_id": "pb-20261023-1327-a6ea4e", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792751847.4215412, "event": "manager_request", "request_id": "req-1792751847", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792751847.4215412, "event": "playbook_active", "playbook_id": "pb-20261023-1407-7e9193", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792754247.455997, "event": "manager_request", "request_id": "req-1792754247", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792754247.455997, "event": "playbook_active", "playbook_id": "pb-20261023-1447-4a01f3", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792756647.4915216, "event": "manager_request", "request_id": "req-1792756647", "reason": "scheduled"}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792756647.4915216, "event": "playbook_active", "playbook_id": "pb-20261023-1527-cbbc0d", "source": "mock", "regime": "devaluation_drift", "core_targets": {"USDTTMN": 0.0, "BTCTMN": 0.15}, "risk_multiplier": 1.0}
+{"git_sha": "10bc993c98df", "mode": "shadow", "ts": 1792758007.5114653, "event": "flatten_phase", "phase": "no_new"}

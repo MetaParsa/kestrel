@@ -62,3 +62,8 @@
 2026-10-23T12:22:41 ai_box loop exited with code -1
 2026-10-23T12:22:44 starting ai_box loop (paid, cap 15 USD)
 2026-10-23T12:23:15 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1223-4b1434", "source": "claude", "regime": "range", "cost_usd": 0.0915, "clamps": []}
+2026-10-23T13:04:23 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1304-745794", "source": "claude", "regime": "range", "cost_usd": 0.0831, "clamps": []}
+2026-10-23T13:46:46 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1346-06dc7d", "source": "claude", "regime": "range", "cost_usd": 0.0864, "clamps": []}
+2026-10-23T14:27:58 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1427-f556ea", "source": "claude", "regime": "range", "cost_usd": 0.0667, "clamps": []}
+2026-10-23T15:09:30 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1509-e5776b", "source": "claude", "regime": "range", "cost_usd": 0.0617, "clamps": []}
+2026-10-23T15:51:27 {"event": "playbook_pushed", "playbook_id": "pb-20261023-1551-4d8db9", "source": "claude", "regime": "range", "cost_usd": 0.0637, "clamps": []}

@@ -2,30 +2,74 @@
  "name": "live",
  "mode_filter": "live",
  "from": "10-23 01:20",
- "to": "10-23 12:29",
+ "to": "10-23 15:59",
  "code_versions": [
   "10bc993c98df",
   "301364bd981d"
  ],
  "playbooks": {
-  "total": 17,
+  "total": 22,
   "by_source": {
-   "claude": 17
+   "claude": 22
   },
   "regimes": {
-   "range": 17
+   "range": 22
   },
-  "claude_cost_usd": 1.19,
+  "claude_cost_usd": 1.552,
   "clamped": 0
  },
  "claude_forecasts_4h": {
-  "n": 18,
-  "direction_hit_rate": 0.611,
-  "baseline_hit_rate": 0.611,
-  "vol_hit_rate": 0.833,
+  "n": 28,
+  "direction_hit_rate": 0.464,
+  "baseline_hit_rate": 0.536,
+  "vol_hit_rate": 0.679,
   "recent": [
    {
-    "playbook_id": "pb-20261023-0610-8f4727",
+    "playbook_id": "pb-20261023-0937-f1942e",
+    "market": "BTCTMN",
+    "said": "up",
+    "actual": "up",
+    "baseline": "up",
+    "dir_hit": true,
+    "base_hit": true,
+    "vol_said": "low",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261023-0937-f1942e",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "up",
+    "baseline": "flat",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261023-1018-a70b7b",
+    "market": "BTCTMN",
+    "said": "flat",
+    "actual": "up",
+    "baseline": "up",
+    "dir_hit": false,
+    "base_hit": true,
+    "vol_said": "low",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261023-1018-a70b7b",
+    "market": "USDTTMN",
+    "said": "flat",
+    "actual": "up",
+    "baseline": "flat",
+    "dir_hit": false,
+    "base_hit": false,
+    "vol_said": "normal",
+    "vol_actual": "normal"
+   },
+   {
+    "playbook_id": "pb-20261023-1059-05e60e",
     "market": "BTCTMN",
     "said": "flat",
     "actual": "up",
@@ -33,91 +77,49 @@
     "dir_hit": false,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "low"
+    "vol_actual": "normal"
    },
    {
-    "playbook_id": "pb-20261023-0610-8f4727",
+    "playbook_id": "pb-20261023-1059-05e60e",
     "market": "USDTTMN",
     "said": "flat",
-    "actual": "flat",
+    "actual": "up",
     "baseline": "flat",
-    "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "low"
-   },
-   {
-    "playbook_id": "pb-20261023-0652-fc5062",
-    "market": "BTCTMN",
-    "said": "flat",
-    "actual": "flat",
-    "baseline": "up",
-    "dir_hit": true,
-    "base_hit": false,
-    "vol_said": "low",
-    "vol_actual": "low"
-   },
-   {
-    "playbook_id": "pb-20261023-0652-fc5062",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "flat",
-    "baseline": "flat",
-    "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "low"
-   },
-   {
-    "playbook_id": "pb-20261023-0733-1c7748",
-    "market": "BTCTMN",
-    "said": "flat",
-    "actual": "down",
-    "baseline": "up",
     "dir_hit": false,
     "base_hit": false,
     "vol_said": "low",
-    "vol_actual": "low"
-   },
-   {
-    "playbook_id": "pb-20261023-0733-1c7748",
-    "market": "USDTTMN",
-    "said": "flat",
-    "actual": "flat",
-    "baseline": "flat",
-    "dir_hit": true,
-    "base_hit": true,
-    "vol_said": "low",
-    "vol_actual": "low"
+    "vol_actual": "normal"
    }
   ]
  },
  "decisions": {
-  "total": 1,
+  "total": 2,
   "by_kind": {
-   "rebalance_up": 1
+   "rebalance_up": 1,
+   "flatten": 1
   },
   "by_decider": {
-   "manager": 1
+   "manager": 1,
+   "flatten": 1
   },
   "gate": {
-   "allow": 1
+   "allow": 2
   },
   "block_reasons": {}
  },
  "orders": {
-  "order_placed": 4,
-  "order_escalated": 3,
-  "order_done": 1
+  "order_placed": 8,
+  "order_escalated": 6,
+  "order_done": 2
  },
- "fills": 1,
+ "fills": 2,
  "pnl_from_fills": {
-  "equity_tmn": 5001253,
-  "return_pct": 0.025,
-  "volume_tmn": 200193,
-  "fees_tmn": 601,
+  "equity_tmn": 5000474,
+  "return_pct": 0.009,
+  "volume_tmn": 401300,
+  "fees_tmn": 1103,
   "holdings": {
-   "BTCTMN": 9.02285e-06
+   "BTCTMN": 2.849999999999473e-09
   }
  },
  "degrade_levels": {

@@ -2,15 +2,15 @@
 
 Claude در هر برنامه، جهت و نوسان ۴ ساعت بعدِ هر بازار را پیش‌بینی می‌کند. چهار ساعت بعد، کد پیش‌بینی را با بازار واقعی مقایسه می‌کند (جهت با باند خنثیِ ±۰٫۲٪؛ نوسان در برابر نوسان ۳۰ روزه)، کنارش دو مبنای ساده را هم نمره می‌دهد، و کارنامه را در چرخه‌ی بعد به خود Claude برمی‌گرداند. همه‌چیز بدون نگاه به آینده: فقط کندل‌هایی که بسته شده بودند.
 
-**۳۲ برنامه، ۴۸ پیش‌بینی ارزیابی‌شده.**
+**۳۷ برنامه، ۵۸ پیش‌بینی ارزیابی‌شده.**
 
 | | Claude | مبنای ساده («مثل ۴ ساعت قبل») | «همیشه خنثی» |
 |---|---|---|---|
-| همه | ۵۲٪ | ۴۲٪ | ۵۶٪ |
-| USDTTMN (۲۴) | ۶۷٪ | ۵۴٪ | ۶۷٪ |
-| BTCTMN (۲۴) | ۳۸٪ | ۲۹٪ | ۴۶٪ |
+| همه | ۴۷٪ | ۴۱٪ | ۴۸٪ |
+| USDTTMN (۲۹) | ۵۹٪ | ۴۸٪ | ۵۹٪ |
+| BTCTMN (۲۹) | ۳۴٪ | ۳۴٪ | ۳۸٪ |
 
-پیش‌بینی نوسان: ۶۲٪ درست.
+پیش‌بینی نوسان: ۵۹٪ درست.
 
 **صادقانه:** نمونه کوچک است و بیشتر ساعت‌ها بازار خنثی بوده؛ ارزش این بخش در خود حلقه‌ی بازخورد است، نه در یک عدد.
 
@@ -41,10 +41,20 @@ Claude در هر برنامه، جهت و نوسان ۴ ساعت بعدِ هر �
 - **۱۰-۲۳ ۱۱:۴۰** (`pb-20261023-1140-c544bd`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN flat/low): Scorecard: direction hit rate 0.478 vs a 0.391 baseline. My recent BTC 'flat' calls missed small up moves, so confidence in direction stays low
 - **۱۰-۲۳ ۱۲:۲۲** (`pb-20261023-1222-857816`، range، پیش‌بینی: BTCTMN up/normal, USDTTMN up/normal): Scorecard: direction hit rate 0.50 vs baseline 0.396; recent BTCTMN 'flat' calls missed up moves
 - **۱۰-۲۳ ۱۲:۲۳** (`pb-20261023-1223-4b1434`، range، پیش‌بینی: BTCTMN up/normal, USDTTMN up/normal): Scorecard: direction hit rate 0.50 vs baseline 0.396. Recent BTCTMN 'flat' calls missed upward moves, so this time I am calling up.
+- **۱۰-۲۳ ۱۳:۰۴** (`pb-20261023-1304-745794`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN flat/low): Forecast scorecard: direction 50% vs 40% for the baseline. My recent flat/low calls on USDTTMN were right, so I keep them
+- **۱۰-۲۳ ۱۳:۴۶** (`pb-20261023-1346-06dc7d`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN up/normal): scorecard: BTCTMN 'flat' calls missed twice when it drifted down, so I lean against adding
+- **۱۰-۲۳ ۱۴:۲۷** (`pb-20261023-1427-f556ea`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN up/low): Scorecard: direction hit rate 48% vs 41% for the baseline. My recent BTCTMN 'flat' calls missed twice when it fell and once when it rose, so this BTC call is low-confidence
+- **۱۰-۲۳ ۱۵:۰۹** (`pb-20261023-1509-e5776b`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN flat/low): Scorecard: direction hit 48% vs baseline 41%; my recent misses were USDTTMN rising when I said flat, so I'm only moderately confident in flat · vs twin: it calls devaluation_drift at 15% from the 24h USDTTMN return of +0.85%. I agree the toman is drifting, but with under an hour of buying left, heavy BTCTMN sell pressure and thin Friday trading, adding about 11% of equity now would mainly add fees and drawdown risk, so I stay at 4%
+- **۱۰-۲۳ ۱۵:۵۱** (`pb-20261023-1551-4d8db9`، range، پیش‌بینی: BTCTMN flat/low, USDTTMN up/low): Scorecard: in recent playbooks I called USDTTMN flat and it went up 3 times in a row (direction hit rate 0.466, baseline 0.414). I am correcting that bias and calling USDTTMN up this time.
 
 ## مقایسه با دوقلوی قاعده‌محور (به قلم خود Claude)
 
 - **۱۰-۲۳ ۱۲:۲۳** (range): vs twin: it reads the 24 h returns and goes to devaluation_drift at 15%. I agree the toman is weakening, but this rise came in one hour on a Friday after flat, stale-looking prices. With 3.5 h left I keep the small 4% position instead of nearly quadrupling it.
+- **۱۰-۲۳ ۱۳:۰۴** (range): vs twin: it reads devaluation_drift at 15% from the +0.60% 24h USDTTMN return. I stay at range 4% because the 5-minute bars show that move reversing within the last half hour, and the 15% position the twin holds is too much to start this close to the sell-off
+- **۱۰-۲۳ ۱۳:۴۶** (range): vs twin: it says devaluation_drift at 15% from the 24h USDTTMN return of +0.84%; I agree the toman is weakening, but BTCTMN stayed flat while USDTTMN rose, meaning BTCUSDT is falling and cancelling the toman gain. With 2 h to the sell-off and a sell-heavy book, I keep range at 8%×0.5
+- **۱۰-۲۳ ۱۴:۲۷** (range): vs twin: it calls devaluation_drift at 15% because USDTTMN is up 0.83% in 24 h. I agree the toman is drifting weaker, but I stay at range 8% × 0.5 because the sell-off starts in about 1.4 h, the BTCTMN order book is heavily one-sided toward sellers, and adding 11% now would mostly pay fees. The twin's realised P&L of −10k TMN shows what churn costs
+- **۱۰-۲۳ ۱۵:۰۹** (range): vs twin: it calls devaluation_drift at 15% from the 24h USDTTMN return of +0.85%. I agree the toman is drifting, but with under an hour of buying left, heavy BTCTMN sell pressure and thin Friday trading, adding about 11% of equity now would mainly add fees and drawdown risk, so I stay at 4%
+- **۱۰-۲۳ ۱۵:۵۱** (range): vs twin: it says devaluation_drift at 15% because USDTTMN is up 1.03% over 24 h. I agree the toman is drifting weaker, but the buying window is closed and the twin has lost 10,026 TMN already, so I stay at range with a small size and tactical off.
 
 ## همه‌ی پیش‌بینی‌ها
 
@@ -98,3 +108,13 @@ Claude در هر برنامه، جهت و نوسان ۴ ساعت بعدِ هر �
 | ۱۰-۲۳ ۰۶:۵۲ | USDTTMN | خنثی | خنثی | ۰.۰٪ | خنثی | ✓ |
 | ۱۰-۲۳ ۰۷:۳۳ | BTCTMN | خنثی | پایین | -۰.۳۶۹٪ | بالا | ✗ |
 | ۱۰-۲۳ ۰۷:۳۳ | USDTTMN | خنثی | خنثی | ۰.۰٪ | خنثی | ✓ |
+| ۱۰-۲۳ ۰۸:۱۵ | BTCTMN | خنثی | پایین | -۰.۳۶۹٪ | بالا | ✗ |
+| ۱۰-۲۳ ۰۸:۱۵ | USDTTMN | خنثی | خنثی | ۰.۰٪ | خنثی | ✓ |
+| ۱۰-۲۳ ۰۸:۵۶ | BTCTMN | خنثی | بالا | ۰.۵۲۴٪ | بالا | ✗ |
+| ۱۰-۲۳ ۰۸:۵۶ | USDTTMN | خنثی | بالا | ۰.۵۸۵٪ | خنثی | ✗ |
+| ۱۰-۲۳ ۰۹:۳۷ | BTCTMN | بالا | بالا | ۰.۳۱۸٪ | بالا | ✓ |
+| ۱۰-۲۳ ۰۹:۳۷ | USDTTMN | خنثی | بالا | ۰.۵۸۶٪ | خنثی | ✗ |
+| ۱۰-۲۳ ۱۰:۱۸ | BTCTMN | خنثی | بالا | ۰.۳۱۸٪ | بالا | ✗ |
+| ۱۰-۲۳ ۱۰:۱۸ | USDTTMN | خنثی | بالا | ۰.۵۸۶٪ | خنثی | ✗ |
+| ۱۰-۲۳ ۱۰:۵۹ | BTCTMN | خنثی | بالا | ۰.۲۵۵٪ | خنثی | ✗ |
+| ۱۰-۲۳ ۱۰:۵۹ | USDTTMN | خنثی | بالا | ۰.۶۷۱٪ | خنثی | ✗ |

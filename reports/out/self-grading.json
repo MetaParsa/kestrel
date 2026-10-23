@@ -1,37 +1,37 @@
 {
  "summary": {
-  "claude_playbooks": 32,
-  "forecasts_resolved": 48,
-  "direction_hit": 0.521,
-  "naive_hit": 0.417,
-  "always_flat_hit": 0.562,
+  "claude_playbooks": 37,
+  "forecasts_resolved": 58,
+  "direction_hit": 0.466,
+  "naive_hit": 0.414,
+  "always_flat_hit": 0.483,
   "by_market": {
    "USDTTMN": {
-    "n": 24,
-    "claude": 0.667,
-    "naive": 0.542,
-    "always_flat": 0.667
+    "n": 29,
+    "claude": 0.586,
+    "naive": 0.483,
+    "always_flat": 0.586
    },
    "BTCTMN": {
-    "n": 24,
-    "claude": 0.375,
-    "naive": 0.292,
-    "always_flat": 0.458
+    "n": 29,
+    "claude": 0.345,
+    "naive": 0.345,
+    "always_flat": 0.379
    }
   },
-  "vol_hit": 0.625,
+  "vol_hit": 0.586,
   "said": {
-   "flat": 40,
-   "up": 6,
+   "flat": 49,
+   "up": 7,
    "down": 2
   },
   "actual": {
-   "up": 17,
-   "flat": 27,
-   "down": 4
+   "up": 25,
+   "flat": 28,
+   "down": 5
   },
-  "playbooks_citing_own_scorecard": 25,
-  "playbooks_with_vs_twin": 1
+  "playbooks_citing_own_scorecard": 30,
+  "playbooks_with_vs_twin": 6
  },
  "rows": [
   {
@@ -705,6 +705,146 @@
    "flat_hit": true,
    "vol_said": "low",
    "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0815-05a60f",
+   "t": 1792730705.3087451,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "down",
+   "naive": "up",
+   "move_pct": -0.369,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0815-05a60f",
+   "t": 1792730705.3087451,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "flat",
+   "naive": "flat",
+   "move_pct": 0.0,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": true,
+   "vol_said": "low",
+   "vol_actual": "low"
+  },
+  {
+   "playbook_id": "pb-20261023-0856-ce77fe",
+   "t": 1792733169.085745,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.524,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-0856-ce77fe",
+   "t": 1792733169.085745,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.585,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-0937-f1942e",
+   "t": 1792735630.5445032,
+   "market": "BTCTMN",
+   "said": "up",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.318,
+   "hit": true,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-0937-f1942e",
+   "t": 1792735630.5445032,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.586,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1018-a70b7b",
+   "t": 1792738093.6363454,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "up",
+   "move_pct": 0.318,
+   "hit": false,
+   "naive_hit": true,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1018-a70b7b",
+   "t": 1792738093.6363454,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.586,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "normal",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1059-05e60e",
+   "t": 1792740552.1212227,
+   "market": "BTCTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.255,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
+  },
+  {
+   "playbook_id": "pb-20261023-1059-05e60e",
+   "t": 1792740552.1212227,
+   "market": "USDTTMN",
+   "said": "flat",
+   "actual": "up",
+   "naive": "flat",
+   "move_pct": 0.671,
+   "hit": false,
+   "naive_hit": false,
+   "flat_hit": false,
+   "vol_said": "low",
+   "vol_actual": "normal"
   }
  ],
  "learning": [
@@ -1033,6 +1173,82 @@
    ],
    "vs_twin": [
     "vs twin: it reads the 24 h returns and goes to devaluation_drift at 15%. I agree the toman is weakening, but this rise came in one hour on a Friday after flat, stale-looking prices. With 3.5 h left I keep the small 4% position instead of nearly quadrupling it."
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1304-745794",
+   "t": 1792748062.83983,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Forecast scorecard: direction 50% vs 40% for the baseline. My recent flat/low calls on USDTTMN were right, so I keep them"
+   ],
+   "vs_twin": [
+    "vs twin: it reads devaluation_drift at 15% from the +0.60% 24h USDTTMN return. I stay at range 4% because the 5-minute bars show that move reversing within the last half hour, and the 15% position the twin holds is too much to start this close to the sell-off"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1346-06dc7d",
+   "t": 1792750605.282239,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "up/normal"
+   },
+   "self_grading": [
+    "scorecard: BTCTMN 'flat' calls missed twice when it drifted down, so I lean against adding"
+   ],
+   "vs_twin": [
+    "vs twin: it says devaluation_drift at 15% from the 24h USDTTMN return of +0.84%; I agree the toman is weakening, but BTCTMN stayed flat while USDTTMN rose, meaning BTCUSDT is falling and cancelling the toman gain. With 2 h to the sell-off and a sell-heavy book, I keep range at 8%×0.5"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1427-f556ea",
+   "t": 1792753077.2796001,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "up/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit rate 48% vs 41% for the baseline. My recent BTCTMN 'flat' calls missed twice when it fell and once when it rose, so this BTC call is low-confidence"
+   ],
+   "vs_twin": [
+    "vs twin: it calls devaluation_drift at 15% because USDTTMN is up 0.83% in 24 h. I agree the toman is drifting weaker, but I stay at range 8% × 0.5 because the sell-off starts in about 1.4 h, the BTCTMN order book is heavily one-sided toward sellers, and adding 11% now would mostly pay fees. The twin's realised P&L of −10k TMN shows what churn costs"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1509-e5776b",
+   "t": 1792755569.2148445,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "flat/low"
+   },
+   "self_grading": [
+    "Scorecard: direction hit 48% vs baseline 41%; my recent misses were USDTTMN rising when I said flat, so I'm only moderately confident in flat",
+    "vs twin: it calls devaluation_drift at 15% from the 24h USDTTMN return of +0.85%. I agree the toman is drifting, but with under an hour of buying left, heavy BTCTMN sell pressure and thin Friday trading, adding about 11% of equity now would mainly add fees and drawdown risk, so I stay at 4%"
+   ],
+   "vs_twin": [
+    "vs twin: it calls devaluation_drift at 15% from the 24h USDTTMN return of +0.85%. I agree the toman is drifting, but with under an hour of buying left, heavy BTCTMN sell pressure and thin Friday trading, adding about 11% of equity now would mainly add fees and drawdown risk, so I stay at 4%"
+   ]
+  },
+  {
+   "playbook_id": "pb-20261023-1551-4d8db9",
+   "t": 1792758086.017044,
+   "regime": "range",
+   "forecast": {
+    "BTCTMN": "flat/low",
+    "USDTTMN": "up/low"
+   },
+   "self_grading": [
+    "Scorecard: in recent playbooks I called USDTTMN flat and it went up 3 times in a row (direction hit rate 0.466, baseline 0.414). I am correcting that bias and calling USDTTMN up this time."
+   ],
+   "vs_twin": [
+    "vs twin: it says devaluation_drift at 15% because USDTTMN is up 1.03% over 24 h. I agree the toman is drifting weaker, but the buying window is closed and the twin has lost 10,026 TMN already, so I stay at range with a small size and tactical off."
    ]
   }
  ]
